@@ -8,6 +8,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 	abstract class Statement : TypedTreeItem {
 		public override Type Type => typeof(void);
 		public override Type[] ChildTypes => new[] { typeof(void) };
+		public override int Depth => 1;
 		public override bool IsChildCountFixed => false;
 
 		public override IEnumerable<TreeItem> Children {
@@ -16,6 +17,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			}
 		}
 
-		private IList<Statement> _children;
+		protected IList<Statement> _children;
 	}
 }
