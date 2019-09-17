@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2050
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatternGuidedGP", "PatternGuidedGP\PatternGuidedGP.csproj", "{CEDC2E0C-EDE4-48C4-B1DB-2D46D951A758}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CEDC2E0C-EDE4-48C4-B1DB-2D46D951A758}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEDC2E0C-EDE4-48C4-B1DB-2D46D951A758}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEDC2E0C-EDE4-48C4-B1DB-2D46D951A758}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEDC2E0C-EDE4-48C4-B1DB-2D46D951A758}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3EC11A68-CA58-44C9-8B29-BB5F65182B57}
+	EndGlobalSection
+EndGlobal
