@@ -7,12 +7,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	abstract class NullaryExpression<TResult> : Expression<TResult> {
 		public override Type[] ChildTypes => new Type[] { };
-		public override int Depth => 1;
-
-		public override IEnumerable<TreeItem> Children {
-			get {
-				return Enumerable.Empty<TreeItem>();
-			}
-		}
+		public override bool IsTerminal => true;
+		public override bool IsChildCountFixed => true;
 	}
 }

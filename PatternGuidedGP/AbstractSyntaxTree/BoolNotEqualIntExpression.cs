@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	class BoolEqualIntExpression : BinaryExpression<bool, int, int> {
+	class BoolNotEqualIntExpression : BinaryExpression<bool, int, int> {
 		public override SyntaxKind GetKind() {
-			return SyntaxKind.EqualsExpression;
+			return SyntaxKind.NotEqualsExpression;
 		}
 	}
 }

@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PatternGuidedGP.AbstractSyntaxTree;
+using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 
 namespace PatternGuidedGP {
 	class Program {
 		static void Main(string[] args) {
-			var compilationUnit = SyntaxFactory.CompilationUnit()
+	
+			CompilationUnitSyntax template = SyntaxFactory.CompilationUnit()
+				.WithUsings(
+					SyntaxFactory.SingletonList<UsingDirectiveSyntax>(
+						SyntaxFactory.UsingDirective(
+							SyntaxFactory.IdentifierName("System"))))
 				.WithMembers(
 					SyntaxFactory.SingletonList<MemberDeclarationSyntax>(
 						SyntaxFactory.ClassDeclaration("C")
@@ -19,7 +26,8 @@ namespace PatternGuidedGP {
 								SyntaxFactory.MethodDeclaration(
 									SyntaxFactory.PredefinedType(
 										SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
-									SyntaxFactory.Identifier("allEqual"))
+									SyntaxFactory.Identifier("methodName"))
+								.WithAdditionalAnnotations(new SyntaxAnnotation("methodName"))
 								.WithModifiers(
 									SyntaxFactory.TokenList(
 										new[]{
@@ -33,37 +41,50 @@ namespace PatternGuidedGP {
 													SyntaxFactory.Identifier("a"))
 												.WithType(
 													SyntaxFactory.PredefinedType(
-														SyntaxFactory.Token(SyntaxKind.IntKeyword))),
+														SyntaxFactory.Token(SyntaxKind.BoolKeyword))),
 												SyntaxFactory.Token(SyntaxKind.CommaToken),
 												SyntaxFactory.Parameter(
 													SyntaxFactory.Identifier("b"))
 												.WithType(
 													SyntaxFactory.PredefinedType(
-														SyntaxFactory.Token(SyntaxKind.IntKeyword))),
-												SyntaxFactory.Token(SyntaxKind.CommaToken),
-												SyntaxFactory.Parameter(
-													SyntaxFactory.Identifier("c"))
-												.WithType(
-													SyntaxFactory.PredefinedType(
-														SyntaxFactory.Token(SyntaxKind.IntKeyword)))})))
+														SyntaxFactory.Token(SyntaxKind.BoolKeyword)))})))
+									.WithAdditionalAnnotations(new SyntaxAnnotation("parameterList"))
 								.WithBody(
 									SyntaxFactory.Block(
-										SyntaxFactory.SingletonList<StatementSyntax>(
 											SyntaxFactory.ReturnStatement(
-												SyntaxFactory.BinaryExpression(
-													SyntaxKind.LogicalAndExpression,
-													SyntaxFactory.BinaryExpression(
-														SyntaxKind.EqualsExpression,
-														SyntaxFactory.IdentifierName("a"),
-														SyntaxFactory.IdentifierName("b")),
-													SyntaxFactory.BinaryExpression(
-														SyntaxKind.EqualsExpression,
-														SyntaxFactory.IdentifierName("b"),
-														SyntaxFactory.IdentifierName("c")))))))))))
+												SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression)
+												.WithAdditionalAnnotations(new SyntaxAnnotation("returnValue"))
+											)
+										.WithAdditionalAnnotations(new SyntaxAnnotation("methodBlock"))
+									)
+								)
+							))))
 				.NormalizeWhitespace();
 
-			if (typeof(void) == typeof(int))
-				Console.WriteLine(compilationUnit.ToString());
+			//Console.WriteLine(template.ToString());
+
+			var generator = new KozaTreeGeneratorFull();
+			var repository = new TreeNodeRepository();
+			repository.Add(new BoolAndExpression(),
+				new BoolFalseExpression(),
+				new BoolNotExpression(),
+				new BoolOrExpression(),
+				new BoolTrueExpression(),
+				new BoolXorExpression(),
+				new BoolIdentifierExpression("a"),
+				new BoolIdentifierExpression("b"));
+			generator.setTreeNodeRepository(repository);
+
+			for (int i = 0; i < 20; i++) {
+				var tree = generator.GenerateTree(5);
+				var syntaxRoot = tree.Root.GenerateSyntax();
+
+				var returnValueNode = template.GetAnnotatedNodes("returnValue").First();
+				var newSyntax = template.ReplaceNode(returnValueNode, syntaxRoot);
+
+				Console.WriteLine(newSyntax.ToString());
+			}
+
 			Console.ReadKey();
 		}
 	}

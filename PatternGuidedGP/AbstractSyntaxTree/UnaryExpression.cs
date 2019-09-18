@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	abstract class UnaryExpression<TResult, TChild> : Expression<TResult> {
 		public override Type[] ChildTypes => new[] { typeof(TChild) };
+		public override bool IsTerminal => false;
+		public override bool IsVariable => false;
+		public override bool IsChildCountFixed => true;
 
-		public override IEnumerable<TreeItem> Children {
+		public Expression<TChild> Child {
 			get {
-				yield return Child;
+				return Children[0] as Expression<TChild>;
 			}
 		}
-
-		public Expression<TChild> Child { get; set; }
 	}
 }

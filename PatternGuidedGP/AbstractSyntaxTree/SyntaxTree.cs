@@ -5,8 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	abstract class TypedTreeItem : TreeItem {
-		public abstract Type Type { get; }
-		public abstract Type[] ChildTypes { get; }
+	class SyntaxTree {
+		public TreeNode Root { get; }
+
+		public SyntaxTree(TreeNode root) {
+			Root = root;
+		}
 	}
 }

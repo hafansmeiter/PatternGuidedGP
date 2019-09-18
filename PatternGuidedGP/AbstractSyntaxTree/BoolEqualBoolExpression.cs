@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	class BoolEqualIntExpression : BinaryExpression<bool, int, int> {
+	class BoolEqualBoolExpression : BinaryExpression<bool, bool, bool> {
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.EqualsExpression;
 		}

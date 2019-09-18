@@ -6,5 +6,7 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class IntIdentifierExpression : IdentifierExpression<int> {
+		public IntIdentifierExpression(string name) : base(name) {
+		}
 	}
 }

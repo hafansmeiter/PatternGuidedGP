@@ -7,5 +7,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolIdentifierExpression : IdentifierExpression<bool> {
+		public BoolIdentifierExpression(string name) : base(name) {
+		}
 	}
 }

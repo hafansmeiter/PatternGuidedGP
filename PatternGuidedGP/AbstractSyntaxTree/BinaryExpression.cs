@@ -10,16 +10,21 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	abstract class BinaryExpression<TResult, TLeft, TRight> : Expression<TResult>, ISyntaxKindProvider {
 		public override Type[] ChildTypes => new[] { typeof(TLeft), typeof(TRight) };
+		public override bool IsTerminal => false;
+		public override bool IsVariable => false;
+		public override bool IsChildCountFixed => true;
 
-		public override IEnumerable<TreeItem> Children {
+		public Expression<TLeft> Left {
 			get {
-				yield return Left;
-				yield return Right;
+				return Children[0] as Expression<TLeft>;
 			}
 		}
 
-		public Expression<TLeft> Left { get; set; }
-		public Expression<TRight> Right { get; set; }
+		public Expression<TRight> Right {
+			get {
+				return Children[1] as Expression<TRight>;
+			}
+		}
 
 		public override CSharpSyntaxNode GenerateSyntax() {
 			return SyntaxFactory.BinaryExpression(GetKind(), 
