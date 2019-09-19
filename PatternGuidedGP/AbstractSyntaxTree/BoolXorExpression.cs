@@ -11,7 +11,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override CSharpSyntaxNode GenerateSyntax() {
 			ExpressionSyntax leftSyntax = (ExpressionSyntax)Left.GenerateSyntax();
 			ExpressionSyntax rightSyntax = (ExpressionSyntax)Right.GenerateSyntax();
-			return SyntaxFactory.BinaryExpression(
+			return SyntaxFactory.ParenthesizedExpression(SyntaxFactory.BinaryExpression(
 				SyntaxKind.LogicalAndExpression,
 				SyntaxFactory.ParenthesizedExpression(
 					SyntaxFactory.BinaryExpression(
@@ -24,7 +24,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 						SyntaxFactory.BinaryExpression(
 							SyntaxKind.LogicalAndExpression,
 							leftSyntax,
-							rightSyntax))));
+							rightSyntax)))));
 		}
 
 		public override SyntaxKind GetKind() {

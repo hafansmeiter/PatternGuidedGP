@@ -27,8 +27,9 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		}
 
 		public override CSharpSyntaxNode GenerateSyntax() {
-			return SyntaxFactory.BinaryExpression(GetKind(), 
-				(ExpressionSyntax) Left.GenerateSyntax(), (ExpressionSyntax) Right.GenerateSyntax());
+			return SyntaxFactory.ParenthesizedExpression(
+				SyntaxFactory.BinaryExpression(GetKind(), 
+					(ExpressionSyntax) Left.GenerateSyntax(), (ExpressionSyntax) Right.GenerateSyntax()));
 		}
 
 		public abstract SyntaxKind GetKind();
