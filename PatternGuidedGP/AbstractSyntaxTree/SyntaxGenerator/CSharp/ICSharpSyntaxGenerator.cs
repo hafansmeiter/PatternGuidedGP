@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator.CSharp {
 	interface ICSharpSyntaxGenerator {
-		CSharpSyntaxNode GenerateSyntax();
+		CSharpSyntaxNode GetSyntaxNode();
 	}
 }

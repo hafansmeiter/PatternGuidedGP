@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolXorExpression : BinaryExpression<bool, bool, bool> {
-		public override CSharpSyntaxNode GenerateSyntax() {
+		protected override CSharpSyntaxNode GenerateSyntax() {
 			ExpressionSyntax leftSyntax = (ExpressionSyntax)Left.GenerateSyntax();
 			ExpressionSyntax rightSyntax = (ExpressionSyntax)Right.GenerateSyntax();
 			return SyntaxFactory.ParenthesizedExpression(SyntaxFactory.BinaryExpression(

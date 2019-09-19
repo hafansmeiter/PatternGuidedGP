@@ -26,10 +26,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			}
 		}
 
-		public override CSharpSyntaxNode GenerateSyntax() {
+		protected override CSharpSyntaxNode GenerateSyntax() {
 			return SyntaxFactory.ParenthesizedExpression(
 				SyntaxFactory.BinaryExpression(GetKind(), 
-					(ExpressionSyntax) Left.GenerateSyntax(), (ExpressionSyntax) Right.GenerateSyntax()));
+					(ExpressionSyntax) Left.GetSyntaxNode(), 
+					(ExpressionSyntax) Right.GetSyntaxNode()));
 		}
 
 		public abstract SyntaxKind GetKind();

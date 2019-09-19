@@ -112,6 +112,16 @@
     <Compile Include="AbstractSyntaxTree\TreeGenerator\KozaTreeGeneratorGrow.cs" />
     <Compile Include="AbstractSyntaxTree\TreeGenerator\TreeNodeRepository.cs" />
     <Compile Include="AbstractSyntaxTree\UnaryExpression.cs" />
+    <Compile Include="GP\Algorithm.cs" />
+    <Compile Include="GP\IAlgorithm.cs" />
+    <Compile Include="GP\IFitnessEvaluator.cs" />
+    <Compile Include="GP\Individual.cs" />
+    <Compile Include="GP\Operators\ICrossover.cs" />
+    <Compile Include="GP\Operators\IInitializer.cs" />
+    <Compile Include="GP\Operators\IMutator.cs" />
+    <Compile Include="GP\Operators\ISelector.cs" />
+    <Compile Include="GP\Population.cs" />
+    <Compile Include="GP\Problem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AbstractSyntaxTree\TreeNode.cs" />

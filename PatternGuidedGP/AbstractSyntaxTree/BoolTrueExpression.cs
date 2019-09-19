@@ -9,7 +9,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolTrueExpression : NullaryExpression<bool> {
 		public override bool IsVariable => false;
 
-		public override CSharpSyntaxNode GenerateSyntax() {
+		protected override CSharpSyntaxNode GenerateSyntax() {
 			return SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression);
 		}
 	}

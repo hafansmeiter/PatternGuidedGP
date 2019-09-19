@@ -20,14 +20,14 @@ namespace PatternGuidedGP {
 							SyntaxFactory.IdentifierName("System"))))
 				.WithMembers(
 					SyntaxFactory.SingletonList<MemberDeclarationSyntax>(
-						SyntaxFactory.ClassDeclaration("C")
+						SyntaxFactory.ClassDeclaration("ProblemClass")
 						.WithMembers(
 							SyntaxFactory.SingletonList<MemberDeclarationSyntax>(
 								SyntaxFactory.MethodDeclaration(
 									SyntaxFactory.PredefinedType(
 										SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
-									SyntaxFactory.Identifier("methodName"))
-								.WithAdditionalAnnotations(new SyntaxAnnotation("methodName"))
+									SyntaxFactory.Identifier("Test"))
+								.WithAdditionalAnnotations(new SyntaxAnnotation("MethodDeclaration"))
 								.WithModifiers(
 									SyntaxFactory.TokenList(
 										new[]{
@@ -48,14 +48,14 @@ namespace PatternGuidedGP {
 												.WithType(
 													SyntaxFactory.PredefinedType(
 														SyntaxFactory.Token(SyntaxKind.BoolKeyword)))})))
-									.WithAdditionalAnnotations(new SyntaxAnnotation("parameterList"))
+									.WithAdditionalAnnotations(new SyntaxAnnotation("ParameterList"))
 								.WithBody(
 									SyntaxFactory.Block(
 											SyntaxFactory.ReturnStatement(
 												SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression)
-												.WithAdditionalAnnotations(new SyntaxAnnotation("returnValue"))
+												.WithAdditionalAnnotations(new SyntaxAnnotation("ReturnValue"))
 											)
-										.WithAdditionalAnnotations(new SyntaxAnnotation("methodBlock"))
+										.WithAdditionalAnnotations(new SyntaxAnnotation("MethodBlock"))
 									)
 								)
 							))))
@@ -71,16 +71,20 @@ namespace PatternGuidedGP {
 				new BoolOrExpression(),
 				new BoolTrueExpression(),
 				new BoolXorExpression(),
+				new BoolEqualBoolExpression(),
+				new BoolNotEqualBoolExpression(),
 				new BoolIdentifierExpression("a"),
 				new BoolIdentifierExpression("b"));
 			generator.setTreeNodeRepository(repository);
 
 			for (int i = 0; i < 20; i++) {
 				var tree = generator.GenerateTree(5);
-				var syntaxRoot = tree.Root.GenerateSyntax();
+				var syntaxRoot = tree.Root.GetSyntaxNode();
 
-				var returnValueNode = template.GetAnnotatedNodes("returnValue").First();
+				var returnValueNode = template.GetAnnotatedNodes("ReturnValue").First();
 				var newSyntax = template.ReplaceNode(returnValueNode, syntaxRoot);
+
+				CSharpCompilation.Create("")
 
 				Console.WriteLine(newSyntax.ToString());
 			}

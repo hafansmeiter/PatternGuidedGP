@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator.CSharp;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			return copy;
 		}
 
-		public abstract CSharpSyntaxNode GenerateSyntax();
+		public CSharpSyntaxNode GetSyntaxNode() {
+			return GenerateSyntax().WithAdditionalAnnotations(
+				new SyntaxAnnotation("Type", Type.ToString()));
+		}
+
+		protected internal abstract CSharpSyntaxNode GenerateSyntax();
 	}
 }

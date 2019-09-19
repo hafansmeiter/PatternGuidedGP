@@ -15,7 +15,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			Name = name;
 		}
 
-		public override CSharpSyntaxNode GenerateSyntax() {
+		protected override CSharpSyntaxNode GenerateSyntax() {
 			return SyntaxFactory.IdentifierName(Name);
 		}
 	}
