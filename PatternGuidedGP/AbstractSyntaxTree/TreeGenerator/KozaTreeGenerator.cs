@@ -1,21 +1,26 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator.CSharp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
-	abstract class KozaTreeGenerator : ITreeGenerator {
-		protected TreeNodeRepository _treeNodeRepository;
+	abstract class KozaTreeGenerator : ISyntaxTreeProvider {
+		public TreeNodeRepository TreeNodeRepository { get; set; }
 
-		public void setTreeNodeRepository(TreeNodeRepository repository) {
-			_treeNodeRepository = repository;
+		public SyntaxNode GetSyntaxTree(int maxDepth) {
+			var root = GetRandomRootNode();
+			AddChildren(root, maxDepth - 1);
+			return root.GetSyntaxNode();
 		}
 
-		public SyntaxTree GenerateTree(int maxDepth) {
-			var root = GetRootNode();
+		public SyntaxNode GetTypedSyntaxTree(int maxDepth, Type type) {
+			var root = GetRootNode(type);
 			AddChildren(root, maxDepth - 1);
-			return new SyntaxTree(root);
+			return root.GetSyntaxNode();
 		}
 
 		private void AddChildren(TreeNode node, int maxDepth) {
@@ -35,8 +40,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 		protected abstract TreeNode SelectTerminalNode(Type type);
 		protected abstract TreeNode SelectNonTerminalNode(Type type);
 
-		private TreeNode GetRootNode() {
-			return _treeNodeRepository.GetRandomNonTerminal(typeof(bool));
+		private TreeNode GetRootNode(Type type) {
+			return TreeNodeRepository.GetRandomNonTerminal(type);
+		}
+
+		private TreeNode GetRandomRootNode() {
+			return TreeNodeRepository.GetRandomNonTerminal(typeof(bool));
 		}
 	}
 }

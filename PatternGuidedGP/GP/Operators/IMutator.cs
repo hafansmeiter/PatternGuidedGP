@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Operators {
 	interface IMutator {
-		void Mutate(Individual individual);
+		bool Mutate(Individual individual);
 	}
 }

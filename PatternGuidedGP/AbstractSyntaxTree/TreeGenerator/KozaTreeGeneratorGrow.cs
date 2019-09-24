@@ -8,11 +8,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 	class KozaTreeGeneratorGrow : KozaTreeGenerator {
 
 		protected override TreeNode SelectNonTerminalNode(Type type) {
-			return _treeNodeRepository.GetRandomAny(type);
+			return TreeNodeRepository.GetRandomAny(type);
 		}
 
 		protected override TreeNode SelectTerminalNode(Type type) {
-			return _treeNodeRepository.GetRandomTerminal(type);
+			return TreeNodeRepository.GetRandomTerminal(type);
 		}
 	}
 }

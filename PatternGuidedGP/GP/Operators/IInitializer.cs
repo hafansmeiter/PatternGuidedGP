@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Operators {
 	interface IInitializer {
-
+		void Initialize(Population population, int maxTreeDepth);
 	}
 }

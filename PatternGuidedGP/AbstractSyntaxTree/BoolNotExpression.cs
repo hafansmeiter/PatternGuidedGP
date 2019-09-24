@@ -8,9 +8,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolNotExpression : UnaryExpression<bool, bool> {
-		public override CSharpSyntaxNode GenerateSyntax() {
-			return SyntaxFactory.PrefixUnaryExpression(
-				SyntaxKind.LogicalNotExpression, (ExpressionSyntax) Child.GenerateSyntax());
+		public override SyntaxKind GetKind() {
+			return SyntaxKind.LogicalNotExpression;
 		}
 	}
 }

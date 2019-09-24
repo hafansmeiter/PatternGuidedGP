@@ -6,5 +6,7 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP {
 	interface IAlgorithm {
+		bool IsSolutionFound();
+		Individual Run();
 	}
 }

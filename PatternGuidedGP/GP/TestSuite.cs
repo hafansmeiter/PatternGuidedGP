@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP {
-	class Algorithm {
+	class TestSuite {
+		public IList<TestCase> TestCases = new List<TestCase>();
 	}
 }

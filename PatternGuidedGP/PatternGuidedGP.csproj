@@ -105,26 +105,41 @@
     <Compile Include="AbstractSyntaxTree\NullaryExpression.cs" />
     <Compile Include="AbstractSyntaxTree\Statement.cs" />
     <Compile Include="AbstractSyntaxTree\SyntaxGenerator\CSharp\ISyntaxKindProvider.cs" />
-    <Compile Include="AbstractSyntaxTree\SyntaxTree.cs" />
-    <Compile Include="AbstractSyntaxTree\TreeGenerator\ITreeGenerator.cs" />
+    <Compile Include="AbstractSyntaxTree\SyntaxGenerator\SyntaxExtensions.cs" />
+    <Compile Include="AbstractSyntaxTree\TreeGenerator\ISyntaxTreeProvider.cs" />
     <Compile Include="AbstractSyntaxTree\TreeGenerator\KozaTreeGenerator.cs" />
     <Compile Include="AbstractSyntaxTree\TreeGenerator\KozaTreeGeneratorFull.cs" />
     <Compile Include="AbstractSyntaxTree\TreeGenerator\KozaTreeGeneratorGrow.cs" />
     <Compile Include="AbstractSyntaxTree\TreeGenerator\TreeNodeRepository.cs" />
     <Compile Include="AbstractSyntaxTree\UnaryExpression.cs" />
-    <Compile Include="GP\Algorithm.cs" />
+    <Compile Include="Compiler\CSharp\CSharpCompiler.cs" />
+    <Compile Include="Compiler\ICompiler.cs" />
+    <Compile Include="GP\AlgorithmBase.cs" />
+    <Compile Include="GP\DefaultAlgorithm.cs" />
     <Compile Include="GP\IAlgorithm.cs" />
     <Compile Include="GP\IFitnessEvaluator.cs" />
+    <Compile Include="GP\IGenerationalAlgorithm.cs" />
     <Compile Include="GP\Individual.cs" />
+    <Compile Include="GP\Operators\CrossoverBase.cs" />
     <Compile Include="GP\Operators\ICrossover.cs" />
     <Compile Include="GP\Operators\IInitializer.cs" />
     <Compile Include="GP\Operators\IMutator.cs" />
+    <Compile Include="GP\Operators\InitializerBase.cs" />
     <Compile Include="GP\Operators\ISelector.cs" />
+    <Compile Include="GP\Operators\MutatorBase.cs" />
+    <Compile Include="GP\Operators\RampedHalfHalfInitializer.cs" />
+    <Compile Include="GP\Operators\RandomSubtreeCrossover.cs" />
+    <Compile Include="GP\Operators\RandomSubtreeMutator.cs" />
     <Compile Include="GP\Population.cs" />
     <Compile Include="GP\Problem.cs" />
+    <Compile Include="GP\TestCase.cs" />
+    <Compile Include="GP\ProgramFitnessEvaluator.cs" />
+    <Compile Include="GP\TestSuite.cs" />
+    <Compile Include="GP\Operators\TournamentSelector.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AbstractSyntaxTree\TreeNode.cs" />
+    <Compile Include="Util\MultiValueDictionary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -134,7 +149,9 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="GP\Problems\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

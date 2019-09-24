@@ -25,9 +25,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		public CSharpSyntaxNode GetSyntaxNode() {
 			return GenerateSyntax().WithAdditionalAnnotations(
+				new SyntaxAnnotation("Node"),
 				new SyntaxAnnotation("Type", Type.ToString()));
 		}
 
-		protected internal abstract CSharpSyntaxNode GenerateSyntax();
+		protected abstract CSharpSyntaxNode GenerateSyntax();
 	}
 }
