@@ -131,11 +131,15 @@
     <Compile Include="GP\Operators\RandomSubtreeCrossover.cs" />
     <Compile Include="GP\Operators\RandomSubtreeMutator.cs" />
     <Compile Include="GP\Population.cs" />
-    <Compile Include="GP\Problem.cs" />
-    <Compile Include="GP\TestCase.cs" />
+    <Compile Include="GP\Problems\MajProblem.cs" />
+    <Compile Include="GP\Problems\Problem.cs" />
+    <Compile Include="GP\Tests\BoolTestSuiteGenerator.cs" />
+    <Compile Include="GP\Tests\IntTestSuiteGenerator.cs" />
+    <Compile Include="GP\Tests\TestCase.cs" />
     <Compile Include="GP\ProgramFitnessEvaluator.cs" />
-    <Compile Include="GP\TestSuite.cs" />
+    <Compile Include="GP\Tests\TestSuite.cs" />
     <Compile Include="GP\Operators\TournamentSelector.cs" />
+    <Compile Include="GP\Tests\ITestSuiteGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AbstractSyntaxTree\TreeNode.cs" />
@@ -149,9 +153,7 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GP\Problems\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

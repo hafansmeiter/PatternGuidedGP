@@ -1,4 +1,5 @@
 ﻿using PatternGuidedGP.GP.Operators;
+using PatternGuidedGP.GP.Problems;
 using System;
 using System.Collections.Generic;
 using System.Linq;

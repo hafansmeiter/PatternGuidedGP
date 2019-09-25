@@ -12,6 +12,8 @@ using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.Compiler.CSharp;
 using PatternGuidedGP.GP;
 using PatternGuidedGP.GP.Operators;
+using PatternGuidedGP.GP.Problems;
+using PatternGuidedGP.GP.Tests;
 
 namespace PatternGuidedGP {
 	class Program {
@@ -29,7 +31,8 @@ namespace PatternGuidedGP {
 							SyntaxFactory.SingletonList<MemberDeclarationSyntax>(
 								SyntaxFactory.MethodDeclaration(
 									SyntaxFactory.PredefinedType(
-										SyntaxFactory.Token(SyntaxKind.BoolKeyword)),
+										SyntaxFactory.Token(SyntaxKind.BoolKeyword))
+									.WithAdditionalAnnotations(new SyntaxAnnotation("ReturnType")),
 									SyntaxFactory.Identifier("Test"))
 								.WithAdditionalAnnotations(new SyntaxAnnotation("MethodDeclaration"))
 								.WithModifiers(
@@ -58,8 +61,8 @@ namespace PatternGuidedGP {
 												.WithType(
 													SyntaxFactory.PredefinedType(
 														SyntaxFactory.Token(SyntaxKind.BoolKeyword)))
-											})))
-									.WithAdditionalAnnotations(new SyntaxAnnotation("ParameterList"))
+											}))
+										.WithAdditionalAnnotations(new SyntaxAnnotation("ParameterList")))
 								.WithBody(
 									SyntaxFactory.Block(
 											SyntaxFactory.ReturnStatement(
@@ -86,7 +89,8 @@ namespace PatternGuidedGP {
 				new BoolNotEqualBoolExpression(),
 				new BoolIdentifierExpression("a"),
 				new BoolIdentifierExpression("b"),
-				new BoolIdentifierExpression("c"));
+				new BoolIdentifierExpression("c"),
+				new BoolIdentifierExpression("d"));
 			generator.TreeNodeRepository = repository;
 
 			var compiler = new CSharpCompiler();
@@ -94,7 +98,7 @@ namespace PatternGuidedGP {
 			evaluator.Compiler = compiler;
 			evaluator.Template = template;
 
-			TestSuite suite = new TestSuite();
+			/*TestSuite suite = new TestSuite();
 			suite.TestCases.Add(new TestCase(new object[] { true, true, true }, true));
 			suite.TestCases.Add(new TestCase(new object[] { true, true, false }, true));
 			suite.TestCases.Add(new TestCase(new object[] { true, false, true }, true));
@@ -102,11 +106,10 @@ namespace PatternGuidedGP {
 			suite.TestCases.Add(new TestCase(new object[] { false, true, true }, true));
 			suite.TestCases.Add(new TestCase(new object[] { false, true, false }, false));
 			suite.TestCases.Add(new TestCase(new object[] { false, false, true }, false));
-			suite.TestCases.Add(new TestCase(new object[] { false, false, false }, false));
+			suite.TestCases.Add(new TestCase(new object[] { false, false, false }, false));*/
 
-			Problem problem = new Problem();
+			Problem problem = new MajProblem(4);
 			problem.FitnessEvaluator = evaluator;
-			problem.TestSuite = suite;
 
 			DefaultAlgorithm algorithm = new DefaultAlgorithm(problem, 
 				populationSize: 100, generations: 20);
@@ -115,7 +118,7 @@ namespace PatternGuidedGP {
 			algorithm.Elitism = 5;
 			algorithm.Initializer = new RampedHalfHalfInitializer(repository);
 			algorithm.MaxTreeDepth = 5;
-			algorithm.MutationRate = 0.1;
+			algorithm.MutationRate = 0.2;
 			algorithm.Mutator = new RandomSubtreeMutator(generator, maxTreeDepth: 5, maxMutationTreeDepth: 3);
 			algorithm.Selector = new TournamentSelector(7);
 

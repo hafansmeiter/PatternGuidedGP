@@ -34,10 +34,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator {
 
 		public static SyntaxNode RandomNode(this SyntaxNode root) {
 			return GetUniformDepthRandomAnnotatedNode(root, new SyntaxAnnotation("Node"));
+			//return GetRandomAnnotatedNode(root, new SyntaxAnnotation("Node"));
 		}
 
 		public static SyntaxNode RandomNode(this SyntaxNode root, Type type) {
 			return GetUniformDepthRandomAnnotatedNode(root, new SyntaxAnnotation("Type", type.ToString()));
+			//return GetRandomAnnotatedNode(root, new SyntaxAnnotation("Type", type.ToString()));
 		}
 
 		private static SyntaxNode GetRandomAnnotatedNode(SyntaxNode root, SyntaxAnnotation annotation) {

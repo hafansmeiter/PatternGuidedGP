@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatternGuidedGP.GP {
+namespace PatternGuidedGP.GP.Tests {
 	class TestCase {
 		public object[] Parameter { get; set; }
 		public object Result { get; set; }

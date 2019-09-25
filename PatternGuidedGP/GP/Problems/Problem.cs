@@ -1,10 +1,11 @@
-﻿using System;
+﻿using PatternGuidedGP.GP.Tests;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatternGuidedGP.GP {
+namespace PatternGuidedGP.GP.Problems {
 	class Problem {
 		public IFitnessEvaluator FitnessEvaluator { get; set; }
 		public TestSuite TestSuite { get; set; }

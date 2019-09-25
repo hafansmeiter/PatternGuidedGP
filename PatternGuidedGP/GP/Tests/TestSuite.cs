@@ -4,8 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatternGuidedGP.GP {
+namespace PatternGuidedGP.GP.Tests {
 	class TestSuite {
 		public IList<TestCase> TestCases = new List<TestCase>();
+
+		public TestSuite(IList<TestCase> cases) {
+			TestCases = cases;
+		}
 	}
 }
