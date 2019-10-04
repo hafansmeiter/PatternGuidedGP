@@ -1,4 +1,5 @@
-﻿using PatternGuidedGP.GP.Tests;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PatternGuidedGP.GP.Tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP {
 	interface IFitnessEvaluator {
-		double Evaluate(Individual individual, TestSuite testSuite);
+		double Evaluate(Individual individual, TestSuite testSuite, CompilationUnitSyntax template);
 	}
 }

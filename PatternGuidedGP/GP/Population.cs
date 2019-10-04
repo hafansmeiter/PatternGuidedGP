@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PatternGuidedGP.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,6 @@ namespace PatternGuidedGP.GP {
 
 		private Individual[] _individuals;
 		private int _count = 0;
-		private Random _random = new Random();
 
 		public Population(int size) {
 			Size = size;
@@ -37,7 +37,7 @@ namespace PatternGuidedGP.GP {
 		}
 
 		public Individual GetRandom() {
-			return _individuals[_random.Next(Size)];
+			return _individuals[RandomValueStore.Instance.GetInt(Size)];
 		}
 
 		public void Sort() {

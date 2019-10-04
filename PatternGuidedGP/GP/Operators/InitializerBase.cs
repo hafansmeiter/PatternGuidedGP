@@ -13,6 +13,6 @@ namespace PatternGuidedGP.GP.Operators {
 			TreeNodeRepository = repository;
 		}
 
-		public abstract void Initialize(Population population, int maxTreeDepth);
+		public abstract void Initialize(Population population, int maxTreeDepth, Type rootType);
 	}
 }

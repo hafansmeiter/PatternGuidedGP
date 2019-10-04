@@ -1,4 +1,5 @@
 ﻿using PatternGuidedGP.GP.Problems;
+using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,23 +9,21 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.GP {
 	class DefaultAlgorithm : AlgorithmBase, IGenerationalAlgorithm {
 
-		private Random _random = new Random();
-
-		public DefaultAlgorithm(Problem problem, int populationSize, int generations) 
-			: base(problem, populationSize, generations) {
+		public DefaultAlgorithm(int populationSize, int generations) 
+			: base(populationSize, generations) {
 		}
 
-		public override Individual Run() {
-			Initializer.Initialize(Population, MaxTreeDepth);
+		public override Individual Run(Problem problem) {
+			Initializer.Initialize(Population, MaxTreeDepth, problem.RootType);
 			Console.WriteLine("Generation 0:");
-			Individual solution = EvaluatePopulation();
+			Individual solution = EvaluatePopulation(problem);
 			if (solution != null) {	// initial generation contains solution
 				return solution;
 			}
 			for (int i = 0; i < Generations; i++) {
 				Population = GetNextGeneration(Population);
 				Console.WriteLine("Generation {0}:", (i + 1));
-				solution = EvaluatePopulation();
+				solution = EvaluatePopulation(problem);
 				if (solution != null) {
 					return solution;
 				}
@@ -33,8 +32,8 @@ namespace PatternGuidedGP.GP {
 			return Population.GetFittest();
 		}
 
-		private Individual EvaluatePopulation() {
-			Problem.Evaluate(Population);
+		private Individual EvaluatePopulation(Problem problem) {
+			problem.Evaluate(Population);
 			Population.Sort();
 			Console.WriteLine("Best={0}, Fitness={1}, Avg={2}", Population.GetFittest(), Population.GetFittest().Fitness, Population.GetAverageFitness());
 
@@ -56,13 +55,13 @@ namespace PatternGuidedGP.GP {
 			for (int i = 0; i < nextGen.Size - Elitism; i++) {
 				Individual child = null;
 				// create child by crossover or copy from old population
-				if (_random.NextDouble() < CrossoverRate) {
+				if (RandomValueStore.Instance.GetDouble() < CrossoverRate) {
 					child = Crossover.cross(Selector.Select(population), 
 						Selector.Select(population));
 				} else {
-					child = new Individual(Selector.Select(population));
+					child = new Individual(population.GetRandom());
 				}
-				if (_random.NextDouble() < MutationRate) {
+				if (RandomValueStore.Instance.GetDouble() < MutationRate) {
 					Mutator.Mutate(child);
 					child.FitnessEvaluated = false;
 				}

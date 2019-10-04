@@ -12,19 +12,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override Type[] ChildTypes => new[] { typeof(TLeft), typeof(TRight) };
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
-		public override bool IsChildCountFixed => true;
+		public override int RequiredTreeDepth => 2;
 
-		public Expression<TLeft> Left {
-			get {
-				return Children[0] as Expression<TLeft>;
-			}
-		}
-
-		public Expression<TRight> Right {
-			get {
-				return Children[1] as Expression<TRight>;
-			}
-		}
+		public Expression<TLeft> Left => Children[0] as Expression<TLeft>;
+		public Expression<TRight> Right => Children[1] as Expression<TRight>;
 
 		protected override CSharpSyntaxNode GenerateSyntax() {
 			return SyntaxFactory.ParenthesizedExpression(

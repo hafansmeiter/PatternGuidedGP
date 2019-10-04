@@ -12,7 +12,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override Type[] ChildTypes => new[] { typeof(TChild) };
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
-		public override bool IsChildCountFixed => true;
+		public override int RequiredTreeDepth => 2;
 
 		public Expression<TChild> Child {
 			get {

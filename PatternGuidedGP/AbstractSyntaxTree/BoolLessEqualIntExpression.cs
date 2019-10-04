@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolLessEqualIntExpression : BinaryExpression<bool, int, int> {
 		public override SyntaxKind GetKind() {
-			return SyntaxKind.LessThanEqualsToken;
+			return SyntaxKind.LessThanOrEqualExpression;
 		}
 	}
 }

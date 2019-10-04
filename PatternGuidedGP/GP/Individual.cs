@@ -48,7 +48,7 @@ namespace PatternGuidedGP.GP {
 		}
 
 		public override string ToString() {
-			return Syntax.ToString();
+			return Syntax.NormalizeWhitespace().ToString();
 		}
 
 		public override bool Equals(object obj) {

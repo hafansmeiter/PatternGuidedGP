@@ -19,7 +19,7 @@ namespace PatternGuidedGP.GP.Operators {
 			SyntaxNode exchangeNode = root.RandomNode();
 			Type nodeType = exchangeNode.GetNodeType();
 
-			SyntaxNode newNode = SyntaxTreeProvider.GetTypedSyntaxTree(MaxMutationTreeDepth, nodeType);
+			SyntaxNode newNode = SyntaxTreeProvider.GetSyntaxTree(MaxMutationTreeDepth, nodeType);
 			SyntaxNode newTree = root.ReplaceNode(exchangeNode, newNode);
 			if (newTree.GetTreeHeight() <= MaxTreeDepth) {
 				individual.Syntax = newTree;

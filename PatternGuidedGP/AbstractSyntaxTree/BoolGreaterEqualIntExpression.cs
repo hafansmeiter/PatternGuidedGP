@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolGreaterEqualIntExpression : BinaryExpression<bool, int, int> {
 		public override SyntaxKind GetKind() {
-			return SyntaxKind.GreaterThanEqualsToken;
+			return SyntaxKind.GreaterThanOrEqualExpression;
 		}
 	}
 }

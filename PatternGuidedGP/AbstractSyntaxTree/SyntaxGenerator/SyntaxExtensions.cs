@@ -48,7 +48,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator {
 				return foundAnnotation != null &&
 					(annotation.Data == null || foundAnnotation.Data != null && foundAnnotation.Data.Equals(annotation.Data));
 			});
-			return descNodes.ElementAtOrDefault(new Random().Next(descNodes.Count()));
+			return descNodes.ElementAtOrDefault(RandomValueStore.Instance.GetInt(descNodes.Count()));
 		}
 
 		private static SyntaxNode GetUniformDepthRandomAnnotatedNode(SyntaxNode root, SyntaxAnnotation annotation) {
@@ -59,10 +59,9 @@ namespace PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator {
 			//	Console.WriteLine("level " + level + ": " + string.Join(", ", levelNodes[level].Select(n => n.ToString()).ToArray()));
 			//}
 
-			var random = new Random();
-			int levelIndex = random.Next(levelNodes.Count);
+			int levelIndex = RandomValueStore.Instance.GetInt(levelNodes.Count);
 			var syntaxNodes = levelNodes.Values.ElementAt(levelIndex);
-			int nodeIndex = random.Next(syntaxNodes.Count);
+			int nodeIndex = RandomValueStore.Instance.GetInt(syntaxNodes.Count);
 			SyntaxNode node = syntaxNodes.ElementAt(nodeIndex);
 			//Console.WriteLine("random select node: " + node + ", level index=" + levelIndex + ", node index=" + nodeIndex);
 

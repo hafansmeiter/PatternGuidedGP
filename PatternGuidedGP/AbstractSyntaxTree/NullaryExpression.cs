@@ -8,6 +8,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 	abstract class NullaryExpression<TResult> : Expression<TResult> {
 		public override Type[] ChildTypes => new Type[] { };
 		public override bool IsTerminal => true;
-		public override bool IsChildCountFixed => true;
+		public override int RequiredTreeDepth => 1;
 	}
 }

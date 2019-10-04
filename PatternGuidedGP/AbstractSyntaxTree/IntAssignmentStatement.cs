@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	abstract class Statement : TreeNode {
-		public override Type Type => typeof(void);
-		public abstract bool IsContainer { get; }
+	class IntAssignmentStatement : AssignmentStatement<int> {
 	}
 }

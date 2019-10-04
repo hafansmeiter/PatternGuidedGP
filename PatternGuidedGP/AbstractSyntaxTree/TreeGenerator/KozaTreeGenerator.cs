@@ -9,43 +9,40 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 	abstract class KozaTreeGenerator : ISyntaxTreeProvider {
-		public TreeNodeRepository TreeNodeRepository { get; set; }
+		public ITreeNodeRepository TreeNodeRepository { get; set; }
 
-		public SyntaxNode GetSyntaxTree(int maxDepth) {
-			var root = GetRandomRootNode();
-			AddChildren(root, maxDepth - 1);
-			return root.GetSyntaxNode();
-		}
-
-		public SyntaxNode GetTypedSyntaxTree(int maxDepth, Type type) {
-			var root = GetRootNode(type);
+		public SyntaxNode GetSyntaxTree(int maxDepth, Type type) {
+			var root = GetRootNode(type, maxDepth);
 			AddChildren(root, maxDepth - 1);
 			return root.GetSyntaxNode();
 		}
 
 		private void AddChildren(TreeNode node, int maxDepth) {
-			/// TODO: Add support for statements.
-			foreach (var type in node.ChildTypes) {
-				if (maxDepth == 1) {
-					var child = SelectTerminalNode(type);
-					node.Children.Add(child);
-				} else {
-					var child = SelectNonTerminalNode(type);
+			for (int i = 0; i < node.ChildTypes.Length; i++) {
+				Type type = node.ChildTypes[i];
+				TreeNode child;
+				do {
+					if (maxDepth == 1) {
+						child = SelectTerminalNode(type);
+					} else {
+						child = SelectNonTerminalNode(type, maxDepth);
+					}
+					if (!node.AcceptChild(child, i)) {
+						child = null;
+					}
+				} while (child == null);
+				node.Children.Add(child);
+				if (maxDepth > 1) {
 					AddChildren(child, maxDepth - 1);
-					node.Children.Add(child);
 				}
 			}
 		}
 
 		protected abstract TreeNode SelectTerminalNode(Type type);
-		protected abstract TreeNode SelectNonTerminalNode(Type type);
+		protected abstract TreeNode SelectNonTerminalNode(Type type, int maxDepth);
 
-		private TreeNode GetRootNode(Type type) {
-			return TreeNodeRepository.GetRandomNonTerminal(type);
-		}
-
-		private TreeNode GetRandomRootNode() {
-			return TreeNodeRepository.GetRandomNonTerminal(typeof(bool));
+		private TreeNode GetRootNode(Type type, int maxDepth) {
+			return TreeNodeRepository.GetRandomNonTerminal(type, maxDepth);
 		}
 	}
 }

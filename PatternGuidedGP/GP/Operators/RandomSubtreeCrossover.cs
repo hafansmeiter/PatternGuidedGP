@@ -15,8 +15,8 @@ namespace PatternGuidedGP.GP.Operators {
 		public override Individual cross(Individual individual1, Individual individual2) {
 			SyntaxNode root1 = individual1.Syntax;
 			SyntaxNode root2 = individual2.Syntax;
-			Type type = root1.GetNodeType();
 			SyntaxNode exchangeNode1 = root1.RandomNode();
+			Type type = exchangeNode1.GetNodeType();
 			SyntaxNode exchangeNode2 = root2.RandomNode(type);
 			if (exchangeNode2 != null) {
 				SyntaxNode newTree = root1.ReplaceNode(exchangeNode1, exchangeNode2);

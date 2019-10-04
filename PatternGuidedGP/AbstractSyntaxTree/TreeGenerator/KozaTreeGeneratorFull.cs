@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 	class KozaTreeGeneratorFull : KozaTreeGenerator {
 
-		protected override TreeNode SelectNonTerminalNode(Type type) {
-			return TreeNodeRepository.GetRandomNonTerminal(type);
+		protected override TreeNode SelectNonTerminalNode(Type type, int maxDepth) {
+			return TreeNodeRepository.GetRandomNonTerminal(type, maxDepth);
 		}
 
 		protected override TreeNode SelectTerminalNode(Type type) {
