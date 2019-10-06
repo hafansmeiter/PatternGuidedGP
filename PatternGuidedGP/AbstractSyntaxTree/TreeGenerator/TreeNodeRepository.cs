@@ -8,37 +8,39 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 	class TreeNodeRepository : ITreeNodeRepository {
 		private class TreeNodeDictionary {
-			private IDictionary<int, List<TreeNode>> _nodeLists = new Dictionary<int, List<TreeNode>>();
+			private IDictionary<int, HashSet<TreeNode>> _nodeLists = new Dictionary<int, HashSet<TreeNode>>();
 			private int _maxDepth = 0;
 
 			public void Add(TreeNode node) {
 				int depth = node.RequiredTreeDepth;
-				List<TreeNode> nodes;
+				HashSet<TreeNode> nodes;
 				if (!_nodeLists.TryGetValue(depth, out nodes)) {
-					nodes = new List<TreeNode>();
+					nodes = new HashSet<TreeNode>();
 					_nodeLists.Add(depth, nodes);
 				}
 				nodes.Add(node);
 				if (depth > _maxDepth) {
 					_maxDepth = depth;
 				}
-				PropagateNodes(depth);
+				PropagateNodes();
 			}
 
 			public IList<TreeNode> GetTreeNodes(int maxDepth) {
 				int depth = Math.Min(maxDepth, _maxDepth);
-				return _nodeLists[depth];
+				return _nodeLists[depth].ToList();
 			}
 
-			private void PropagateNodes(int fromDepth) {
-				var nodes = _nodeLists[fromDepth];
-				for (int i = fromDepth + 1; i <= _maxDepth; i++) {
-					List<TreeNode> nextNodes;
-					if (!_nodeLists.TryGetValue(i, out nextNodes)) {
-						nextNodes = new List<TreeNode>();
-						_nodeLists.Add(i, nextNodes);
+			private void PropagateNodes() {
+				var prevNodes = new HashSet<TreeNode>();
+				for (int i = 0; i <= _maxDepth; i++) {
+					HashSet<TreeNode> currentNodes;
+					if (!_nodeLists.TryGetValue(i, out currentNodes)) {
+						currentNodes = new HashSet<TreeNode>(prevNodes);
+						_nodeLists.Add(i, currentNodes);
+					} else {
+						currentNodes.UnionWith(prevNodes);
 					}
-					nodes = nodes.Union(nextNodes).ToList();
+					prevNodes = currentNodes;
 				}
 			}
 		}
@@ -66,8 +68,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 				_any.Add(treeNode);
 			}
 
-			public TreeNode GetRandomAny(int maxDepth) {
+			public TreeNode GetRandomAny(int maxDepth, TreeNodeFilter filter) {
 				var nodes = _any.GetTreeNodes(maxDepth);
+				if (filter != null) {
+					nodes = filter(nodes).ToList();
+				}
 				var node = nodes[RandomValueStore.Instance.GetInt(nodes.Count)].Clone() as TreeNode;
 				node.Initialize();
 				return node;
@@ -95,8 +100,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 			}
 		}
 		
-		public TreeNode GetRandomAny(Type type, int maxDepth) {
-			return GetTypeRepository(type).GetRandomAny(maxDepth);
+		public TreeNode GetRandomAny(Type type, int maxDepth, TreeNodeFilter filter) {
+			return GetTypeRepository(type).GetRandomAny(maxDepth, filter);
 		}
 
 		public TreeNode GetRandomNonTerminal(Type type, int maxDepth) {

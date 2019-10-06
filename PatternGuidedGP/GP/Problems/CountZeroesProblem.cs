@@ -8,22 +8,22 @@ using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.GP.Tests;
 
 namespace PatternGuidedGP.GP.Problems {
-	class AllEqualProblem : CodingProblem {
-		public override Type ReturnType => typeof(bool);
+	class CountZeroesProblem : CodingProblem {
+		public override Type ReturnType => typeof(int);
 		public override Type ParameterType => typeof(int);
 
-		public AllEqualProblem(int parameterCount) : base(parameterCount) {
+		public CountZeroesProblem(int parameterCount) : base(parameterCount) {
 		}
 
 		protected override TestSuite GetTestSuite() {
 			return new IntTestSuiteGenerator().Create(ParameterCount, parameters => {
-				int value = (int) parameters[0];
-				for (int i = 1; i < parameters.Length; i++) {
-					if (value != (int) parameters[i]) {
-						return false;
+				int zeroes = 0;
+				for (int i = 0; i < parameters.Length; i++) {
+					if ((int) parameters[i] == 0) {
+						zeroes++;
 					}
 				}
-				return true;
+				return zeroes;
 			});
 		}
 	}

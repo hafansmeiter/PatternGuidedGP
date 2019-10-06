@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator;
 using System;
 using System.Collections.Generic;
@@ -13,19 +13,20 @@ namespace PatternGuidedGP.GP.Operators {
 		}
 
 		public override Individual cross(Individual individual1, Individual individual2) {
-			SyntaxNode root1 = individual1.Syntax;
-			SyntaxNode root2 = individual2.Syntax;
-			SyntaxNode exchangeNode1 = root1.RandomNode();
-			Type type = exchangeNode1.GetNodeType();
-			SyntaxNode exchangeNode2 = root2.RandomNode(type);
+			SyntaxTree tree1 = (SyntaxTree) individual1.SyntaxTree.DeepClone();
+			SyntaxTree tree2 = individual2.SyntaxTree;
+			TreeNode exchangeNode1 = tree1.GetRandomNode();
+			Type type = exchangeNode1.Type;
+			TreeNode exchangeNode2 = tree2.GetRandomNode(type);
 			if (exchangeNode2 != null) {
-				SyntaxNode newTree = root1.ReplaceNode(exchangeNode1, exchangeNode2);
-				if (newTree.GetTreeHeight() <= MaxTreeDepth) {
-					return new Individual(newTree);
+				// need to clone exchangeNode2 to avoid circular node connections in the tree
+				bool replaced = tree1.ReplaceTreeNode(exchangeNode1, (TreeNode) exchangeNode2.DeepClone());
+				if (replaced && tree1.Height <= MaxTreeDepth) {
+					return new Individual(tree1);
 				}
 			}
 			// return individual 1 unchanged if:
-			// - individual 2 does not contain chosen node type 
+			// - individual 2 does not contain chosen node type
 			// - resulting tree too large
 			return individual1;
 		}

@@ -16,7 +16,7 @@ namespace PatternGuidedGP.GP {
 		public ICompiler Compiler { get; set; }
 
 		public double Evaluate(Individual individual, TestSuite testSuite, CompilationUnitSyntax template) {
-			CompilationUnitSyntax compilationUnit = CreateCompilationUnit(individual.Syntax, 
+			CompilationUnitSyntax compilationUnit = CreateCompilationUnit(individual.SyntaxTree.Root.GetSyntaxNode(), 
 				testSuite.TestCases.First(),
 				template);
 			//Console.WriteLine("Run test method:");

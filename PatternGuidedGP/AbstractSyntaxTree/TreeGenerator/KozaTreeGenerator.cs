@@ -8,33 +8,44 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
-	abstract class KozaTreeGenerator : ISyntaxTreeProvider {
+	abstract class KozaTreeGenerator : ISyntaxProvider {
 		public ITreeNodeRepository TreeNodeRepository { get; set; }
 
-		public SyntaxNode GetSyntaxTree(int maxDepth, Type type) {
+		public SyntaxTree GetSyntaxTree(int maxDepth, Type type) {
+			var root = GetSyntaxNode(maxDepth, type);
+			return new SyntaxTree(root);
+		}
+
+		public TreeNode GetSyntaxNode(int maxDepth, Type type) {
 			var root = GetRootNode(type, maxDepth);
 			AddChildren(root, maxDepth - 1);
-			return root.GetSyntaxNode();
+			return root;
 		}
 
 		private void AddChildren(TreeNode node, int maxDepth) {
+			if (maxDepth == 0) {
+				return;
+			}
 			for (int i = 0; i < node.ChildTypes.Length; i++) {
 				Type type = node.ChildTypes[i];
 				TreeNode child;
 				do {
-					if (maxDepth == 1) {
-						child = SelectTerminalNode(type);
+					var filter = node.GetChildSelectionFilter(i);
+					if (filter != null) {
+						child = TreeNodeRepository.GetRandomAny(type, maxDepth, filter);
 					} else {
-						child = SelectNonTerminalNode(type, maxDepth);
+						if (maxDepth == 1) {
+							child = SelectTerminalNode(type);
+						} else {
+							child = SelectNonTerminalNode(type, maxDepth);
+						}
 					}
-					if (!node.AcceptChild(child, i)) {
-						child = null;
+					if (node.AcceptChild(child, i)) {
+						break;
 					}
-				} while (child == null);
-				node.Children.Add(child);
-				if (maxDepth > 1) {
-					AddChildren(child, maxDepth - 1);
-				}
+				} while (true);
+				node.AddChild(child);
+				AddChildren(child, maxDepth - 1);
 			}
 		}
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using PatternGuidedGP.AbstractSyntaxTree;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,17 +24,17 @@ namespace PatternGuidedGP.GP {
 				_fitnessEvaluated = value;
 			}
 		}
-		public SyntaxNode Syntax { get; set; }
+		public SyntaxTree SyntaxTree { get; set; }
 
 		private double _fitness = 0.0;
 		private bool _fitnessEvaluated = false;
 
-		public Individual(SyntaxNode syntax) {
-			Syntax = syntax;
+		public Individual(SyntaxTree syntaxTree) {
+			SyntaxTree = syntaxTree;
 		}
 
 		public Individual(Individual other) {
-			Syntax = other.Syntax;
+			SyntaxTree = (SyntaxTree) other.SyntaxTree.DeepClone();
 			Fitness = other.Fitness;
 			FitnessEvaluated = other.FitnessEvaluated;
 		}
@@ -48,11 +48,11 @@ namespace PatternGuidedGP.GP {
 		}
 
 		public override string ToString() {
-			return Syntax.NormalizeWhitespace().ToString();
+			return SyntaxTree.ToString();
 		}
 
 		public override bool Equals(object obj) {
-			return Syntax.Equals(obj);
+			return SyntaxTree.Equals(obj);
 		}
 
 		public override int GetHashCode() {

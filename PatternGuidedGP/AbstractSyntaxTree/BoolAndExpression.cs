@@ -7,6 +7,8 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolAndExpression : BinaryExpression<bool, bool, bool> {
+		public override string Description => "&&";
+
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.LogicalAndExpression;
 		}

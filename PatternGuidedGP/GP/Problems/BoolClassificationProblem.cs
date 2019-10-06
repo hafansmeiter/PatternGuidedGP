@@ -13,6 +13,8 @@ using PatternGuidedGP.GP.Tests;
 namespace PatternGuidedGP.GP.Problems {
 	abstract class BoolClassificationProblem : Problem {
 		public override Type RootType => typeof(bool);
+		public override Type ParameterType => typeof(bool);
+		public override Type ReturnType => typeof(bool);
 
 		public BoolClassificationProblem(int parameterCount) : base(parameterCount) {
 		}
@@ -26,10 +28,6 @@ namespace PatternGuidedGP.GP.Problems {
 				new BoolXorExpression(),
 				new BoolEqualBoolExpression(),
 				new BoolNotEqualBoolExpression());
-
-			for (int i = 0; i < _parameterCount; i++) {
-				repository.Add(new BoolIdentifierExpression(((char)('a' + i)).ToString()));
-			}
 		}
 
 		protected override CompilationUnitSyntax GetCodeTemplate() {

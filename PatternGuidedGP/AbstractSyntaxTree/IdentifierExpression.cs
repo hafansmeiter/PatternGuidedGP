@@ -7,8 +7,8 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	abstract class IdentifierExpression<T> : NullaryExpression<T> {
+		public override string Description => Name;
 		public override bool IsVariable => true;
-
 		public string Name { get; set; }
 
 		public IdentifierExpression(string name) {

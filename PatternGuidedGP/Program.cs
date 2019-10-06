@@ -22,24 +22,43 @@ namespace PatternGuidedGP {
 			var evaluator = new ProgramFitnessEvaluator();
 			evaluator.Compiler = compiler;
 
-			Problem problem = new AllEqualProblem(3);
-			problem.FitnessEvaluator = evaluator;
+			Problem[] problems = new Problem[] {
+				//new AllEqualProblem(3),
+				//new ContainsFirstProblem(3),
+				new CountZeroesProblem(3),
+				new IsOrderedProblem(3),
+				new MajorityProblem(3),
+				new MaximumProblem(3)
+			};
 
-			var generator = new KozaTreeGeneratorGrow();
-			generator.TreeNodeRepository = problem.TreeNodeRepository;
+			foreach (var problem in problems) {
+				Console.WriteLine(problem.GetType().Name + ":");
+				problem.FitnessEvaluator = evaluator;
 
-			DefaultAlgorithm algorithm = new DefaultAlgorithm(populationSize: 100, generations: 20);
-			algorithm.Crossover = new RandomSubtreeCrossover(maxTreeDepth: 5);
-			algorithm.CrossoverRate = 0.8;
-			algorithm.Elitism = 5;
-			algorithm.Initializer = new RampedHalfHalfInitializer(problem.TreeNodeRepository);
-			algorithm.MaxTreeDepth = 5;
-			algorithm.MutationRate = 0.2;
-			algorithm.Mutator = new RandomSubtreeMutator(generator, maxTreeDepth: 5, maxMutationTreeDepth: 3);
-			algorithm.Selector = new TournamentSelector(7);
+				var generator = new KozaTreeGeneratorGrow();
+				generator.TreeNodeRepository = problem.TreeNodeRepository;
 
-			Individual individual = algorithm.Run(problem);
-			Console.WriteLine("Result solution: " + individual);
+				DefaultAlgorithm algorithm = new DefaultAlgorithm(populationSize: 300, generations: 300);
+				algorithm.Crossover = new RandomSubtreeCrossover(maxTreeDepth: 9);
+				algorithm.CrossoverRate = 0.7;
+				algorithm.Elitism = 5;
+				algorithm.Initializer = new RampedHalfHalfInitializer(maxTreeDepth: 3, repository: problem.TreeNodeRepository);
+				algorithm.MaxTreeDepth = 9;
+				algorithm.MutationRate = 0.2;
+				algorithm.Mutator = new RandomSubtreeMutator(generator, maxTreeDepth: 9, maxMutationTreeDepth: 3);
+				algorithm.Selector = new TournamentSelector(7);
+
+				int solved = 0;
+				for (int i = 0; i < 20; i++) {
+					Individual individual = algorithm.Run(problem);
+					Console.WriteLine("Result solution:\n" + individual);
+					if (individual != null) {
+						solved++;
+					}
+				}
+				Console.WriteLine(problem.GetType().Name + ": Solved " + solved + "/20");
+				Console.WriteLine("=====================================================");
+			}
 
 			Console.ReadKey();
 		}

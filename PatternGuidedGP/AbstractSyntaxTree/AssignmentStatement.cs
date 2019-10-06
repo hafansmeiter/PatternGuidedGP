@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class AssignmentStatement<T> : Statement {
+		public override string Description => "=";
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
 		public override int RequiredTreeDepth => 2;
@@ -17,7 +19,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		public IdentifierExpression<T> Variable => Children[0] as IdentifierExpression<T>;
 		public Expression<T> Expression => Children[1] as Expression<T>;
-
 
 		protected override CSharpSyntaxNode GenerateSyntax() {
 			return SyntaxFactory.ExpressionStatement(
@@ -33,6 +34,14 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 				return true;
 			} else {
 				return child.IsVariable;
+			}
+		}
+
+		public override TreeNodeFilter GetChildSelectionFilter(int childIndex) {
+			if (childIndex == 0) {
+				return (nodes) => nodes.Where(node => node.IsVariable);
+			} else {
+				return base.GetChildSelectionFilter(childIndex);
 			}
 		}
 	}

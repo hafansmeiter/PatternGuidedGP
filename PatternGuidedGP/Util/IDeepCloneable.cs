@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatternGuidedGP.GP.Operators {
-	interface IInitializer {
-		void Initialize(Population population, Type rootType);
+namespace PatternGuidedGP.Util {
+	interface IDeepCloneable {
+		object DeepClone();
 	}
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolTrueExpression : NullaryExpression<bool> {
+		public override string Description => "true";
 		public override bool IsVariable => false;
 
 		protected override CSharpSyntaxNode GenerateSyntax() {

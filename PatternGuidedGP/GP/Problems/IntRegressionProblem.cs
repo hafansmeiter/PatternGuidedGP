@@ -14,6 +14,8 @@ namespace PatternGuidedGP.GP.Problems {
 	abstract class IntRegressionProblem : Problem {
 
 		public override Type RootType => typeof(int);
+		public override Type ReturnType => typeof(int);
+		public override Type ParameterType => typeof(int);
 
 		public IntRegressionProblem(int parameterCount) : base(parameterCount) {
 		}
@@ -24,10 +26,6 @@ namespace PatternGuidedGP.GP.Problems {
 				new IntMultiplicationExpression(),
 				new IntDivisionExpression(),
 				new IntModuloExpression());
-
-			for (int i = 0; i < _parameterCount; i++) {
-				repository.Add(new IntIdentifierExpression(((char)('a' + i)).ToString()));
-			}
 		}
 
 		protected override CompilationUnitSyntax GetCodeTemplate() {
@@ -74,6 +72,10 @@ namespace PatternGuidedGP.GP.Problems {
 								)
 							))))
 				.NormalizeWhitespace();
+		}
+
+		protected override TestSuite GetTestSuite() {
+			throw new NotImplementedException();
 		}
 	}
 }

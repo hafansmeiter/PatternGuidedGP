@@ -7,6 +7,8 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class IntModuloExpression : BinaryExpression<int, int, int> {
+		public override string Description => "%";
+
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.ModuloExpression;
 		}

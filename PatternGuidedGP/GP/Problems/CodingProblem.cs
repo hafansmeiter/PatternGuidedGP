@@ -19,6 +19,18 @@ namespace PatternGuidedGP.GP.Problems {
 		}
 
 		protected override void AddTreeNodes(TreeNodeRepository repository) {
+			base.AddTreeNodes(repository);
+			if (ReturnType == typeof(int)) {
+				repository.Add(new IntIdentifierExpression("ret"));
+			} else {
+				repository.Add(new BoolIdentifierExpression("ret"));
+			}
+			if (ReturnType == typeof(int) || ParameterType == typeof(int)) {
+				repository.Add(new IntAssignmentStatement());
+			}
+			if (ReturnType == typeof(bool) || ParameterType == typeof(bool)) {
+				repository.Add(new BoolAssignmentStatement());
+			}
 			repository.Add(new BoolAndExpression(),
 				new BoolFalseExpression(),
 				new BoolNotExpression(),
@@ -38,7 +50,6 @@ namespace PatternGuidedGP.GP.Problems {
 				new IntMultiplicationExpression(),
 				new IntDivisionExpression(),
 				new IntModuloExpression(),
-				new BlockStatement(),
 				new IfStatement(),
 				new ForCountStatement());
 		}

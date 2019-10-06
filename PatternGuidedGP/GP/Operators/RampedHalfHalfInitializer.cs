@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using PatternGuidedGP.AbstractSyntaxTree;
+﻿using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using System;
 using System.Collections.Generic;
@@ -12,20 +11,20 @@ namespace PatternGuidedGP.GP.Operators {
 		private KozaTreeGenerator _generatorFull = new KozaTreeGeneratorFull();
 		private KozaTreeGenerator _generatorGrow = new KozaTreeGeneratorGrow();
 
-		public RampedHalfHalfInitializer(TreeNodeRepository repository) : base(repository) {
+		public RampedHalfHalfInitializer(int maxTreeDepth, TreeNodeRepository repository) : base(maxTreeDepth, repository) {
 		}
 
-		public override void Initialize(Population population, int maxTreeDepth, Type rootType) {
+		public override void Initialize(Population population, Type rootType) {
 			_generatorFull.TreeNodeRepository = TreeNodeRepository;
 			_generatorGrow.TreeNodeRepository = TreeNodeRepository;
 			for (int i = 0; i < population.Size; i++) {
-				SyntaxNode syntax;
+				SyntaxTree syntaxTree;
 				if (i % 2 == 0) {
-					syntax = _generatorFull.GetSyntaxTree(maxTreeDepth, rootType);
+					syntaxTree = _generatorFull.GetSyntaxTree(MaxTreeDepth, rootType);
 				} else {
-					syntax = _generatorGrow.GetSyntaxTree(maxTreeDepth, rootType);
+					syntaxTree = _generatorGrow.GetSyntaxTree(MaxTreeDepth, rootType);
 				}
-				Individual individual = new Individual(syntax);
+				Individual individual = new Individual(syntaxTree);
 				population.Add(individual);
 			}
 		}

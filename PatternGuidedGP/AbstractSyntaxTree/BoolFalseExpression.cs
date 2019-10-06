@@ -7,6 +7,8 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolFalseExpression : NullaryExpression<bool> {
+		public override string Description => "false";
+
 		public override bool IsVariable => false;
 
 		protected override CSharpSyntaxNode GenerateSyntax() {

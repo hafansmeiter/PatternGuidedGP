@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using System;
@@ -10,19 +10,18 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.GP.Operators {
 	class RandomSubtreeMutator : MutatorBase {
 
-		public RandomSubtreeMutator(ISyntaxTreeProvider provider, int maxTreeDepth, int maxMutationTreeDepth) 
+		public RandomSubtreeMutator(ISyntaxProvider provider, int maxTreeDepth, int maxMutationTreeDepth) 
 			: base(provider, maxTreeDepth, maxMutationTreeDepth) {
 		}
 
 		public override bool Mutate(Individual individual) {
-			SyntaxNode root = individual.Syntax;
-			SyntaxNode exchangeNode = root.RandomNode();
-			Type nodeType = exchangeNode.GetNodeType();
+			SyntaxTree tree = individual.SyntaxTree;
+			TreeNode exchangeNode = tree.GetRandomNode();
+			Type nodeType = exchangeNode.Type;
 
-			SyntaxNode newNode = SyntaxTreeProvider.GetSyntaxTree(MaxMutationTreeDepth, nodeType);
-			SyntaxNode newTree = root.ReplaceNode(exchangeNode, newNode);
-			if (newTree.GetTreeHeight() <= MaxTreeDepth) {
-				individual.Syntax = newTree;
+			TreeNode newNode = SyntaxTreeProvider.GetSyntaxNode(MaxMutationTreeDepth, nodeType);
+			bool replaced = tree.ReplaceTreeNode(exchangeNode, newNode);
+			if (replaced && tree.Height <= MaxTreeDepth) {
 				return true;
 			}
 			return false;

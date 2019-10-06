@@ -9,6 +9,7 @@ using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class IfStatement : Statement {
+		public override string Description => "if";
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
 		public override int RequiredTreeDepth => 3;
@@ -22,11 +23,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public Statement IfBlock => Children[1] as Statement;
 		public Statement ElseBlock => Children[2] as Statement;
 
-
 		private Type[] _childTypes;
 
 		public override void Initialize() {
 			// randomly choose if else-clause is present
+			base.Initialize();
 			if (RandomValueStore.Instance.GetInt(2) == 0) {
 				HasElseClause = false;
 				_childTypes = new[] { typeof(bool), typeof(void) };

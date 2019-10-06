@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class ForCountStatement : Statement {
+		public override string Description => "for";
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
 		public override int RequiredTreeDepth => 3;
@@ -17,15 +18,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public Expression<int> Count => Children[0] as Expression<int>;
 		public Statement ContentBlock => Children[1] as Statement;
 
-		private static long id = 0;
-		private long _id;
-
-		public override void Initialize() {
-			_id = ++id;
-		}
-
 		protected override CSharpSyntaxNode GenerateSyntax() {
-			string indexName = "i" + _id;
+			string indexName = "i" + Id;
 			return SyntaxFactory.ForStatement(
 						SyntaxFactory.Block((StatementSyntax) ContentBlock.GetSyntaxNode()))
 					.WithDeclaration(

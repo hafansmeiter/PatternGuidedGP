@@ -9,9 +9,10 @@ using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BlockStatement : Statement {
+		public override string Description => "{}";
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
-		public override int RequiredTreeDepth => 0;
+		public override int RequiredTreeDepth => 3;
 		public override Type[] ChildTypes => _childTypes;
 		public override bool IsContainer => true;
 
@@ -20,6 +21,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		private Type[] _childTypes;
 
 		public override void Initialize() {
+			base.Initialize();
 			int childCount = RandomValueStore.Instance.GetInt(MaxChildCount) + 1;
 			_childTypes = new Type[childCount];
 			for (int i = 0; i < childCount; i++) {

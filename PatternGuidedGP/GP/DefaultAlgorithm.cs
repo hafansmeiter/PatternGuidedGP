@@ -14,31 +14,32 @@ namespace PatternGuidedGP.GP {
 		}
 
 		public override Individual Run(Problem problem) {
-			Initializer.Initialize(Population, MaxTreeDepth, problem.RootType);
-			Console.WriteLine("Generation 0:");
+			Initializer.Initialize(Population, problem.RootType);
+			Console.Write("Generation 0: ");
 			Individual solution = EvaluatePopulation(problem);
 			if (solution != null) {	// initial generation contains solution
 				return solution;
 			}
 			for (int i = 0; i < Generations; i++) {
 				Population = GetNextGeneration(Population);
-				Console.WriteLine("Generation {0}:", (i + 1));
+				Console.Write("Generation {0}: ", (i + 1));
 				solution = EvaluatePopulation(problem);
 				if (solution != null) {
 					return solution;
 				}
 			}
-			Console.WriteLine("No solution found. Returning best={0}", Population.GetFittest());
+			Console.WriteLine("No solution found. Returning best:\n{0}", Population.GetFittest());
 			return Population.GetFittest();
 		}
 
 		private Individual EvaluatePopulation(Problem problem) {
 			problem.Evaluate(Population);
 			Population.Sort();
-			Console.WriteLine("Best={0}, Fitness={1}, Avg={2}", Population.GetFittest(), Population.GetFittest().Fitness, Population.GetAverageFitness());
+			//Console.WriteLine("Best:\n{0}", Population.GetFittest());
+			Console.WriteLine("Best fitness: {0}, Avg: {1}", Population.GetFittest().Fitness, Population.GetAverageFitness());
 
 			if (IsSolutionFound()) {
-				Console.WriteLine("Solution found: {0}", Population.GetFittest());
+				Console.WriteLine("Solution found:\n{0}", Population.GetFittest());
 				return Population.GetFittest();
 			}
 			return null;

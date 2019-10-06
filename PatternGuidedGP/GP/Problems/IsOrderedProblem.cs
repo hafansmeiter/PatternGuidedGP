@@ -8,18 +8,17 @@ using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.GP.Tests;
 
 namespace PatternGuidedGP.GP.Problems {
-	class AllEqualProblem : CodingProblem {
+	class IsOrderedProblem : CodingProblem {
 		public override Type ReturnType => typeof(bool);
 		public override Type ParameterType => typeof(int);
 
-		public AllEqualProblem(int parameterCount) : base(parameterCount) {
+		public IsOrderedProblem(int parameterCount) : base(parameterCount) {
 		}
 
 		protected override TestSuite GetTestSuite() {
 			return new IntTestSuiteGenerator().Create(ParameterCount, parameters => {
-				int value = (int) parameters[0];
-				for (int i = 1; i < parameters.Length; i++) {
-					if (value != (int) parameters[i]) {
+				for (int i = 0; i < parameters.Length - 1; i++) {
+					if ((int) parameters[i] > (int) parameters[i + 1]) {
 						return false;
 					}
 				}
