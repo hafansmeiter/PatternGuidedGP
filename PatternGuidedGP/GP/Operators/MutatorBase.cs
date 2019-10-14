@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Operators {
 	abstract class MutatorBase : IMutator {
-		public ISyntaxProvider SyntaxTreeProvider { get; }
+		public ISyntaxTreeProvider SyntaxTreeProvider { get; }
 		public int MaxMutationTreeDepth { get; set; }
 		public int MaxTreeDepth { get; set; }
 
-		public MutatorBase(ISyntaxProvider provider, int maxTreeDepth, int maxMutationTreeDepth) {
+		public MutatorBase(ISyntaxTreeProvider provider, int maxTreeDepth, int maxMutationTreeDepth) {
 			SyntaxTreeProvider = provider;
 			MaxTreeDepth = maxTreeDepth;
 			MaxMutationTreeDepth = maxMutationTreeDepth;

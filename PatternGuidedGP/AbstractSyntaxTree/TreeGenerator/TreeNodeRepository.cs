@@ -52,8 +52,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 			private TreeNodeDictionary _nonTerminals = new TreeNodeDictionary();
 			private TreeNodeDictionary _any = new TreeNodeDictionary();
 
-			private double _variableRatio = 0.7;
-
 			public void Add(TreeNode treeNode) {
 				if (treeNode.IsTerminal) {
 					if (treeNode.IsVariable) {

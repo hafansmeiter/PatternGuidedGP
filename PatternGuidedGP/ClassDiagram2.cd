@@ -1,0 +1,463 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Classes for defining abstract syntax trees. &#xD;&#xA;Nodes of Abstract Syntax Trees generate corresponding Roslyn syntax nodes.">
+    <Position X="27.665" Y="6.75" Height="0.958" Width="3.002" />
+  </Comment>
+  <Comment CommentText="BinaryExpressions: +, -, /, *, %, %%, ||, ^, &gt;, &lt;, &gt;=, &lt;=, ==, !=">
+    <Position X="34.982" Y="10.369" Height="0.75" Width="2.821" />
+  </Comment>
+  <Comment CommentText="UnaryExpression: !">
+    <Position X="38.028" Y="10.369" Height="0.734" Width="2.521" />
+  </Comment>
+  <Comment CommentText="Subtrees are either provided by a pool of subtrees or generated randomly (by Koza's algorithms).&#xD;&#xA;Pools and generators are used by initializers, mutation- and crossover operators.">
+    <Position X="16.001" Y="7.266" Height="0.75" Width="3.911" />
+  </Comment>
+  <Comment CommentText="Random operators are used in the standard GP algorithm.">
+    <Position X="19.552" Y="3.344" Height="0.49" Width="1.981" />
+  </Comment>
+  <Comment CommentText="Competent geometric operators are used for semantic backtracking.">
+    <Position X="16.521" Y="0.635" Height="0.49" Width="2.45" />
+  </Comment>
+  <Comment CommentText="A compiler compiles the abstract syntax tree into C# source code in order to perform the test runs.">
+    <Position X="17.313" Y="9.458" Height="0.75" Width="2.19" />
+  </Comment>
+  <Comment CommentText="NullaryExpression: Identifiers, Constants">
+    <Position X="40.831" Y="11.729" Height="0.75" Width="1.7" />
+  </Comment>
+  <Comment CommentText="MDL = Minimum Description Length.&#xD;&#xA;Used for PANGEA fitness evaluation.">
+    <Position X="16.987" Y="16.188" Height="0.792" Width="2.502" />
+  </Comment>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.AssignmentStatement&lt;T&gt;" Collapsed="true">
+    <Position X="27.5" Y="9.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAIgAAAAAAABAIAAABAAAAAgAAQAQAQAAQg=</HashCode>
+      <FileName>AbstractSyntaxTree\AssignmentStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.BinaryExpression&lt;TResult, TLeft, TRight&gt;" Collapsed="true">
+    <Position X="35" Y="9.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAIAAAAAAAAAgCACAQAQAAQA=</HashCode>
+      <FileName>AbstractSyntaxTree\BinaryExpression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.Expression&lt;TResult&gt;" Collapsed="true">
+    <Position X="35.75" Y="8" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>AbstractSyntaxTree\Expression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.ForCountStatement" Collapsed="true">
+    <Position X="32.75" Y="9.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAISAAAAAAAAgAAAAQAQAAQA=</HashCode>
+      <FileName>AbstractSyntaxTree\ForCountStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.IdentifierExpression&lt;T&gt;" Collapsed="true">
+    <Position X="40.75" Y="10.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAIQAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>AbstractSyntaxTree\IdentifierExpression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.IfStatement" Collapsed="true">
+    <Position X="30.25" Y="9.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACiAQQAhAAAAIAAAAAAAAAgAAAAQAQAAQA=</HashCode>
+      <FileName>AbstractSyntaxTree\IfStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.NullaryExpression&lt;TResult&gt;" Collapsed="true">
+    <Position X="40.75" Y="9.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAQAQAAAA=</HashCode>
+      <FileName>AbstractSyntaxTree\NullaryExpression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.Statement" Collapsed="true">
+    <Position X="30.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>AbstractSyntaxTree\Statement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.SyntaxTree" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="28.75" Y="5.5" Width="1.5" />
+    <AssociationLine Name="Root" Type="PatternGuidedGP.AbstractSyntaxTree.TreeNode">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.802" Y="0.678" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ARAAEAAABAAAACgFAAAAAAEAEIACAAAAAAAAAAAAABA=</HashCode>
+      <FileName>AbstractSyntaxTree\SyntaxTree.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Root" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.TreeNode" Collapsed="true">
+    <Position X="33.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCAAIAAAAgEQAEgAAFQIAAAJAAAIAgAQAAQAUAATg=</HashCode>
+      <FileName>AbstractSyntaxTree\TreeNode.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.UnaryExpression&lt;TResult, TChild&gt;" Collapsed="true">
+    <Position X="38" Y="9.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAQAAAAIAAAAAAAAAgAAAAQAQAAQA=</HashCode>
+      <FileName>AbstractSyntaxTree\UnaryExpression.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.Pool.DefaultSubTreePool" Collapsed="true">
+    <Position X="17" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AbstractSyntaxTree\Pool\DefaultSubTreePool.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.TreeGenerator.KozaTreeGenerator" Collapsed="true">
+    <Position X="22" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAoAAAAAAAQAAAAAAIAAAAAAAAAQAAAAAAAAEAA=</HashCode>
+      <FileName>AbstractSyntaxTree\TreeGenerator\KozaTreeGenerator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.TreeGenerator.KozaTreeGeneratorFull" Collapsed="true">
+    <Position X="20.75" Y="6.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AbstractSyntaxTree\TreeGenerator\KozaTreeGeneratorFull.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.AbstractSyntaxTree.TreeGenerator.KozaTreeGeneratorGrow" Collapsed="true">
+    <Position X="23" Y="6.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AbstractSyntaxTree\TreeGenerator\KozaTreeGeneratorGrow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.Compiler.CSharp.CSharpCompiler" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAEA=</HashCode>
+      <FileName>Compiler\CSharp\CSharpCompiler.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PatternGuidedGP.GP.DefaultAlgorithm" Collapsed="true">
+    <Position X="26.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgACAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>GP\DefaultAlgorithm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Individual" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="28.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAgAAAAAAQEiAAAAAQAAEAAAIAAAAAAAAAAAAI=</HashCode>
+      <FileName>GP\Individual.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SyntaxTree" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Population" Collapsed="true">
+    <Position X="28.75" Y="2.5" Width="1.5" />
+    <AssociationLine Name="Individuals" Type="PatternGuidedGP.GP.Individual">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.06" Y="0.297" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAABBgAAAAAAQAAACEAAAAAAAAACAAAAAAAA=</HashCode>
+      <FileName>GP\Population.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Individuals" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Operators.RampedHalfHalfInitializer" Collapsed="true">
+    <Position X="27.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>GP\Operators\RampedHalfHalfInitializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Operators.RandomSubtreeCrossover" Collapsed="true">
+    <Position X="19.5" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>GP\Operators\RandomSubtreeCrossover.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Operators.RandomSubtreeMutator" Collapsed="true">
+    <Position X="19.5" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>GP\Operators\RandomSubtreeMutator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Operators.TournamentSelector" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="19.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>GP\Operators\TournamentSelector.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Problems.AllEqualProblem" Collapsed="true">
+    <Position X="31.75" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAAAEAAA=</HashCode>
+      <FileName>GP\Problems\AllEqualProblem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Problems.BoolClassificationProblem" Collapsed="true">
+    <Position X="22.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABIAAAAAAAAAAAAAAAAAgAAAAAAAAAEAAQ=</HashCode>
+      <FileName>GP\Problems\BoolClassificationProblem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Problems.CodingProblem" Collapsed="true">
+    <Position X="26" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAQ=</HashCode>
+      <FileName>GP\Problems\CodingProblem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Problems.ContainsFirstProblem" Collapsed="true">
+    <Position X="20.5" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAAAEAAA=</HashCode>
+      <FileName>GP\Problems\ContainsFirstProblem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Problems.CountZeroesProblem" Collapsed="true">
+    <Position X="22.75" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAAAEAAA=</HashCode>
+      <FileName>GP\Problems\CountZeroesProblem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Problems.IntRegressionProblem" Collapsed="true">
+    <Position X="29.25" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABIAAAAAAAAAAAAAAAAAgAAAAAgAAAEAAQ=</HashCode>
+      <FileName>GP\Problems\IntRegressionProblem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Problems.IsOrderedProblem" Collapsed="true">
+    <Position X="25" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAAAEAAA=</HashCode>
+      <FileName>GP\Problems\IsOrderedProblem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Problems.MajorityProblem" Collapsed="true">
+    <Position X="27.25" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAAAEAAA=</HashCode>
+      <FileName>GP\Problems\MajorityProblem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Problems.MaximumProblem" Collapsed="true">
+    <Position X="29.5" Y="15" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAgAAAEAAA=</HashCode>
+      <FileName>GP\Problems\MaximumProblem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Problems.Problem" Collapsed="true">
+    <Position X="26" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAoEAAABIAAIAAAAAAgAAAQAAAgAQAAAgAAAEAAQ=</HashCode>
+      <FileName>GP\Problems\Problem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TestSuite" />
+      <Property Name="FitnessEvaluator" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Tests.TestCase" Collapsed="true">
+    <Position X="31.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAQAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GP\Tests\TestCase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.Tests.TestSuite" Collapsed="true">
+    <Position X="31.5" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GP\Tests\TestSuite.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="TestCases" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="PatternGuidedGP.GPExtensions.CompetentGeometricCrossover" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.5" Y="1.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>GPExtensions\CompetentGeometricCrossover.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PatternGuidedGP.GPExtensions.CompetentGeometricMutator" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.5" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>GPExtensions\CompetentGeometricMutator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PatternGuidedGP.GPExtensions.RecordSubTreePool" Collapsed="true">
+    <Position X="18.25" Y="6.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GPExtensions\RecordSubTreePool.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.Pangea.MDLFitnessEvaluator" Collapsed="true">
+    <Position X="17" Y="15.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAEQAAAAAAAAAAAABAAAgACAAAAAAAABAAEAAAAAAA=</HashCode>
+      <FileName>Pangea\MDLFitnessEvaluator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.Pangea.MDLSubTreePool" Collapsed="true">
+    <Position X="16" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pangea\MDLSubTreePool.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.AlgorithmBase" Collapsed="true">
+    <Position X="25.5" Y="2.5" Width="1.5" />
+    <AssociationLine Name="Crossover" Type="PatternGuidedGP.GP.Operators.ICrossover" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="25.5" Y="2.562" />
+        <Point X="25.125" Y="2.562" />
+        <Point X="25.125" Y="1.781" />
+        <Point X="23.5" Y="1.781" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Selector" Type="PatternGuidedGP.GP.Operators.ISelector" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="25.688" Y="2.5" />
+        <Point X="25.688" Y="1.933" />
+        <Point X="25.375" Y="1.933" />
+        <Point X="25.375" Y="0.781" />
+        <Point X="23.5" Y="0.781" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Runs" Type="PatternGuidedGP.GP.Problems.Problem" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="25.938" Y="3.062" />
+        <Point X="25.938" Y="11.875" />
+        <Point X="26.75" Y="11.875" />
+        <Point X="26.75" Y="12.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.946" Y="1.417" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AIEAAAAwAAAAEAAIAAACACAAgAAAAAAAAAAAAIgABAI=</HashCode>
+      <FileName>GP\AlgorithmBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Crossover" />
+      <Property Name="Initializer" />
+      <Property Name="Population" />
+      <Property Name="Selector" />
+      <Property Name="Mutator" />
+      <Property Name="Runs" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.DefaultFitnessEvaluator" Collapsed="true">
+    <Position X="17" Y="13.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GP\DefaultFitnessEvaluator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PatternGuidedGP.GP.ProgramFitnessEvaluator" Collapsed="true">
+    <Position X="17" Y="12.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAEAACAgBBAAAgAQAAAAAAQAhAAAAAAAAAg=</HashCode>
+      <FileName>GP\ProgramFitnessEvaluator.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Compiler" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator.CSharp.ICSharpSyntaxGenerator" Collapsed="true">
+    <Position X="31" Y="6.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AbstractSyntaxTree\SyntaxGenerator\CSharp\ICSharpSyntaxGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PatternGuidedGP.AbstractSyntaxTree.TreeGenerator.ISyntaxTreeProvider" Collapsed="true">
+    <Position X="19.5" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AbstractSyntaxTree\TreeGenerator\ISyntaxTreeProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PatternGuidedGP.Compiler.ICompiler" Collapsed="true">
+    <Position X="17.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Compiler\ICompiler.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PatternGuidedGP.GP.IFitnessEvaluator" Collapsed="true">
+    <Position X="19.75" Y="12.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GP\IFitnessEvaluator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PatternGuidedGP.GP.Operators.ICrossover" Collapsed="true">
+    <Position X="22" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>GP\Operators\ICrossover.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PatternGuidedGP.GP.Operators.IInitializer" Collapsed="true">
+    <Position X="25.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GP\Operators\IInitializer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PatternGuidedGP.GP.Operators.IMutator" Collapsed="true">
+    <Position X="22" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>GP\Operators\IMutator.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PatternGuidedGP.GP.Operators.ISelector" Collapsed="true">
+    <Position X="22" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>GP\Operators\ISelector.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

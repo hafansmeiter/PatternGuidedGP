@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	abstract class BinaryExpression<TResult, TLeft, TRight> : Expression<TResult>, ISyntaxKindProvider {
+	abstract class BinaryExpression<TResult, TLeft, TRight> : Expression<TResult> {
 		public override Type[] ChildTypes => new[] { typeof(TLeft), typeof(TRight) };
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
@@ -19,9 +19,9 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		protected override CSharpSyntaxNode GenerateSyntax() {
 			return SyntaxFactory.ParenthesizedExpression(
-				SyntaxFactory.BinaryExpression(GetKind(), 
-					(ExpressionSyntax) Left.GetSyntaxNode(), 
-					(ExpressionSyntax) Right.GetSyntaxNode()));
+				SyntaxFactory.BinaryExpression(GetKind(),
+					(ExpressionSyntax)Left.GetSyntaxNode(),
+					(ExpressionSyntax)Right.GetSyntaxNode()));
 		}
 
 		public abstract SyntaxKind GetKind();

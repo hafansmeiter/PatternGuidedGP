@@ -13,7 +13,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
 		public override int RequiredTreeDepth => 3;
-		public override bool IsContainer => false;
 		public override Type[] ChildTypes {
 			get => _childTypes;
 		}
@@ -40,11 +39,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		protected override CSharpSyntaxNode GenerateSyntax() {
 			if (HasElseClause) {
 				return SyntaxFactory.IfStatement((ExpressionSyntax) Condition.GetSyntaxNode(), 
-					(StatementSyntax) IfBlock.GetSyntaxNode())
-				.WithElse(SyntaxFactory.ElseClause((StatementSyntax) ElseBlock.GetSyntaxNode()));
+					SyntaxFactory.Block((StatementSyntax) IfBlock.GetSyntaxNode()))
+				.WithElse(SyntaxFactory.ElseClause(SyntaxFactory.Block((StatementSyntax) ElseBlock.GetSyntaxNode())));
 			} else {
 				return SyntaxFactory.IfStatement((ExpressionSyntax)Condition.GetSyntaxNode(),
-					(StatementSyntax)IfBlock.GetSyntaxNode());
+					SyntaxFactory.Block((StatementSyntax)IfBlock.GetSyntaxNode()));
 			}
 		}
 	}

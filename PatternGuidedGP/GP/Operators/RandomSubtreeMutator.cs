@@ -10,18 +10,19 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.GP.Operators {
 	class RandomSubtreeMutator : MutatorBase {
 
-		public RandomSubtreeMutator(ISyntaxProvider provider, int maxTreeDepth, int maxMutationTreeDepth) 
+		public RandomSubtreeMutator(ISyntaxTreeProvider provider, int maxTreeDepth, int maxMutationTreeDepth) 
 			: base(provider, maxTreeDepth, maxMutationTreeDepth) {
 		}
 
 		public override bool Mutate(Individual individual) {
-			SyntaxTree tree = individual.SyntaxTree;
+			SyntaxTree tree = (SyntaxTree) individual.SyntaxTree.DeepClone();
 			TreeNode exchangeNode = tree.GetRandomNode();
 			Type nodeType = exchangeNode.Type;
 
 			TreeNode newNode = SyntaxTreeProvider.GetSyntaxNode(MaxMutationTreeDepth, nodeType);
 			bool replaced = tree.ReplaceTreeNode(exchangeNode, newNode);
 			if (replaced && tree.Height <= MaxTreeDepth) {
+				individual.SyntaxTree = tree;
 				return true;
 			}
 			return false;

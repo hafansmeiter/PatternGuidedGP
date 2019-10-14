@@ -2,6 +2,7 @@
 using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.GP.Tests;
+using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,12 +26,12 @@ namespace PatternGuidedGP.GP.Problems {
 			CodeTemplate = GetCodeTemplate();
 			AddTreeNodes(TreeNodeRepository);
 
-			Console.WriteLine(GetType().Name + " test suite:");
+			Logger.WriteLine(4, GetType().Name + " test suite:");
 			foreach (var test in TestSuite.TestCases) {
 				foreach (var param in test.Parameter) {
-					Console.Write(param + " ");
+					Logger.WriteLine(4, param + " ");
 				}
-				Console.WriteLine(test.Result);
+				Logger.WriteLine(4, test.Result.ToString());
 			}
 		}
 
@@ -59,8 +60,9 @@ namespace PatternGuidedGP.GP.Problems {
 
 		public void Evaluate(Population population) {
 			foreach (var individual in population.Individuals) {
+				Logger.WriteLine(4, "Individual tree height: " + individual.SyntaxTree.Height);
 				if (!individual.FitnessEvaluated) {
-					double fitness = FitnessEvaluator.Evaluate(individual, TestSuite, CodeTemplate);
+					double fitness = FitnessEvaluator.Evaluate(individual, this);
 					individual.Fitness = fitness;
 				}
 			}

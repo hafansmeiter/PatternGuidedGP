@@ -2,43 +2,73 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PatternGuidedGP.Compiler;
+using PatternGuidedGP.GP.Problems;
 using PatternGuidedGP.GP.Tests;
+using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP {
-	class ProgramFitnessEvaluator : IFitnessEvaluator {
+	abstract class ProgramFitnessEvaluator : IFitnessEvaluator {
 
 		public ICompiler Compiler { get; set; }
 
-		public double Evaluate(Individual individual, TestSuite testSuite, CompilationUnitSyntax template) {
-			CompilationUnitSyntax compilationUnit = CreateCompilationUnit(individual.SyntaxTree.Root.GetSyntaxNode(), 
+		public virtual double Evaluate(Individual individual, Problem problem) {
+			TestSuite testSuite = problem.TestSuite;
+			CompilationUnitSyntax compilationUnit = CreateCompilationUnit(individual, 
 				testSuite.TestCases.First(),
-				template);
-			//Console.WriteLine("Run test method:");
-			//Console.WriteLine(compilationUnit.ToString());
+				problem.CodeTemplate);
+			Logger.WriteLine(4, "Run test method:");
+			Logger.WriteLine(4, compilationUnit.ToString());
 			MethodInfo method = GetTestMethod(compilationUnit);
 
-			int positive = 0;
-			foreach (TestCase test in testSuite.TestCases) {
-				object result;
+			PrepareTestRuns(testSuite);
+
+			int testCaseCount = testSuite.TestCases.Count;
+			var results = new object[testSuite.TestCases.Count];
+			for (int i = 0; i < testCaseCount; i++) {
+				TestCase test = testSuite.TestCases[i];
 				try {
-					result = method.Invoke(null, test.Parameter);
+					results[i] = RunTestCase(method, test);
 
 					//Console.WriteLine("Test case: " + test.ToString() + ", GP result=" + result);
-					if (result.Equals(test.Result)) {
-						positive++;
-					}
-				} catch (Exception e) {
+				} catch (Exception ex) {
+					//Logger.WriteLine(4, "Exception: " + ex.GetType().Name);
 					// Code does not run properly, e.g. DivideByZeroException
 					// Count as negative run
 				}
+				TestRunFinished(test, results[i]);
 			}
-			return 1 - ((double) positive / (double) testSuite.TestCases.Count);
+			return CalculateFitness(individual, testSuite, results);
+		}
+
+		protected abstract double CalculateFitness(Individual individual, TestSuite testSuite, object[] results);
+
+		protected virtual void PrepareTestRuns(TestSuite testSuite) {
+		}
+
+		protected virtual void TestRunFinished(TestCase testCase, object result) {
+		}
+
+		protected virtual object RunTestCase(MethodInfo method, TestCase test) {
+			return method.Invoke(null, test.Parameter);
+		}
+
+		protected virtual CompilationUnitSyntax CreateCompilationUnit(Individual individual, TestCase sample, CompilationUnitSyntax template) {
+			var syntax = individual.SyntaxTree.Root.GetSyntaxNode();
+			return CreateCompilationUnit(syntax, sample, template);
+		}
+
+		protected virtual CompilationUnitSyntax CreateCompilationUnit(SyntaxNode syntax, TestCase sample, CompilationUnitSyntax template) {
+			var newSyntax = ReplacePlaceholder(template, syntax);
+			newSyntax = ReplaceParameterList(newSyntax, sample);
+			newSyntax = ReplaceReturnType(newSyntax, sample);
+			return newSyntax.NormalizeWhitespace();
 		}
 
 		private MethodInfo GetTestMethod(CompilationUnitSyntax compilationUnit) {
@@ -48,34 +78,27 @@ namespace PatternGuidedGP.GP {
 			return method;
 		}
 
-		private CompilationUnitSyntax CreateCompilationUnit(SyntaxNode syntax, TestCase testCase, CompilationUnitSyntax template) {
-			var newSyntax = ReplacePlaceholder(template, syntax);
-			newSyntax = ReplaceParameterList(newSyntax, testCase);
-			newSyntax = ReplaceReturnType(newSyntax, testCase);
-			return newSyntax.NormalizeWhitespace();
-		}
-
 		private CompilationUnitSyntax ReplacePlaceholder(CompilationUnitSyntax template, SyntaxNode syntax) {
 			var returnValueNode = template.GetAnnotatedNodes("SyntaxPlaceholder").First();
 			return template.ReplaceNode(returnValueNode, syntax);
 		}
 
-		private CompilationUnitSyntax ReplaceParameterList(CompilationUnitSyntax template, TestCase test) {
+		private CompilationUnitSyntax ReplaceParameterList(CompilationUnitSyntax template, TestCase sample) {
 			var parameterListNode = template.GetAnnotatedNodes("ParameterList").First();
-			var parameterList = new ParameterSyntax[test.Parameter.Length];
+			var parameterList = new ParameterSyntax[sample.Parameter.Length];
 			for (int i = 0; i < parameterList.Length; i++) {
 				parameterList[i] = SyntaxFactory.Parameter(SyntaxFactory.Identifier(((char)('a' + i)).ToString()))
 					.WithType(SyntaxFactory.PredefinedType(
-						SyntaxFactory.Token(GetTypeSyntax(test.Parameter[i].GetType()))));
+						SyntaxFactory.Token(GetTypeSyntax(sample.Parameter[i].GetType()))));
 			}
 			return template.ReplaceNode(parameterListNode, SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(parameterList)));
 		}
 
-		private CompilationUnitSyntax ReplaceReturnType(CompilationUnitSyntax template, TestCase test) {
+		private CompilationUnitSyntax ReplaceReturnType(CompilationUnitSyntax template, TestCase sample) {
 			SyntaxNode returnTypeNode;
 			while ((returnTypeNode = template.GetAnnotatedNodes("ReturnType").FirstOrDefault()) != null) {
 				template = template.ReplaceNode(returnTypeNode, SyntaxFactory.PredefinedType(
-					SyntaxFactory.Token(GetTypeSyntax(test.Result.GetType()))));
+					SyntaxFactory.Token(GetTypeSyntax(sample.Result.GetType()))));
 			}
 			return template;
 		}

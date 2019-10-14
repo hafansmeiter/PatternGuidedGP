@@ -21,14 +21,10 @@ namespace PatternGuidedGP.GP.Problems {
 		protected override void AddTreeNodes(TreeNodeRepository repository) {
 			base.AddTreeNodes(repository);
 			if (ReturnType == typeof(int)) {
-				repository.Add(new IntIdentifierExpression("ret"));
-			} else {
-				repository.Add(new BoolIdentifierExpression("ret"));
-			}
-			if (ReturnType == typeof(int) || ParameterType == typeof(int)) {
+				repository.Add(new IntIdentifierExpression("ret", true));
 				repository.Add(new IntAssignmentStatement());
-			}
-			if (ReturnType == typeof(bool) || ParameterType == typeof(bool)) {
+			} else {
+				repository.Add(new BoolIdentifierExpression("ret", true));
 				repository.Add(new BoolAssignmentStatement());
 			}
 			repository.Add(new BoolAndExpression(),
@@ -56,10 +52,18 @@ namespace PatternGuidedGP.GP.Problems {
 
 		protected override CompilationUnitSyntax GetCodeTemplate() {
 			return SyntaxFactory.CompilationUnit()
-				.WithUsings(
-					SyntaxFactory.SingletonList<UsingDirectiveSyntax>(
+				.WithUsings(SyntaxFactory.List<UsingDirectiveSyntax>(
+					new UsingDirectiveSyntax[]{
 						SyntaxFactory.UsingDirective(
-							SyntaxFactory.IdentifierName("System"))))
+							SyntaxFactory.IdentifierName("System")),
+						SyntaxFactory.UsingDirective(
+							SyntaxFactory.QualifiedName(
+								SyntaxFactory.IdentifierName("System"),
+								SyntaxFactory.IdentifierName("Reflection"))),
+						SyntaxFactory.UsingDirective(
+							SyntaxFactory.QualifiedName(
+								SyntaxFactory.IdentifierName("PatternGuidedGP"),
+								SyntaxFactory.IdentifierName("Pangea")))}))
 				.WithMembers(
 					SyntaxFactory.SingletonList<MemberDeclarationSyntax>(
 						SyntaxFactory.ClassDeclaration("ProblemClass")

@@ -12,7 +12,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
 		public override int RequiredTreeDepth => 3;
-		public override bool IsContainer => false;
 		public override Type[] ChildTypes => new[] { typeof(int), typeof(void) };
 
 		public Expression<int> Count => Children[0] as Expression<int>;

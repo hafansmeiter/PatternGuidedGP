@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PatternGuidedGP.Pangea;
 
 namespace PatternGuidedGP.Compiler.CSharp {
 	class CSharpCompiler : ICompiler {
@@ -27,15 +28,24 @@ namespace PatternGuidedGP.Compiler.CSharp {
 				new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
 			using (var ms = new MemoryStream()) {
-				compilation.Emit(ms);
-				Assembly assembly = Assembly.Load(ms.GetBuffer());
-				return assembly;
+				var compilationResult = compilation.Emit(ms);
+				if (compilationResult.Success) {
+					Assembly assembly = Assembly.Load(ms.GetBuffer());
+					return assembly;
+
+				} else {
+					foreach (var error in compilationResult.Diagnostics) {
+						Console.WriteLine(error.ToString());
+					}
+				}
+				return null;
 			}
 		}
 
 		private static IEnumerable<MetadataReference> GetAssemblyReferences() {
 			var references = new MetadataReference[] {
-				MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location)
+				MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location),
+				MetadataReference.CreateFromFile(typeof(ExecutionTraces).GetTypeInfo().Assembly.Location)
 			};
 			return references;
 		}

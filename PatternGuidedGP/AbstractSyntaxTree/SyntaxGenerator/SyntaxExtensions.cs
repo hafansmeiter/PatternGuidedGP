@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,15 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator {
 	static class SyntaxExtensions {
+		public static SyntaxNode FindNodeById(this CompilationUnitSyntax syntax, ulong id) {
+			return syntax.GetAnnotatedNodes("Id")  // syntax.GetAnnotatedNodes(new SyntaxAnnotation("Id", assignmentNode.Id.ToString())) does not work!
+					.Where(node => node.GetAnnotations("Id").First().Data.Equals(id.ToString())).First();
+		}
+
+		public static CompilationUnitSyntax InsertStatementBefore(this CompilationUnitSyntax syntax, SyntaxNode node, SyntaxNode nodeToAdd) {
+			return syntax.InsertNodesBefore(node, new[] { nodeToAdd });
+		}
+
 		public static Type GetNodeType(this SyntaxNode node) {
 			var annotation = node.GetAnnotations("Type").FirstOrDefault();
 			return annotation != null ? Type.GetType(annotation.Data) : null;

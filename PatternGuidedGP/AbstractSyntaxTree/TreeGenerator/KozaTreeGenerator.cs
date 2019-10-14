@@ -8,13 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
-	abstract class KozaTreeGenerator : ISyntaxProvider {
+	abstract class KozaTreeGenerator : ISyntaxTreeProvider {
 		public ITreeNodeRepository TreeNodeRepository { get; set; }
-
-		public SyntaxTree GetSyntaxTree(int maxDepth, Type type) {
-			var root = GetSyntaxNode(maxDepth, type);
-			return new SyntaxTree(root);
-		}
 
 		public TreeNode GetSyntaxNode(int maxDepth, Type type) {
 			var root = GetRootNode(type, maxDepth);

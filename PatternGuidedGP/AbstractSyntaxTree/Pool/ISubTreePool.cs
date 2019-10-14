@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatternGuidedGP.GP.Operators {
-	interface IMutator {
-
-		bool Mutate(Individual individual);
+namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
+	interface ISubTreePool {
 	}
 }

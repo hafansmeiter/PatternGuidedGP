@@ -18,13 +18,13 @@ namespace PatternGuidedGP.GP.Operators {
 			_generatorFull.TreeNodeRepository = TreeNodeRepository;
 			_generatorGrow.TreeNodeRepository = TreeNodeRepository;
 			for (int i = 0; i < population.Size; i++) {
-				SyntaxTree syntaxTree;
+				TreeNode root;
 				if (i % 2 == 0) {
-					syntaxTree = _generatorFull.GetSyntaxTree(MaxTreeDepth, rootType);
+					root = _generatorFull.GetSyntaxNode(MaxTreeDepth, rootType);
 				} else {
-					syntaxTree = _generatorGrow.GetSyntaxTree(MaxTreeDepth, rootType);
+					root = _generatorGrow.GetSyntaxNode(MaxTreeDepth, rootType);
 				}
-				Individual individual = new Individual(syntaxTree);
+				Individual individual = new Individual(new SyntaxTree(root));
 				population.Add(individual);
 			}
 		}

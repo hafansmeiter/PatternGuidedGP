@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	abstract class UnaryExpression<TResult, TChild> : Expression<TResult>, ISyntaxKindProvider {
+	abstract class UnaryExpression<TResult, TChild> : Expression<TResult> {
 		public override Type[] ChildTypes => new[] { typeof(TChild) };
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;

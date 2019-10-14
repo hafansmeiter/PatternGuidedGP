@@ -19,6 +19,14 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			Height = GetTreeHeight(Root);
 		}
 
+		public IEnumerable<TreeNode> GetTraceableNodes() {
+			return GetTreeNodes().Where(node => node.IsTraceable);
+		}
+
+		public TreeNode FindNodeById(ulong id) {
+			return GetTreeNodes().Where(node => node.Id == id).SingleOrDefault();
+		}
+
 		// return true, if newNode is allowed to be placed at oldNode's position
 		// false, otherwise
 		public bool ReplaceTreeNode(TreeNode oldNode, TreeNode newNode) {
@@ -47,18 +55,18 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 					maxChildHeight = height;
 				}
 			}
-			return maxChildHeight + (node.IsContainer ? 0 : 1);	// do not count container levels
+			return maxChildHeight + 1;
 		}
 
 		public TreeNode GetRandomNode() {
 			var nodesPerLevel = new MultiValueDictionary<int, TreeNode>();
-			GetNodeHeights(Root, nodesPerLevel, node => !node.IsContainer);
+			GetNodeHeights(Root, nodesPerLevel, node => true);
 			return UniformRandomSelect(nodesPerLevel);
 		}
 
 		public TreeNode GetRandomNode(Type type) {
 			var nodesPerLevel = new MultiValueDictionary<int, TreeNode>();
-			GetNodeHeights(Root, nodesPerLevel, node => !node.IsContainer && node.Type == type);
+			GetNodeHeights(Root, nodesPerLevel, node => node.Type == type);
 			return UniformRandomSelect(nodesPerLevel);
 		}
 
@@ -75,7 +83,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		private int GetNodeHeights(TreeNode node, 
 			MultiValueDictionary<int, TreeNode> heights,
 			Predicate<TreeNode> addNodePredicate) {
-			int nodeHeight = (node.IsContainer ? 0 : 1);	// do not container as nodes
+			int nodeHeight = 1;
 			int maxChildHeight = 0;
 			foreach (var child in node.Children) {
 				int height = GetNodeHeights(child, heights, addNodePredicate);
@@ -87,6 +95,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 				heights.Add(nodeHeight + maxChildHeight, node);
 			}
 			return nodeHeight + maxChildHeight;
+		}
+
+		public IEnumerable<TreeNode> GetTreeNodes() {
+			return Root.GetSubTreeNodes(true);
 		}
 
 		public object Clone() {
