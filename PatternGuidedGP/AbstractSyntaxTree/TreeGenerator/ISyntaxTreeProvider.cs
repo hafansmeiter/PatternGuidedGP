@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 	interface ISyntaxTreeProvider {
-
-		TreeNode GetSyntaxNode(int maxDepth, Type type);
+		TreeNode GetSyntaxTree(int maxDepth, Type type);
 	}
 }

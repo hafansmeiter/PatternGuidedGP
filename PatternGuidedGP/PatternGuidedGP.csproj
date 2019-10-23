@@ -92,8 +92,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractSyntaxTree\Pool\FitnessBasedSubTreePool.cs" />
+    <Compile Include="AbstractSyntaxTree\Pool\IPoolItemSelector.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\ISubTreePool.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\DefaultSubTreePool.cs" />
+    <Compile Include="AbstractSyntaxTree\Pool\RankBasedPoolItemSelector.cs" />
     <Compile Include="AbstractSyntaxTree\SyntaxTree.cs" />
     <Compile Include="AbstractSyntaxTree\AssignmentStatement.cs" />
     <Compile Include="AbstractSyntaxTree\BinaryExpression.cs" />
@@ -141,7 +144,7 @@
     <Compile Include="Compiler\ICompiler.cs" />
     <Compile Include="GPExtensions\CompetentGeometricCrossover.cs" />
     <Compile Include="GPExtensions\CompetentGeometricMutator.cs" />
-    <Compile Include="GPExtensions\RecordSubTreePool.cs" />
+    <Compile Include="GPExtensions\RecordBasedSubTreePool.cs" />
     <Compile Include="GP\AlgorithmBase.cs" />
     <Compile Include="GP\DefaultAlgorithm.cs" />
     <Compile Include="GP\DefaultFitnessEvaluator.cs" />
@@ -160,6 +163,7 @@
     <Compile Include="GP\Operators\RandomSubtreeCrossover.cs" />
     <Compile Include="GP\Operators\RandomSubtreeMutator.cs" />
     <Compile Include="GP\Population.cs" />
+    <Compile Include="GP\Problems\CompareProblem.cs" />
     <Compile Include="GP\Problems\MaximumProblem.cs" />
     <Compile Include="GP\Problems\IsOrderedProblem.cs" />
     <Compile Include="GP\Problems\CountZeroesProblem.cs" />
@@ -169,6 +173,8 @@
     <Compile Include="GP\Problems\CodingProblem.cs" />
     <Compile Include="GP\Problems\IntRegressionProblem.cs" />
     <Compile Include="GP\Problems\MajorityProblem.cs" />
+    <Compile Include="GP\Problems\MultiplexerProblem.cs" />
+    <Compile Include="GP\Problems\ParityProblem.cs" />
     <Compile Include="GP\Problems\Problem.cs" />
     <Compile Include="GP\RunConfiguration.cs" />
     <Compile Include="GP\Tests\BoolTestSuiteGenerator.cs" />

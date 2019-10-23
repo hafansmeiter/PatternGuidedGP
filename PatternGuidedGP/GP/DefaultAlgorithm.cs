@@ -28,7 +28,8 @@ namespace PatternGuidedGP.GP {
 					return solution;
 				}
 			}
-			Logger.WriteLine(1, string.Format("No solution found. Returning best:\n{0}", Population.GetFittest()));
+			Logger.WriteLine(1, "No solution found.");
+			Logger.WriteLine(2, string.Format("Returning best:\n{0}", Population.GetFittest()));
 			return Population.GetFittest();
 		}
 
@@ -39,7 +40,8 @@ namespace PatternGuidedGP.GP {
 			Logger.WriteLine(1, string.Format("Best fitness: {0}, Avg: {1}", Population.GetFittest().Fitness, Population.GetAverageFitness()));
 
 			if (IsSolutionFound()) {
-				Logger.WriteLine(1, string.Format("Solution found:\n{0}", Population.GetFittest()));
+				Logger.WriteLine(1, "Solution found.");
+				Logger.WriteLine(2, string.Format("Solution:\n{0}", Population.GetFittest()));
 				return Population.GetFittest();
 			}
 			return null;
@@ -51,9 +53,12 @@ namespace PatternGuidedGP.GP {
 		}
 
 		public override Population GetNextGeneration(Population population) {
-			Population nextGen = new Population(population.Size);
+			int size = population.Size;
+			Population nextGen = new Population(size);
 			nextGen.Add(population.GetFittest(Elitism).ToArray());
-			for (int i = 0; i < nextGen.Size - Elitism; i++) {
+			int duplicates = 0;
+			while (nextGen.IndividualCount < size) {
+			//for (int i = 0; i < nextGen.Size - Elitism; i++) {
 				Individual child = null;
 				// create child by crossover or copy from old population
 				if (RandomValueStore.Instance.GetDouble() < CrossoverRate) {
@@ -68,8 +73,13 @@ namespace PatternGuidedGP.GP {
 						child.FitnessEvaluated = false;
 					}
 				}
-				nextGen.Add(child);
+				if (!nextGen.ContainsIndividual(child)) {
+					nextGen.Add(child);
+				} else {
+					duplicates++;
+				}
 			}
+			Logger.WriteLine(1, "Generated duplicates: " + duplicates);
 			return nextGen;
 		}
 	}

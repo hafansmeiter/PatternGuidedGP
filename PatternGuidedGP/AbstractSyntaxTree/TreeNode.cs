@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	delegate IEnumerable<TreeNode> TreeNodeFilter(IEnumerable<TreeNode> nodes);
 
-	abstract class TreeNode : ICSharpSyntaxGenerator {
+	internal abstract class TreeNode : ICSharpSyntaxGenerator {
 		public abstract bool IsTerminal { get; }
 		public abstract bool IsVariable { get; }
 		public abstract int RequiredTreeDepth { get; }
@@ -27,7 +27,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public TreeNode Parent { get; set; }
 		public List<TreeNode> Children { get; private set; }
 
-
 		public ulong Id { get; private set; }
 
 		private static ulong _currentId = 0;
@@ -40,6 +39,25 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public void AddChild(TreeNode node) {
 			Children.Add(node);
 			node.Parent = this;
+		}
+
+		public int GetTreeHeight() {
+			return CalculateHeight(this);
+		}
+
+		private int CalculateHeight(TreeNode node) {
+			if (node.IsTerminal) {
+				return 1;
+			}
+
+			int maxChildHeight = 0;
+			foreach (var child in node.Children) {
+				int height = CalculateHeight(child);
+				if (height > maxChildHeight) {
+					maxChildHeight = height;
+				}
+			}
+			return maxChildHeight + 1;
 		}
 
 		// return true, if newNode is allowed to be placed at oldNode's position
@@ -80,6 +98,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		// interface ICSharpSyntaxGenerator
 		public virtual CSharpSyntaxNode GetSyntaxNode() {
+			// Annotations not required anymore
+			// as GP-operators work with ASTs
 			return GenerateSyntax().WithAdditionalAnnotations(
 				new SyntaxAnnotation("Id", Id.ToString()),
 				new SyntaxAnnotation("Node"),
@@ -131,12 +151,26 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			}
 		}
 
-		public override bool Equals(object obj) {
-			return base.Equals(obj);
-		}
-
-		public override int GetHashCode() {
-			return base.GetHashCode();
+		public bool EqualsTreeNode(TreeNode other) {
+			if (other == null) {
+				return false;
+			}
+			if (Children != null && other.Children == null
+				|| Children == null && other.Children != null
+				|| Children.Count != other.Children.Count) {
+				return false;
+			}
+			// use Description instead of GetType to compare types
+			// as this comparison considers identifier names.
+			if (Description != other.Description) {
+				return false;
+			}
+			for (int i = 0; i < Children.Count; i++) {
+				if (!Children[i].EqualsTreeNode(other.Children[i])) {
+					return false;
+				}
+			}
+			return true;
 		}
 	}
 }

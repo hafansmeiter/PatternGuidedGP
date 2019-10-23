@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PatternGuidedGP.AbstractSyntaxTree;
+using PatternGuidedGP.AbstractSyntaxTree.Pool;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.Compiler.CSharp;
 using PatternGuidedGP.GP;
@@ -21,20 +22,28 @@ using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP {
 	class Program {
+
+		bool AllEqual3(int a, int b, int c) {
+			return a == b && b == c || true;
+		}
+		
 		static void Main(string[] args) {
-			Logger.Level = 3;
+			Logger.Level = 0;
+
+			var subTreePool = new FitnessBasedSubTreePool();
 
 			var compiler = new CSharpCompiler();
 			var defaultEvaluator = new DefaultFitnessEvaluator() {
 				Compiler = compiler
 			};
 			var mdlEvaluator = new MDLFitnessEvaluator() {
-				Compiler = compiler
+				Compiler = compiler,
+				//SubTreePool = subTreePool
 			};
 
 			var configurations = new[] {
-				new RunConfiguration("Standard PANGEA") { FitnessEvaluator = mdlEvaluator },
-				new RunConfiguration("Standard GP") { FitnessEvaluator = defaultEvaluator }
+				new RunConfiguration("Standard GP") { FitnessEvaluator = defaultEvaluator },
+				new RunConfiguration("Standard PANGEA") { FitnessEvaluator = mdlEvaluator }
 			};
 
 			Problem[] problems = new Problem[] {
@@ -43,38 +52,41 @@ namespace PatternGuidedGP {
 				new CountZeroesProblem(3),
 				new IsOrderedProblem(3),
 				new MajorityProblem(3),
-				new MaximumProblem(3)
+				new MaximumProblem(3),
+				new CompareProblem(6),
+				new MultiplexerProblem(6, 2),
+				new ParityProblem(6)
 			};
 
 			foreach (var config in configurations) {
-				Logger.WriteLine(1, "Run configuration: " + config.Name);
+				Logger.WriteLine(0, "Run configuration: " + config.Name);
 				foreach (var problem in problems) {
-					Logger.WriteLine(1, problem.GetType().Name + ":");
+					Logger.WriteLine(0, problem.GetType().Name + ":");
 					problem.FitnessEvaluator = config.FitnessEvaluator;
 
 					var generator = new KozaTreeGeneratorGrow();
 					generator.TreeNodeRepository = problem.TreeNodeRepository;
 
-					DefaultAlgorithm algorithm = new DefaultAlgorithm(populationSize: 300, generations: 300);
-					algorithm.Crossover = new RandomSubtreeCrossover(maxTreeDepth: 7);
-					algorithm.CrossoverRate = 0.7;
-					algorithm.Elitism = 5;
-					algorithm.Initializer = new RampedHalfHalfInitializer(maxTreeDepth: 7, repository: problem.TreeNodeRepository);
-					algorithm.MaxTreeDepth = 9;
-					algorithm.MutationRate = 0.2;
-					algorithm.Mutator = new RandomSubtreeMutator(generator, maxTreeDepth: 7, maxMutationTreeDepth: 3);
-					algorithm.Selector = new TournamentSelector(7);
-
 					int solved = 0;
 					for (int i = 0; i < config.Runs; i++) {
+						DefaultAlgorithm algorithm = new DefaultAlgorithm(populationSize: 100, generations: 50) {
+							Crossover = new RandomSubtreeCrossover(maxTreeDepth: 7),
+							CrossoverRate = 0.7,
+							Elitism = 5,
+							Initializer = new RampedHalfHalfInitializer(maxTreeDepth: 7, repository: problem.TreeNodeRepository),
+							MaxTreeDepth = 9,
+							MutationRate = 0.2,
+							Mutator = new RandomSubtreeMutator(generator, maxTreeDepth: 7, maxMutationTreeDepth: 3),
+							Selector = new TournamentSelector(7)
+						};
+
 						Individual individual = algorithm.Run(problem);
-						Logger.WriteLine(1, "Result solution:\n" + individual);
-						if (individual != null) {
+						if (individual != null && individual.Fitness == 0) {
 							solved++;
 						}
 					}
-					Logger.WriteLine(1, problem.GetType().Name + ": Solved " + solved + "/" + config.Runs);
-					Logger.WriteLine(1, "=====================================================");
+					Logger.WriteLine(0, problem.GetType().Name + ": Solved " + solved + "/" + config.Runs);
+					Logger.WriteLine(0, "=====================================================");
 				}
 			}
 

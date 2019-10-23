@@ -20,9 +20,9 @@ namespace PatternGuidedGP.GP.Operators {
 			for (int i = 0; i < population.Size; i++) {
 				TreeNode root;
 				if (i % 2 == 0) {
-					root = _generatorFull.GetSyntaxNode(MaxTreeDepth, rootType);
+					root = _generatorFull.GetSyntaxTree(MaxTreeDepth, rootType);
 				} else {
-					root = _generatorGrow.GetSyntaxNode(MaxTreeDepth, rootType);
+					root = _generatorGrow.GetSyntaxTree(MaxTreeDepth, rootType);
 				}
 				Individual individual = new Individual(new SyntaxTree(root));
 				population.Add(individual);

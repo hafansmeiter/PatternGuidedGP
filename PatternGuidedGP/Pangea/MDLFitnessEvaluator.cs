@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PatternGuidedGP.AbstractSyntaxTree;
+using PatternGuidedGP.AbstractSyntaxTree.Pool;
 using PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator;
 using PatternGuidedGP.GP;
 using PatternGuidedGP.GP.Problems;
@@ -18,29 +19,42 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.Pangea {
+
 	// MDL = Minimum description length: https://en.wikipedia.org/wiki/Minimum_description_length
 	class MDLFitnessEvaluator : DefaultFitnessEvaluator {
+		class MDLFitnessResult : FitnessResult {
+			public IEnumerable<ulong> Features { get; private set; }
 
-		protected override void PrepareTestRuns(TestSuite testSuite) {
+			public MDLFitnessResult(double fitness, IEnumerable<ulong> features)
+				: base(fitness) {
+				Features = features;
+			}
+		}
+
+		public ISubTreePool SubTreePool { get; set; }
+
+		protected override void PrepareTestRuns(Individual individual, TestSuite testSuite) {
 			ExecutionTraces.Reset();
 		}
 
-		protected override double CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {
-			double fitness = base.CalculateFitness(individual, testSuite, results);	// f0
+		protected override FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {
+			double fitness = base.CalculateFitness(individual, testSuite, results).Fitness;	// standard fitness f0
 
-			var dataset = MLDataset.FromExecutionTraces(ExecutionTraces.Traces);
+			var dataset = MLDataset.FromExecutionTraces(individual, ExecutionTraces.Traces);
+
 			Logger.Write(4, "Features: ");
 			foreach (var feature in dataset.Features) {
 				Logger.Write(4, feature.ToString() + ",");
 			}
 			Logger.WriteLine(4, "");
-			dataset.RemoveConstantFeatures();
+
 			if (dataset.Features.Count() > 0) {
 				var input = dataset.ToRawInputDataset();
 
 				var expected = GetExpectedOutputDataset(testSuite);
 				var actual = GetActualOutputDataset(results);
 
+				// Log input matrix and outputs
 				Logger.WriteLine(4, "\nInput:");
 				for (int i = 0; i < input.Length; i++) {
 					Logger.Write(4, "\n" + i + ": ");
@@ -48,8 +62,9 @@ namespace PatternGuidedGP.Pangea {
 						Logger.Write(4, input[i][j] + ", ");
 					}
 					Logger.Write(4, "Exp: " + expected[i]);
-					Logger.Write(4, ", Res: " + actual[i]);
+					Logger.Write(4, ", Act: " + actual[i]);
 				}
+				Logger.WriteLine(4, "");
 
 				var decisionTree = CreateDecisionTree(input, expected);
 				if (decisionTree != null) {
@@ -58,17 +73,18 @@ namespace PatternGuidedGP.Pangea {
 
 					double mdlFitness = CalculateMDLFitness(error, treeLength, results.Length);
 
+					var rules = decisionTree.ToRules();
+
 					Logger.WriteLine(3, "Error: " + error + ", Tree length: " + treeLength);
 					Logger.WriteLine(3, "Fitness: " + fitness * mdlFitness + ", default fitness: " + fitness + ", mdl fitness: " + mdlFitness);
-					Logger.WriteLine(3, "Rules: " + decisionTree.ToRules().ToString());
+					Logger.WriteLine(3, "Rules: " + rules.ToString());
 					if (mdlFitness == 0) {
 						Logger.WriteLine(3, "MDL fitness is zero.");
 					}
 					fitness *= mdlFitness;
 				}
 			}
-
-			return fitness;
+			return new MDLFitnessResult(fitness, dataset.Features);
 		}
 
 		private double CalculateMDLFitness(double error, int treeLength, int n) {
@@ -83,10 +99,10 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		private void GetSubtreeLength(DecisionNode node, ref int length) {
+			length++;
 			if (node.IsLeaf) {
 				return;
 			}
-			length++;
 			foreach (var branch in node.Branches) {
 				GetSubtreeLength(branch, ref length);
 			}
@@ -121,8 +137,18 @@ namespace PatternGuidedGP.Pangea {
 			return dataset;
 		}
 
-		protected override void TestRunFinished(TestCase testCase, object result) {
+		protected override void OnTestRunFinished(Individual individual, TestCase testCase, object result) {
 			ExecutionTraces.FinishCurrent();
+		}
+
+		protected override void OnEvaluationFinished(Individual individual, FitnessResult fitness) {
+			MDLFitnessResult fitnessResult = fitness as MDLFitnessResult;
+			if (SubTreePool != null) {
+				double fitnessValue = fitnessResult.Fitness;
+				foreach (var id in fitnessResult.Features) {
+					SubTreePool.Add(individual.SyntaxTree.FindNodeById(id), fitnessValue);
+				}
+			}
 		}
 
 		protected override CompilationUnitSyntax CreateCompilationUnit(Individual individual, TestCase sample, CompilationUnitSyntax template) {

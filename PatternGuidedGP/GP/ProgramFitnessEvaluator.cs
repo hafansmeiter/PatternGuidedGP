@@ -16,6 +16,14 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.GP {
 	abstract class ProgramFitnessEvaluator : IFitnessEvaluator {
 
+		protected class FitnessResult {
+			public double Fitness { get; private set; }
+
+			public FitnessResult(double fitness) {
+				Fitness = fitness;
+			}
+		}
+
 		public ICompiler Compiler { get; set; }
 
 		public virtual double Evaluate(Individual individual, Problem problem) {
@@ -27,7 +35,7 @@ namespace PatternGuidedGP.GP {
 			Logger.WriteLine(4, compilationUnit.ToString());
 			MethodInfo method = GetTestMethod(compilationUnit);
 
-			PrepareTestRuns(testSuite);
+			PrepareTestRuns(individual, testSuite);
 
 			int testCaseCount = testSuite.TestCases.Count;
 			var results = new object[testSuite.TestCases.Count];
@@ -42,17 +50,22 @@ namespace PatternGuidedGP.GP {
 					// Code does not run properly, e.g. DivideByZeroException
 					// Count as negative run
 				}
-				TestRunFinished(test, results[i]);
+				OnTestRunFinished(individual, test, results[i]);
 			}
-			return CalculateFitness(individual, testSuite, results);
+			FitnessResult fitness = CalculateFitness(individual, testSuite, results);
+			OnEvaluationFinished(individual, fitness);
+			return fitness.Fitness;
 		}
 
-		protected abstract double CalculateFitness(Individual individual, TestSuite testSuite, object[] results);
+		protected abstract FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results);
 
-		protected virtual void PrepareTestRuns(TestSuite testSuite) {
+		protected virtual void PrepareTestRuns(Individual individual, TestSuite testSuite) {
 		}
 
-		protected virtual void TestRunFinished(TestCase testCase, object result) {
+		protected virtual void OnTestRunFinished(Individual individual, TestCase testCase, object result) {
+		}
+
+		protected virtual void OnEvaluationFinished(Individual individual, FitnessResult fitness) {
 		}
 
 		protected virtual object RunTestCase(MethodInfo method, TestCase test) {

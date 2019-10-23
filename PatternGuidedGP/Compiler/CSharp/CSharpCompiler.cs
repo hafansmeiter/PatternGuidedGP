@@ -32,7 +32,6 @@ namespace PatternGuidedGP.Compiler.CSharp {
 				if (compilationResult.Success) {
 					Assembly assembly = Assembly.Load(ms.GetBuffer());
 					return assembly;
-
 				} else {
 					foreach (var error in compilationResult.Diagnostics) {
 						Console.WriteLine(error.ToString());

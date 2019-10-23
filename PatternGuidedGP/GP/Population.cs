@@ -13,9 +13,9 @@ namespace PatternGuidedGP.GP {
 				return _individuals;
 			}
 		}
+		public int IndividualCount { get; private set; } = 0;
 
 		private Individual[] _individuals;
-		private int _count = 0;
 
 		public Population(int size) {
 			Size = size;
@@ -23,8 +23,8 @@ namespace PatternGuidedGP.GP {
 		}
 
 		public void Add(params Individual[] individuals) {
-			for (int i = 0; i < individuals.Length && _count < Size; i++) {
-				_individuals[_count++] = individuals[i];
+			for (int i = 0; i < individuals.Length && IndividualCount < Size; i++) {
+				_individuals[IndividualCount++] = individuals[i];
 			}
 		}
 
@@ -52,5 +52,13 @@ namespace PatternGuidedGP.GP {
 			return fitnessSum / Size;
 		}
 
+		public bool ContainsIndividual(Individual individual) {
+			for (int i = 0; i < IndividualCount; i++) {
+				if (individual.Equals(_individuals[i])) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }

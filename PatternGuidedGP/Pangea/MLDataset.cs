@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PatternGuidedGP.GP;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ namespace PatternGuidedGP.Pangea {
 			}
 		}
 
-		public static MLDataset FromExecutionTraces(IList<ExecutionTrace> traces) {
+		public static MLDataset FromExecutionTraces(Individual /* unused */ individual, IList<ExecutionTrace> traces) {
 			MLDataset dataset = new MLDataset();
 			int count = traces.Count;
 			dataset.Count = count;
@@ -33,6 +34,7 @@ namespace PatternGuidedGP.Pangea {
 					}
 				}
 			}
+			dataset.RemoveConstantFeatures();
 			return dataset;
 		}
 
@@ -55,7 +57,7 @@ namespace PatternGuidedGP.Pangea {
 			return dataset;
 		}
 
-		public void RemoveConstantFeatures() {
+		private void RemoveConstantFeatures() {
 			int featureCount = _features.Count;
 			var toRemove = new List<ulong>();
 			for (int i = 0; i < featureCount; i++) {

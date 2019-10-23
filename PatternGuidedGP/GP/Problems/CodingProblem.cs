@@ -15,7 +15,8 @@ namespace PatternGuidedGP.GP.Problems {
 
 		public override Type RootType => typeof(void);
 
-		public CodingProblem(int parameterCount) : base(parameterCount) {
+		public CodingProblem(int parameterCount, bool initialize = true) 
+			: base(parameterCount, initialize) {
 		}
 
 		protected override void AddTreeNodes(TreeNodeRepository repository) {
@@ -27,6 +28,16 @@ namespace PatternGuidedGP.GP.Problems {
 				repository.Add(new BoolIdentifierExpression("ret", true));
 				repository.Add(new BoolAssignmentStatement());
 			}
+			if (ReturnType == typeof(int) || ParameterType == typeof(int)) {
+				repository.Add(
+					new BoolEqualIntExpression(),
+					new BoolNotEqualIntExpression(),
+					new BoolGreaterEqualIntExpression(),
+					new BoolGreaterThanIntExpression(),
+					new BoolLessEqualIntExpression(),
+					new BoolLessThanIntExpression(),
+					new ForCountStatement());
+			} 
 			repository.Add(new BoolAndExpression(),
 				new BoolFalseExpression(),
 				new BoolNotExpression(),
@@ -35,19 +46,12 @@ namespace PatternGuidedGP.GP.Problems {
 				new BoolXorExpression(),
 				new BoolEqualBoolExpression(),
 				new BoolNotEqualBoolExpression(),
-				new BoolEqualIntExpression(),
-				new BoolNotEqualIntExpression(),
-				new BoolGreaterEqualIntExpression(),
-				new BoolGreaterThanIntExpression(),
-				new BoolLessEqualIntExpression(),
-				new BoolLessThanIntExpression(),
 				new IntAdditionExpression(),
 				new IntSubtractionExpression(),
 				new IntMultiplicationExpression(),
 				new IntDivisionExpression(),
 				new IntModuloExpression(),
-				new IfStatement(),
-				new ForCountStatement());
+				new IfStatement());
 		}
 
 		protected override CompilationUnitSyntax GetCodeTemplate() {

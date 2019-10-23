@@ -1,17 +1,16 @@
-﻿using PatternGuidedGP.AbstractSyntaxTree;
-using PatternGuidedGP.GP.Tests;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PatternGuidedGP.GP.Tests;
 
 namespace PatternGuidedGP.GP.Problems {
-	class MajorityProblem : CodingProblem {
+	class ParityProblem : CodingProblem {
 		public override Type ReturnType => typeof(bool);
 		public override Type ParameterType => typeof(bool);
 
-		public MajorityProblem(int n) : base(n) {
+		public ParityProblem(int n) : base(n) {
 		}
 
 		protected override TestSuite GetTestSuite() {
@@ -22,7 +21,7 @@ namespace PatternGuidedGP.GP.Problems {
 						trues++;
 					}
 				}
-				return trues > ParameterCount / 2;
+				return trues % 2 != 0;
 			});
 		}
 	}

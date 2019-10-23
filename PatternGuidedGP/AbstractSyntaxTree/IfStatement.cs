@@ -27,7 +27,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override void Initialize() {
 			// randomly choose if else-clause is present
 			base.Initialize();
-			if (RandomValueStore.Instance.GetInt(2) == 0) {
+			//if (RandomValueStore.Instance.GetInt(2) == 0) {
+			if (false) {
 				HasElseClause = false;
 				_childTypes = new[] { typeof(bool), typeof(void) };
 			} else {

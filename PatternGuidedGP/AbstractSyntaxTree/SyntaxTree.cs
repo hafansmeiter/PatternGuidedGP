@@ -44,23 +44,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		}
 
 		private int GetTreeHeight(TreeNode node) {
-			if (node.IsTerminal) {
-				return 1;
-			}
-
-			int maxChildHeight = 0;
-			foreach (var child in node.Children) {
-				int height = GetTreeHeight(child);
-				if (height > maxChildHeight) {
-					maxChildHeight = height;
-				}
-			}
-			return maxChildHeight + 1;
+			return node.GetTreeHeight();
 		}
 
 		public TreeNode GetRandomNode() {
 			var nodesPerLevel = new MultiValueDictionary<int, TreeNode>();
-			GetNodeHeights(Root, nodesPerLevel, node => true);
+			GetNodeHeights(Root, nodesPerLevel, _ => true);
 			return UniformRandomSelect(nodesPerLevel);
 		}
 
@@ -114,6 +103,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		public override string ToString() {
 			return Root.ToString();
+		}
+
+		public override bool Equals(object obj) {
+			var tree = obj as SyntaxTree;
+			return tree != null &&
+				   Root.EqualsTreeNode(tree.Root);
 		}
 	}
 }

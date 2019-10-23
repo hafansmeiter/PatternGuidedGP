@@ -12,16 +12,22 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.GP.Problems {
 	abstract class Problem {
 		public IFitnessEvaluator FitnessEvaluator { get; set; }
-		public TestSuite TestSuite { get; }
-		public CompilationUnitSyntax CodeTemplate { get; }
+		public TestSuite TestSuite { get; protected set; }
+		public CompilationUnitSyntax CodeTemplate { get; protected set; }
 		public TreeNodeRepository TreeNodeRepository { get; } = new TreeNodeRepository();
 		public abstract Type RootType { get; }
 		public abstract Type ReturnType { get; }
 		public abstract Type ParameterType { get; }
 		public int ParameterCount { get; set; }
 
-		public Problem(int n) {
+		public Problem(int n, bool initialize = true) {
 			ParameterCount = n;
+			if (initialize) {
+				Initialize();
+			}
+		}
+
+		protected void Initialize() {
 			TestSuite = GetTestSuite();
 			CodeTemplate = GetCodeTemplate();
 			AddTreeNodes(TreeNodeRepository);
@@ -29,9 +35,9 @@ namespace PatternGuidedGP.GP.Problems {
 			Logger.WriteLine(4, GetType().Name + " test suite:");
 			foreach (var test in TestSuite.TestCases) {
 				foreach (var param in test.Parameter) {
-					Logger.WriteLine(4, param + " ");
+					Logger.Write(4, param + " ");
 				}
-				Logger.WriteLine(4, test.Result.ToString());
+				Logger.WriteLine(4, "-> " + test.Result.ToString());
 			}
 		}
 

@@ -52,7 +52,8 @@ namespace PatternGuidedGP.GP {
 		}
 
 		public override bool Equals(object obj) {
-			return SyntaxTree.Equals(obj);
+			var other = obj as Individual;
+			return other != null && SyntaxTree.Equals(other.SyntaxTree);
 		}
 
 		public override int GetHashCode() {

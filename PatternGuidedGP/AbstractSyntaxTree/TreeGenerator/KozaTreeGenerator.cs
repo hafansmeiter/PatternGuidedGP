@@ -11,7 +11,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 	abstract class KozaTreeGenerator : ISyntaxTreeProvider {
 		public ITreeNodeRepository TreeNodeRepository { get; set; }
 
-		public TreeNode GetSyntaxNode(int maxDepth, Type type) {
+		public TreeNode GetSyntaxTree(int maxDepth, Type type) {
 			var root = GetRootNode(type, maxDepth);
 			AddChildren(root, maxDepth - 1);
 			return root;

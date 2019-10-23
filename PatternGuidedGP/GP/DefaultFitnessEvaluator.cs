@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.GP {
 	class DefaultFitnessEvaluator : ProgramFitnessEvaluator {
 
-		protected override double CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {
+		protected override FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {
 			int positive = 0;
 			for (int i = 0; i < testSuite.TestCases.Count; i++) {
 				Logger.WriteLine(4, "Test case " + i + ": " + testSuite.TestCases[i].Result + " = " + results[i]);
@@ -17,7 +17,7 @@ namespace PatternGuidedGP.GP {
 					positive++;
 				}
 			}
-			return 1 - ((double)positive / (double)testSuite.TestCases.Count);
+			return new FitnessResult(1 - ((double)positive / (double)testSuite.TestCases.Count));
 		}
 	}
 }
