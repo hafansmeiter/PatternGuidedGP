@@ -141,6 +141,8 @@
     <Compile Include="AbstractSyntaxTree\TreeGenerator\TreeNodeRepository.cs" />
     <Compile Include="AbstractSyntaxTree\UnaryExpression.cs" />
     <Compile Include="Compiler\CSharp\CSharpCompiler.cs" />
+    <Compile Include="Compiler\ITestable.cs" />
+    <Compile Include="Compiler\CSharp\TestClassProxy.cs" />
     <Compile Include="Compiler\ICompiler.cs" />
     <Compile Include="GPExtensions\CompetentGeometricCrossover.cs" />
     <Compile Include="GPExtensions\CompetentGeometricMutator.cs" />

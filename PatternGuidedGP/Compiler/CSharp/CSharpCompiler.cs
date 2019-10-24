@@ -18,7 +18,7 @@ namespace PatternGuidedGP.Compiler.CSharp {
 			_references = GetAssemblyReferences();
 		}
 
-		public Assembly Compile(CompilationUnitSyntax syntax) {
+		public ITestable Compile(AppDomain appDomain, CompilationUnitSyntax syntax) {
 			string assemblyName = Guid.NewGuid().ToString();
 			var syntaxTree = CSharpSyntaxTree.Create(syntax);
 			var compilation = CSharpCompilation.Create(
@@ -30,8 +30,12 @@ namespace PatternGuidedGP.Compiler.CSharp {
 			using (var ms = new MemoryStream()) {
 				var compilationResult = compilation.Emit(ms);
 				if (compilationResult.Success) {
-					Assembly assembly = Assembly.Load(ms.GetBuffer());
-					return assembly;
+					//Assembly assembly = Assembly.Load(ms.GetBuffer());
+					TestClassProxy proxy = (TestClassProxy) appDomain.CreateInstanceAndUnwrap(
+						typeof(TestClassProxy).Assembly.FullName,
+						"PatternGuidedGP.Compiler.CSharp.TestClassProxy");
+					proxy.Initialize(ms.GetBuffer(), "ProblemClass", "Test");
+					return proxy;
 				} else {
 					foreach (var error in compilationResult.Diagnostics) {
 						Console.WriteLine(error.ToString());

@@ -22,13 +22,9 @@ using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP {
 	class Program {
-
-		bool AllEqual3(int a, int b, int c) {
-			return a == b && b == c || true;
-		}
 		
 		static void Main(string[] args) {
-			Logger.Level = 0;
+			Logger.Level = 4;
 
 			var subTreePool = new FitnessBasedSubTreePool();
 

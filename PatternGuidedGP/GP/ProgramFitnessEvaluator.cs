@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PatternGuidedGP.Compiler;
+using PatternGuidedGP.Compiler.CSharp;
 using PatternGuidedGP.GP.Problems;
 using PatternGuidedGP.GP.Tests;
 using PatternGuidedGP.Util;
@@ -33,7 +34,9 @@ namespace PatternGuidedGP.GP {
 				problem.CodeTemplate);
 			Logger.WriteLine(4, "Run test method:");
 			Logger.WriteLine(4, compilationUnit.ToString());
-			MethodInfo method = GetTestMethod(compilationUnit);
+
+			AppDomain appDomain = AppDomain.CreateDomain("AppDomain");
+			var testable = GetTestableObject(appDomain, compilationUnit);
 
 			PrepareTestRuns(individual, testSuite);
 
@@ -42,7 +45,7 @@ namespace PatternGuidedGP.GP {
 			for (int i = 0; i < testCaseCount; i++) {
 				TestCase test = testSuite.TestCases[i];
 				try {
-					results[i] = RunTestCase(method, test);
+					results[i] = RunTestCase(testable, test);
 
 					//Console.WriteLine("Test case: " + test.ToString() + ", GP result=" + result);
 				} catch (Exception ex) {
@@ -52,6 +55,9 @@ namespace PatternGuidedGP.GP {
 				}
 				OnTestRunFinished(individual, test, results[i]);
 			}
+
+			AppDomain.Unload(appDomain);
+
 			FitnessResult fitness = CalculateFitness(individual, testSuite, results);
 			OnEvaluationFinished(individual, fitness);
 			return fitness.Fitness;
@@ -68,8 +74,8 @@ namespace PatternGuidedGP.GP {
 		protected virtual void OnEvaluationFinished(Individual individual, FitnessResult fitness) {
 		}
 
-		protected virtual object RunTestCase(MethodInfo method, TestCase test) {
-			return method.Invoke(null, test.Parameter);
+		protected virtual object RunTestCase(ITestable testable, TestCase test) {
+			return testable.RunTest(test.Parameter);
 		}
 
 		protected virtual CompilationUnitSyntax CreateCompilationUnit(Individual individual, TestCase sample, CompilationUnitSyntax template) {
@@ -84,11 +90,8 @@ namespace PatternGuidedGP.GP {
 			return newSyntax.NormalizeWhitespace();
 		}
 
-		private MethodInfo GetTestMethod(CompilationUnitSyntax compilationUnit) {
-			var assembly = Compiler.Compile(compilationUnit);
-			Type t = assembly.GetType("ProblemClass");
-			MethodInfo method = t.GetMethod("Test");
-			return method;
+		private ITestable GetTestableObject(AppDomain appDomain, CompilationUnitSyntax compilationUnit) {
+			return Compiler.Compile(appDomain, compilationUnit);
 		}
 
 		private CompilationUnitSyntax ReplacePlaceholder(CompilationUnitSyntax template, SyntaxNode syntax) {

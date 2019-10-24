@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PatternGuidedGP.Compiler.CSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.Compiler {
 	interface ICompiler {
-		Assembly Compile(CompilationUnitSyntax syntax);
+		ITestable Compile(AppDomain appDomain, CompilationUnitSyntax syntax);
 	}
 }
