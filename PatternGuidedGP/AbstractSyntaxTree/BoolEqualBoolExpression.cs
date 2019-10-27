@@ -12,5 +12,18 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.EqualsExpression;
 		}
+
+		public override bool IsInvertible => true;
+
+		public override IEnumerable<object> Invert(object desiredValue, int k, object complementValue, out bool ambiguous) {
+			bool desired = (bool)desiredValue;
+			bool complement = (bool)complementValue;
+			ambiguous = false;
+			if (desired) {
+				return new object[] { complement };
+			} else {
+				return new object[] { !complement };
+			}
+		}
 	}
 }

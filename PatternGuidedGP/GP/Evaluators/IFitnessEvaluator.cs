@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatternGuidedGP.GP {
+namespace PatternGuidedGP.GP.Evaluators {
 	interface IFitnessEvaluator {
 		double Evaluate(Individual individual, Problem problem);
 	}

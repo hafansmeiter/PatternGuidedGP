@@ -8,6 +8,7 @@ using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.AbstractSyntaxTree.Pool;
 using PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator;
 using PatternGuidedGP.GP;
+using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Problems;
 using PatternGuidedGP.GP.Tests;
 using PatternGuidedGP.Util;
@@ -166,9 +167,9 @@ namespace PatternGuidedGP.Pangea {
 
 		private SyntaxNode GetStorageCallSyntax(TreeNode tracedNode) {
 			// Code example: 
-			// ret = a <= b;
+			// ret = a + b;
 			// Store execution trace for code (23, 1, 2, 3 are node ids):
-			// ExecutionTraces.Current.Add(23, new ExecutionRecord(1, a <= b), new ExecutionRecord(2, a), new ExecutionRecord(3, b));
+			// ExecutionTraces.Current.Add(23, new ExecutionRecord(1, a + b), new ExecutionRecord(2, a), new ExecutionRecord(3, b));
 
 			var executionTraceParameters = new List<ArgumentSyntax> {
 								SyntaxFactory.Argument(SyntaxFactory.LiteralExpression(

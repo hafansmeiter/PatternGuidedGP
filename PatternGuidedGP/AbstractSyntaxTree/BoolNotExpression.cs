@@ -13,5 +13,13 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.LogicalNotExpression;
 		}
+
+		public override bool IsInvertible => true;
+
+		public override IEnumerable<object> Invert(object desiredValue, int k, object complementValue, out bool ambiguous) {
+			var desired = (bool)desiredValue;
+			ambiguous = false;
+			return new object[] { !desired };
+		}
 	}
 }

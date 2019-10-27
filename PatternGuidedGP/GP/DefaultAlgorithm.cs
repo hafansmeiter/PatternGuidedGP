@@ -61,14 +61,14 @@ namespace PatternGuidedGP.GP {
 			//for (int i = 0; i < nextGen.Size - Elitism; i++) {
 				Individual child = null;
 				// create child by crossover or copy from old population
-				if (RandomValueStore.Instance.GetDouble() < CrossoverRate) {
+				if (RandomValueGenerator.Instance.GetDouble() < CrossoverRate) {
 					child = new Individual(Crossover.cross(Selector.Select(population),
 						Selector.Select(population)));
 				}
 				else {
 					child = new Individual(population.GetRandom());
 				}
-				if (RandomValueStore.Instance.GetDouble() < MutationRate) {
+				if (RandomValueGenerator.Instance.GetDouble() < MutationRate) {
 					if (Mutator.Mutate(child)) {
 						child.FitnessEvaluated = false;
 					}

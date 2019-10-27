@@ -63,9 +63,9 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			if (nodesPerLevel.Count == 0) {
 				return null;
 			}
-			int levelIndex = RandomValueStore.Instance.GetInt(nodesPerLevel.Count);
+			int levelIndex = RandomValueGenerator.Instance.GetInt(nodesPerLevel.Count);
 			var levelNodes = nodesPerLevel.Values.ElementAt(levelIndex);
-			int nodeIndex = RandomValueStore.Instance.GetInt(levelNodes.Count);
+			int nodeIndex = RandomValueGenerator.Instance.GetInt(levelNodes.Count);
 			return levelNodes.ElementAt(nodeIndex);
 		}
 

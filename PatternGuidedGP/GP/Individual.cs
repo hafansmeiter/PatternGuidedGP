@@ -1,4 +1,5 @@
 ﻿using PatternGuidedGP.AbstractSyntaxTree;
+using PatternGuidedGP.GP.SemanticGP;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator.CSharp;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
+using PatternGuidedGP.GP.SemanticGP;
 using PatternGuidedGP.Pangea;
 using PatternGuidedGP.Util;
 using System;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	delegate IEnumerable<TreeNode> TreeNodeFilter(IEnumerable<TreeNode> nodes);
 
-	internal abstract class TreeNode : ICSharpSyntaxGenerator {
+	internal abstract class TreeNode : ICSharpSyntaxGenerator, ITraceable {
 		public abstract bool IsTerminal { get; }
 		public abstract bool IsVariable { get; }
 		public abstract int RequiredTreeDepth { get; }
@@ -23,6 +24,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public abstract Type[] ChildTypes { get; }
 
 		public virtual bool IsTraceable { get; } = false;
+		public virtual bool IsBackPropagationBase { get; } = false;
 
 		public TreeNode Parent { get; set; }
 		public List<TreeNode> Children { get; private set; }
@@ -171,6 +173,33 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 				}
 			}
 			return true;
+		}
+
+		// Get root node for semantic backpropagation.
+		// Relevant if this tree node is returned as root by method IsBackPropagable.
+		// Mostly, return either this tree node or a direct child.
+		public virtual TreeNode GetBackPropagationRoot() {
+			return null;
+		}
+
+		public bool IsBackPropagable(out TreeNode root) {
+			var current = this;
+			while ((current = current.Parent) != null) {
+				if (current.IsBackPropagationBase) {
+					root = current.GetBackPropagationRoot();
+					return true;
+				}
+			}
+			root = null;
+			return false;
+		}
+
+		public IEnumerable<TreeNode> GetPathTo(TreeNode node) {
+			var current = this;
+			while (current != node) {	// not including node itself
+				yield return current;
+				current = current.Parent;
+			}
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
+using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Tests;
 using PatternGuidedGP.Util;
 using System;

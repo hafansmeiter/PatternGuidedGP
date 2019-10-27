@@ -144,16 +144,20 @@
     <Compile Include="Compiler\ITestable.cs" />
     <Compile Include="Compiler\CSharp\TestClassProxy.cs" />
     <Compile Include="Compiler\ICompiler.cs" />
-    <Compile Include="GPExtensions\CompetentGeometricCrossover.cs" />
-    <Compile Include="GPExtensions\CompetentGeometricMutator.cs" />
     <Compile Include="GPExtensions\RecordBasedSubTreePool.cs" />
     <Compile Include="GP\AlgorithmBase.cs" />
     <Compile Include="GP\DefaultAlgorithm.cs" />
-    <Compile Include="GP\DefaultFitnessEvaluator.cs" />
     <Compile Include="GP\IAlgorithm.cs" />
-    <Compile Include="GP\IFitnessEvaluator.cs" />
     <Compile Include="GP\IGenerationalAlgorithm.cs" />
     <Compile Include="GP\Individual.cs" />
+    <Compile Include="GP\Evaluators\DefaultFitnessEvaluator.cs" />
+    <Compile Include="GP\Evaluators\IFitnessEvaluator.cs" />
+    <Compile Include="GP\Evaluators\ProgramFitnessEvaluator.cs" />
+    <Compile Include="GP\SemanticGP\CompetentCrossover.cs" />
+    <Compile Include="GP\SemanticGP\CompetentMutator.cs" />
+    <Compile Include="GP\SemanticGP\IInvertible.cs" />
+    <Compile Include="GP\SemanticGP\SemanticBackpropagationExtensions.cs" />
+    <Compile Include="GP\SemanticGP\Semantics.cs" />
     <Compile Include="GP\Operators\CrossoverBase.cs" />
     <Compile Include="GP\Operators\ICrossover.cs" />
     <Compile Include="GP\Operators\IInitializer.cs" />
@@ -179,10 +183,10 @@
     <Compile Include="GP\Problems\ParityProblem.cs" />
     <Compile Include="GP\Problems\Problem.cs" />
     <Compile Include="GP\RunConfiguration.cs" />
+    <Compile Include="GP\SemanticGP\ISemanticsProvider.cs" />
     <Compile Include="GP\Tests\BoolTestSuiteGenerator.cs" />
     <Compile Include="GP\Tests\IntTestSuiteGenerator.cs" />
     <Compile Include="GP\Tests\TestCase.cs" />
-    <Compile Include="GP\ProgramFitnessEvaluator.cs" />
     <Compile Include="GP\Tests\TestSuite.cs" />
     <Compile Include="GP\Operators\TournamentSelector.cs" />
     <Compile Include="GP\Tests\ITestSuiteGenerator.cs" />
@@ -199,7 +203,7 @@
     <Compile Include="Util\IDeepCloneable.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Util\MultiValueDictionary.cs" />
-    <Compile Include="Util\RandomValueStore.cs" />
+    <Compile Include="Util\RandomValueGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

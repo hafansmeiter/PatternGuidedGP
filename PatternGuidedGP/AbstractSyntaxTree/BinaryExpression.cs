@@ -25,5 +25,18 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		}
 
 		public abstract SyntaxKind GetKind();
+
+		public override object GetComplementValue(int k, int semanticsIndex) {
+			if (k == 0) {
+				if (Right.IsSemanticsEvaluated) {
+					return Right.Semantics[semanticsIndex];
+				}
+			} else if (k == 1) {
+				if (Left.IsSemanticsEvaluated) {
+					return Left.Semantics[semanticsIndex];
+				}
+			}
+			return null;
+		}
 	}
 }

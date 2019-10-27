@@ -14,6 +14,7 @@ using PatternGuidedGP.AbstractSyntaxTree.Pool;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.Compiler.CSharp;
 using PatternGuidedGP.GP;
+using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Operators;
 using PatternGuidedGP.GP.Problems;
 using PatternGuidedGP.GP.Tests;
@@ -24,7 +25,7 @@ namespace PatternGuidedGP {
 	class Program {
 		
 		static void Main(string[] args) {
-			Logger.Level = 4;
+			Logger.Level = 0;
 
 			var subTreePool = new FitnessBasedSubTreePool();
 
@@ -76,8 +77,8 @@ namespace PatternGuidedGP {
 							Selector = new TournamentSelector(7)
 						};
 
-						Individual individual = algorithm.Run(problem);
-						if (individual != null && individual.Fitness == 0) {
+						Individual bestSolution = algorithm.Run(problem);
+						if (bestSolution != null && bestSolution.Fitness == 0) {
 							solved++;
 						}
 					}

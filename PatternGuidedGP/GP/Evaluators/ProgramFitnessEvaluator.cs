@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PatternGuidedGP.GP {
+namespace PatternGuidedGP.GP.Evaluators {
 	abstract class ProgramFitnessEvaluator : IFitnessEvaluator {
 
 		protected class FitnessResult {

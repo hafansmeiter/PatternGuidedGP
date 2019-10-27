@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GPExtensions {
-	class CompetentGeometricCrossover : ICrossover {
+	class CompetentCrossover : ICrossover {
 		public Individual cross(Individual individual1, Individual individual2) {
 			throw new NotImplementedException();
 		}

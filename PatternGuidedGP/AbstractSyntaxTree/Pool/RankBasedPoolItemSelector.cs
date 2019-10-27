@@ -13,7 +13,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 				return list[0];
 			}
 			int fitnessRanks = (1 + list.Count) * list.Count / 2;
-			int rankNumber = RandomValueStore.Instance.GetInt(fitnessRanks);
+			int rankNumber = RandomValueGenerator.Instance.GetInt(fitnessRanks);
 			int rankIndex = 0;
 			int aggregatedRanks = list.Count;
 			while (aggregatedRanks <= rankNumber) {

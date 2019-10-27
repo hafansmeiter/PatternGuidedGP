@@ -71,20 +71,20 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 				if (filter != null) {
 					nodes = filter(nodes).ToList();
 				}
-				var node = nodes[RandomValueStore.Instance.GetInt(nodes.Count)].Clone() as TreeNode;
+				var node = nodes[RandomValueGenerator.Instance.GetInt(nodes.Count)].Clone() as TreeNode;
 				node.Initialize();
 				return node;
 			}
 
 			public TreeNode GetRandomNonTerminal(int maxDepth) {
 				var nodes = _nonTerminals.GetTreeNodes(maxDepth);
-				var node = nodes[RandomValueStore.Instance.GetInt(nodes.Count)].Clone() as TreeNode;
+				var node = nodes[RandomValueGenerator.Instance.GetInt(nodes.Count)].Clone() as TreeNode;
 				node.Initialize();
 				return node;
 			}
 
 			public TreeNode GetRandomTerminal() {
-				var node = _terminals[RandomValueStore.Instance.GetInt(_terminals.Count)].Clone() as TreeNode;
+				var node = _terminals[RandomValueGenerator.Instance.GetInt(_terminals.Count)].Clone() as TreeNode;
 				node.Initialize();
 				return node;
 			}

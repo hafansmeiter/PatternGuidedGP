@@ -16,6 +16,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override bool IsVariable => false;
 		public override int RequiredTreeDepth => 2;
 		public override bool IsTraceable => true;
+		public override bool IsBackPropagationBase => true;
 		public override Type[] ChildTypes => new[] { typeof(T), typeof(T) };
 
 		public IdentifierExpression<T> Variable => Children[0] as IdentifierExpression<T>;
@@ -53,6 +54,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		public override IEnumerable<TreeNode> GetExecutionTraceNodes() {
 			return AssignedExpression.GetSubTreeNodes(true);
+		}
+
+		public override TreeNode GetBackPropagationRoot() {
+			return AssignedExpression;
 		}
 	}
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PatternGuidedGP.GP {
+namespace PatternGuidedGP.GP.Evaluators {
 	class DefaultFitnessEvaluator : ProgramFitnessEvaluator {
 
 		protected override FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {

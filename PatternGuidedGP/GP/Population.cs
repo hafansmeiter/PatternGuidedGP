@@ -37,7 +37,7 @@ namespace PatternGuidedGP.GP {
 		}
 
 		public Individual GetRandom() {
-			return _individuals[RandomValueStore.Instance.GetInt(Size)];
+			return _individuals[RandomValueGenerator.Instance.GetInt(Size)];
 		}
 
 		public void Sort() {
