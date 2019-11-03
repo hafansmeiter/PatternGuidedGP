@@ -31,9 +31,10 @@ namespace PatternGuidedGP.Compiler.CSharp {
 				var compilationResult = compilation.Emit(ms);
 				if (compilationResult.Success) {
 					//Assembly assembly = Assembly.Load(ms.GetBuffer());
-					TestClassProxy proxy = (TestClassProxy) appDomain.CreateInstanceAndUnwrap(
+					/*TestClassProxy proxy = (TestClassProxy) appDomain.CreateInstanceAndUnwrap(
 						typeof(TestClassProxy).Assembly.FullName,
-						"PatternGuidedGP.Compiler.CSharp.TestClassProxy");
+						"PatternGuidedGP.Compiler.CSharp.TestClassProxy");*/
+					TestClassProxy proxy = new TestClassProxy();
 					proxy.Initialize(ms.GetBuffer(), "ProblemClass", "Test");
 					return proxy;
 				} else {

@@ -7,8 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GPExtensions {
-	class RecordBasedSubTreePool : DefaultSubTreePool {
-		protected class RecordTreeNodeItem : TreeNodeItem {
+	class RecordBasedSubTreePool : SubTreePoolBase {
+		protected class RecordTreeNodeItem : PoolItem {
 			public int Improved { get; private set; }
 			public int Deteriorated { get; private set; }
 
@@ -23,11 +23,11 @@ namespace PatternGuidedGP.GPExtensions {
 			}
 
 			public override double GetFitness() {
-				return Improved / (double) Deteriorated;
+				return (double) Improved / (double) Deteriorated;
 			}
 		}
 
-		protected override TreeNodeItem CreateItem(TreeNode node, double fitness) {
+		protected override PoolItem CreateItem(TreeNode node, object data) {
 			return new RecordTreeNodeItem(node, 0, 0);
 		}
 	}

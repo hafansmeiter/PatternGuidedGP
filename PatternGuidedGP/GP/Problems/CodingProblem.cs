@@ -67,7 +67,12 @@ namespace PatternGuidedGP.GP.Problems {
 						SyntaxFactory.UsingDirective(
 							SyntaxFactory.QualifiedName(
 								SyntaxFactory.IdentifierName("PatternGuidedGP"),
-								SyntaxFactory.IdentifierName("Pangea")))}))
+								SyntaxFactory.IdentifierName("Pangea"))),
+						SyntaxFactory.UsingDirective(
+							SyntaxFactory.QualifiedName(
+								SyntaxFactory.IdentifierName("PatternGuidedGP"),
+								SyntaxFactory.IdentifierName("Util")))
+					}))
 				.WithMembers(
 					SyntaxFactory.SingletonList<MemberDeclarationSyntax>(
 						SyntaxFactory.ClassDeclaration("ProblemClass")

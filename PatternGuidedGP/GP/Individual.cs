@@ -7,7 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP {
-	class Individual : IComparable<Individual> {
+	class Individual : IComparable<Individual>, ISemanticsProvider {
+
+		private double _fitness = 0.0;
 		public double Fitness {
 			get {
 				return _fitness;
@@ -17,6 +19,8 @@ namespace PatternGuidedGP.GP {
 				_fitnessEvaluated = true;
 			}
 		}
+
+		private bool _fitnessEvaluated = false;
 		public bool FitnessEvaluated {
 			get {
 				return _fitnessEvaluated;
@@ -27,8 +31,18 @@ namespace PatternGuidedGP.GP {
 		}
 		public SyntaxTree SyntaxTree { get; set; }
 
-		private double _fitness = 0.0;
-		private bool _fitnessEvaluated = false;
+		private Semantics _semantics;
+		public Semantics Semantics {
+			get => _semantics;
+			set => _semantics = value;
+		}
+
+		private bool _isSemanticsEvaluated;
+		public bool IsSemanticsEvaluated {
+			get => _isSemanticsEvaluated;
+			set => _isSemanticsEvaluated = value;
+		}
+
 
 		public Individual(SyntaxTree syntaxTree) {
 			SyntaxTree = syntaxTree;

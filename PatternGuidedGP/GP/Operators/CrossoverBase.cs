@@ -12,6 +12,6 @@ namespace PatternGuidedGP.GP.Operators {
 			MaxTreeDepth = maxTreeDepth;
 		}
 
-		public abstract Individual cross(Individual individual1, Individual individual2);
+		public abstract IEnumerable<Individual> cross(Individual individual1, Individual individual2);
 	}
 }

@@ -39,8 +39,8 @@ namespace PatternGuidedGP {
 			};
 
 			var configurations = new[] {
+				new RunConfiguration("Standard PANGEA") { FitnessEvaluator = mdlEvaluator },
 				new RunConfiguration("Standard GP") { FitnessEvaluator = defaultEvaluator },
-				new RunConfiguration("Standard PANGEA") { FitnessEvaluator = mdlEvaluator }
 			};
 
 			Problem[] problems = new Problem[] {
@@ -78,7 +78,7 @@ namespace PatternGuidedGP {
 						};
 
 						Individual bestSolution = algorithm.Run(problem);
-						if (bestSolution != null && bestSolution.Fitness == 0) {
+						if (algorithm.IsSolutionFound()) {
 							solved++;
 						}
 					}

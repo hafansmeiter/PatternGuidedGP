@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	delegate IEnumerable<TreeNode> TreeNodeFilter(IEnumerable<TreeNode> nodes);
 
-	internal abstract class TreeNode : ICSharpSyntaxGenerator, ITraceable {
+	abstract class TreeNode : ICSharpSyntaxGenerator, ITraceable {
 		public abstract bool IsTerminal { get; }
 		public abstract bool IsVariable { get; }
 		public abstract int RequiredTreeDepth { get; }
@@ -25,7 +25,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		public virtual bool IsTraceable { get; } = false;
 		public virtual bool IsBackPropagationBase { get; } = false;
-
+	
 		public TreeNode Parent { get; set; }
 		public List<TreeNode> Children { get; private set; }
 
@@ -196,7 +196,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		public IEnumerable<TreeNode> GetPathTo(TreeNode node) {
 			var current = this;
-			while (current != node) {	// not including node itself
+			while (current != node) {   // not including node itself
 				yield return current;
 				current = current.Parent;
 			}

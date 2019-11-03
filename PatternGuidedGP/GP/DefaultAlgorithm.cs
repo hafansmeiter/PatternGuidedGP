@@ -58,28 +58,32 @@ namespace PatternGuidedGP.GP {
 			nextGen.Add(population.GetFittest(Elitism).ToArray());
 			int duplicates = 0;
 			while (nextGen.IndividualCount < size) {
-			//for (int i = 0; i < nextGen.Size - Elitism; i++) {
-				Individual child = null;
+				IList<Individual> children = new List<Individual>();
 				// create child by crossover or copy from old population
 				if (RandomValueGenerator.Instance.GetDouble() < CrossoverRate) {
-					child = new Individual(Crossover.cross(Selector.Select(population),
-						Selector.Select(population)));
-				}
-				else {
-					child = new Individual(population.GetRandom());
-				}
-				if (RandomValueGenerator.Instance.GetDouble() < MutationRate) {
-					if (Mutator.Mutate(child)) {
-						child.FitnessEvaluated = false;
+					foreach (var child in Crossover.cross(Selector.Select(population), Selector.Select(population))) {
+						children.Add(new Individual(child));
 					}
 				}
-				if (!nextGen.ContainsIndividual(child)) {
-					nextGen.Add(child);
-				} else {
-					duplicates++;
+				else {
+					children.Add(new Individual(population.GetRandom()));
+				}
+				foreach (var child in children) {
+					if (RandomValueGenerator.Instance.GetDouble() < MutationRate) {
+						if (Mutator.Mutate(child)) {
+							child.FitnessEvaluated = false;
+						}
+					}
+					if (AllowDuplicates || !nextGen.ContainsIndividual(child)) {
+						nextGen.Add(child);
+					} else {
+						duplicates++;
+					}
 				}
 			}
-			Logger.WriteLine(1, "Generated duplicates: " + duplicates);
+			if (!AllowDuplicates) {
+				Logger.WriteLine(1, "Generated duplicates: " + duplicates);
+			}
 			return nextGen;
 		}
 	}

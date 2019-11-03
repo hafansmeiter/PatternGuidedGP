@@ -24,5 +24,9 @@ namespace PatternGuidedGP.Util {
 		public double GetDouble() {
 			return _random.NextDouble();
 		}
+
+		public bool GetBool() {
+			return GetDouble() >= 0.5;
+		}
 	}
 }

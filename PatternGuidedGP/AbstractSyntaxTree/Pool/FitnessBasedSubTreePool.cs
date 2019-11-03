@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
-	class FitnessBasedSubTreePool : DefaultSubTreePool {
-		protected class FitnessTreeNodeItem : TreeNodeItem {
+	class FitnessBasedSubTreePool : SubTreePoolBase {
+		protected class FitnessTreeNodeItem : PoolItem {
 			public double Fitness { get; }
 
 			public FitnessTreeNodeItem(TreeNode node, double fitness) 
@@ -19,8 +19,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			}
 		}
 
-		protected override TreeNodeItem CreateItem(TreeNode node, double fitness) {
-			return new FitnessTreeNodeItem(node, fitness);
+		protected override PoolItem CreateItem(TreeNode node, object data) {
+			return new FitnessTreeNodeItem(node, (double) data);
 		}
 	}
 }

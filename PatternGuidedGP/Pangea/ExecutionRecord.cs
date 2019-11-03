@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.Pangea {
+
+	[Serializable]
 	public class ExecutionRecord {
 		public ulong NodeId { get; }
 		public object Value { get; }

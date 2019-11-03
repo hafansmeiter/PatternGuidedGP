@@ -35,7 +35,7 @@ namespace PatternGuidedGP.GP.Evaluators {
 			Logger.WriteLine(4, "Run test method:");
 			Logger.WriteLine(4, compilationUnit.ToString());
 
-			AppDomain appDomain = AppDomain.CreateDomain("AppDomain");
+			AppDomain appDomain = null;// AppDomain.CreateDomain("AppDomain");
 			var testable = GetTestableObject(appDomain, compilationUnit);
 
 			PrepareTestRuns(individual, testSuite);
@@ -46,8 +46,6 @@ namespace PatternGuidedGP.GP.Evaluators {
 				TestCase test = testSuite.TestCases[i];
 				try {
 					results[i] = RunTestCase(testable, test);
-
-					//Console.WriteLine("Test case: " + test.ToString() + ", GP result=" + result);
 				} catch (Exception ex) {
 					//Logger.WriteLine(4, "Exception: " + ex.GetType().Name);
 					// Code does not run properly, e.g. DivideByZeroException
@@ -56,7 +54,7 @@ namespace PatternGuidedGP.GP.Evaluators {
 				OnTestRunFinished(individual, test, results[i]);
 			}
 
-			AppDomain.Unload(appDomain);
+			//AppDomain.Unload(appDomain);
 
 			FitnessResult fitness = CalculateFitness(individual, testSuite, results);
 			OnEvaluationFinished(individual, fitness);
