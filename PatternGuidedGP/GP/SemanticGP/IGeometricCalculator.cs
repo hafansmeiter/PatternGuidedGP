@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.SemanticGP {
-	interface IMidpointCalculator {
+	interface IGeometricCalculator {
 		Semantics GetMidpoint(Semantics semantics1, Semantics semantics2);
 	}
 }

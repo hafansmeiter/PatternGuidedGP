@@ -7,21 +7,23 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.SemanticGP {
-	class ApproximatelyGeometricSemanticCrossover : ICrossover {
 
-		public IMidpointCalculator MidpointCalculator { get; set; }
+	// Pawlak et al. - Semantic Backpropagation for Designing Search Operators in GP: page 332
+	// AGX Crossover
+	class ApproximatelyGeometricSemanticCrossover : ICrossover, IGeometricOperator {
+
+		public IGeometricCalculator GeometricCalculator { get; set; }
 		public ISemanticSubTreePool SubTreePool { get; set; }
 		public IResultSemanticsOperator ResultSemanticsOperator { get; set; } = new RandomDesiredOperator();
 		public int MaxTreeDepth { get; set; }
 
-		public ApproximatelyGeometricSemanticCrossover(ISemanticSubTreePool subTreePool, IMidpointCalculator midpointCalculator, int maxTreeDepth) {
-			MidpointCalculator = midpointCalculator;
-			SubTreePool = SubTreePool;
+		public ApproximatelyGeometricSemanticCrossover(ISemanticSubTreePool subTreePool, int maxTreeDepth) {
+			SubTreePool = subTreePool;
 			MaxTreeDepth = maxTreeDepth;
 		}
 
 		public IEnumerable<Individual> cross(Individual individual1, Individual individual2) {
-			var midpoint = MidpointCalculator.GetMidpoint(individual1.Semantics, individual2.Semantics);
+			var midpoint = GeometricCalculator.GetMidpoint(individual1.Semantics, individual2.Semantics);
 
 			var child1 = new Individual(individual1);
 			var child2 = new Individual(individual2);

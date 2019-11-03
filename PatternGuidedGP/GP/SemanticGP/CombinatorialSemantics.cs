@@ -24,6 +24,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			}
 		}
 
+		[Obsolete]
 		public IEnumerable<Semantics> CartesianProduct() {
 			IEnumerable<IEnumerable<object>> emptyProduct = new[] { Enumerable.Empty<object>() };
 			return _valueSets.Aggregate(
@@ -32,6 +33,77 @@ namespace PatternGuidedGP.GP.SemanticGP {
 					from acc in accumulator
 					from item in sequence
 					select acc.Concat(new[] { item })).Select(enumerable => new Semantics(enumerable));
+		}
+
+		public static double NumericDistance(CombinatorialSemantics desired, Semantics candidate, IEnumerable<Semantics> allCandidates) {
+			double distance = 0.0;
+			for (int i = 0; i < Math.Min(desired.Length, candidate.Length); i++) {
+				var semantics = desired[i];
+				foreach (var value in semantics) {
+					if (candidate[i] == null) {
+						// if candidate has no semantic value, take the worst distance of the other candidates
+						// if no other candidate has a semantic value, ignore i'th value
+						bool distanceFound;
+						double worstDistance = GetWorstDistance((double) value, allCandidates, i, out distanceFound);
+						if (distanceFound) {
+							distance += worstDistance; 
+						}
+					} else {
+						var dist = Math.Abs((double)value - (double)candidate[i]);
+						distance += dist;
+					}
+				}
+			}
+			return distance;
+		}
+
+		private static double GetWorstDistance(double value, IEnumerable<Semantics> allCandidates, int i, out bool distanceFound) {
+			var found = false;
+			var worst = Double.MinValue;
+			foreach (var candidate in allCandidates) {
+				if (candidate[i] != null) {
+					var distance = Math.Abs(((double)candidate[i]) - value);
+					if (distance > worst) {
+						worst = distance;
+					}
+					found = true;
+				}
+			}
+			distanceFound = found;
+			return worst;
+		}
+
+		public static double HammingDistance(CombinatorialSemantics desired, Semantics candidate, IEnumerable<Semantics> allCandidates) {
+			double distance = 0.0;
+			for (int i = 0; i < Math.Min(desired.Length, candidate.Length); i++) {
+				var semantics = desired[i];
+				foreach (var value in semantics) {
+					if (candidate == null || !value.Equals(candidate[i])) {
+						distance++;
+					}
+				}
+			}
+			return distance;
+		}
+
+		public override string ToString() {
+			StringBuilder builder = new StringBuilder();
+			builder.Append("[");
+			for (int i = 0; i < Length; i++) {
+				if (i > 0) {
+					builder.Append(", ");
+				}
+				builder.Append("{");
+				for (int j = 0; j < _valueSets[i].Count; j++) {
+					if (j > 0) {
+						builder.Append(", ");
+					}
+					builder.Append(_valueSets[i].ElementAt(j).ToString());
+				}
+				builder.Append("}");
+			}
+			builder.Append("]");
+			return builder.ToString();
 		}
 	}
 }

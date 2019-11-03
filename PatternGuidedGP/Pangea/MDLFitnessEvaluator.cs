@@ -9,7 +9,6 @@ using PatternGuidedGP.AbstractSyntaxTree.Pool;
 using PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator;
 using PatternGuidedGP.GP;
 using PatternGuidedGP.GP.Evaluators;
-using PatternGuidedGP.GP.Problems;
 using PatternGuidedGP.GP.Tests;
 using PatternGuidedGP.Util;
 using System;
@@ -35,13 +34,12 @@ namespace PatternGuidedGP.Pangea {
 		public ISubTreePool SubTreePool { get; set; }
 
 		protected override void PrepareTestRuns(Individual individual, TestSuite testSuite) {
-			//ExecutionTraces.Reset();
-			Singleton<ExecutionTraces>.Instance.Reset();
+			ExecutionTraces.Reset();
 		}
 
 		protected override FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {
 			double fitness = base.CalculateFitness(individual, testSuite, results).Fitness; // standard fitness f0
-			var dataset = MLDataset.FromExecutionTraces(individual, Singleton<ExecutionTraces>.Instance.Traces);
+			var dataset = MLDataset.FromExecutionTraces(individual, ExecutionTraces.Traces);
 			LogDatasetFeatures(dataset);
 
 			if (dataset.Features.Count() > 0) {
@@ -67,11 +65,10 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		protected override void OnTestRunFinished(Individual individual, TestCase testCase, object result) {
-			//ExecutionTraces.FinishCurrent();
-			Singleton<ExecutionTraces>.Instance.FinishCurrent();
+			ExecutionTraces.FinishCurrent();
 		}
 
-		protected override void OnEvaluationFinished(Individual individual, FitnessResult fitness) {
+		protected override void OnEvaluationFinished(Individual individual, FitnessResult fitness, object[] results) {
 			MDLFitnessResult fitnessResult = fitness as MDLFitnessResult;
 			if (SubTreePool != null) {
 				double fitnessValue = fitnessResult.Fitness;
@@ -149,64 +146,70 @@ namespace PatternGuidedGP.Pangea {
 			// Code example: 
 			// ret = a + b;
 			// Store execution trace for code (23, 1, 2, 3 are node ids):
-			// Singleton<ExecutionTraces>.Instance.Current.Add(23, new ExecutionRecord(1, a + b), new ExecutionRecord(2, a), new ExecutionRecord(3, b));
+			// try {
+			//   ExecutionTraces.Current.Add(23, new ExecutionRecord(1, a + b));
+			// } catch (Exception e) {}
+			// try {
+			//   ExecutionTraces.Current.Add(23, new ExecutionRecord(2, a));
+			// } catch (Exception e) {}
+			// try {
+			//   ExecutionTraces.Current.Add(23, new ExecutionRecord(3, b));
+			// } catch (Exception e) {}
 
-			var executionTraceParameters = new List<ArgumentSyntax> {
-								SyntaxFactory.Argument(SyntaxFactory.LiteralExpression(
-									SyntaxKind.NumericLiteralExpression,
-									SyntaxFactory.Literal(tracedNode.Id)))
-			};
-			executionTraceParameters.AddRange(tracedNode.GetExecutionTraceNodes().Select(node => SyntaxFactory.Argument(
-									SyntaxFactory.ObjectCreationExpression(
-										SyntaxFactory.IdentifierName("ExecutionRecord"))
-									.WithArgumentList(
-										SyntaxFactory.ArgumentList(
-											SyntaxFactory.SeparatedList(
-												new ArgumentSyntax[] {
-													SyntaxFactory.Argument(
-														SyntaxFactory.LiteralExpression(
-															SyntaxKind.NumericLiteralExpression,
-															SyntaxFactory.Literal(node.Id))),
-													SyntaxFactory.Argument(
-														(ExpressionSyntax) node.GetSyntaxNode())
-												}
-											)
-										)
-									)
-								)));
-			return SyntaxFactory.ExpressionStatement(
-				SyntaxFactory.InvocationExpression(
+			var statements = new List<StatementSyntax>();
+			statements.AddRange(tracedNode.GetExecutionTraceNodes().Select(node =>
+				SyntaxFactory.TryStatement(
+					SyntaxFactory.SingletonList<CatchClauseSyntax>(
+						SyntaxFactory.CatchClause()
+						.WithDeclaration(
+							SyntaxFactory.CatchDeclaration(
+								SyntaxFactory.IdentifierName("Exception"))
+							.WithIdentifier(
+								SyntaxFactory.Identifier("e")))))
+				.WithBlock(
+					SyntaxFactory.Block(
+						SyntaxFactory.ExpressionStatement(
+							SyntaxFactory.InvocationExpression(
+								SyntaxFactory.MemberAccessExpression(
+									SyntaxKind.SimpleMemberAccessExpression,
 									SyntaxFactory.MemberAccessExpression(
 										SyntaxKind.SimpleMemberAccessExpression,
-										SyntaxFactory.MemberAccessExpression(
-											SyntaxKind.SimpleMemberAccessExpression,
-											SyntaxFactory.MemberAccessExpression(
-												SyntaxKind.SimpleMemberAccessExpression,
-												SyntaxFactory.GenericName(
-													SyntaxFactory.Identifier("Singleton"))
-												.WithTypeArgumentList(
-													SyntaxFactory.TypeArgumentList(
-														SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-															SyntaxFactory.IdentifierName("ExecutionTraces")))),
-												SyntaxFactory.IdentifierName("Instance")),
-											SyntaxFactory.IdentifierName("Current")),
-										SyntaxFactory.IdentifierName("Add")))
-				/*SyntaxFactory.InvocationExpression(
-					SyntaxFactory.MemberAccessExpression(
-						SyntaxKind.SimpleMemberAccessExpression,
-						SyntaxFactory.MemberAccessExpression(
-							SyntaxKind.SimpleMemberAccessExpression,
-							SyntaxFactory.IdentifierName("ExecutionTraces"),
-							SyntaxFactory.IdentifierName("Current")),
-						SyntaxFactory.IdentifierName("Add")))*/
-				.WithArgumentList(
-					SyntaxFactory.ArgumentList(
-						SyntaxFactory.SeparatedList<ArgumentSyntax>(
-							executionTraceParameters
+										SyntaxFactory.IdentifierName("ExecutionTraces"),
+										SyntaxFactory.IdentifierName("Current")),
+									SyntaxFactory.IdentifierName("Add")))
+							.WithArgumentList(
+								SyntaxFactory.ArgumentList(
+									SyntaxFactory.SeparatedList<ArgumentSyntax>(
+										new ArgumentSyntax[] {
+											SyntaxFactory.Argument(SyntaxFactory.LiteralExpression(
+												SyntaxKind.NumericLiteralExpression,
+												SyntaxFactory.Literal(tracedNode.Id))),
+											SyntaxFactory.Argument(
+													SyntaxFactory.ObjectCreationExpression(
+														SyntaxFactory.IdentifierName("ExecutionRecord"))
+													.WithArgumentList(
+														SyntaxFactory.ArgumentList(
+															SyntaxFactory.SeparatedList(
+																new ArgumentSyntax[] {
+																	SyntaxFactory.Argument(
+																		SyntaxFactory.LiteralExpression(
+																			SyntaxKind.NumericLiteralExpression,
+																			SyntaxFactory.Literal(node.Id))),
+																	SyntaxFactory.Argument(
+																		(ExpressionSyntax) node.GetSyntaxNode())
+																}
+															)
+														)
+													)
+												)
+											}
+										)
+									)
+								)
+							)
 						)
-					)
-				)
-			);
+					)));
+			return SyntaxFactory.Block(statements);
 		}
 
 		private void LogResult(double fitness, double error, int treeLength, double mdlFitness, Accord.MachineLearning.DecisionTrees.Rules.DecisionSet rules) {

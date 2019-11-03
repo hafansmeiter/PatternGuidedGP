@@ -1,0 +1,16 @@
+21:00:07 03.11.2019: Run configuration: PANGEA + Semantic Backpropagation Operators
+21:00:07 03.11.2019: AllEqualProblem:
+21:00:07 03.11.2019: Generation 0: 
+21:27:39 03.11.2019: Run configuration: PANGEA + Semantic Backpropagation Operators
+21:27:39 03.11.2019: AllEqualProblem:
+21:27:39 03.11.2019: Generation 0: 
+21:27:51 03.11.2019: Best fitness: 0,111111111111111, Avg: 0,348121147845567
+21:31:34 03.11.2019: Run configuration: PANGEA + Semantic Backpropagation Operators
+21:31:34 03.11.2019: AllEqualProblem:
+21:31:34 03.11.2019: Generation 0: 
+21:32:56 03.11.2019: Run configuration: PANGEA + Semantic Backpropagation Operators
+21:32:56 03.11.2019: AllEqualProblem:
+21:32:56 03.11.2019: Generation 0: 
+21:35:26 03.11.2019: Run configuration: PANGEA + Semantic Backpropagation Operators
+21:35:26 03.11.2019: AllEqualProblem:
+21:35:26 03.11.2019: Generation 0: 

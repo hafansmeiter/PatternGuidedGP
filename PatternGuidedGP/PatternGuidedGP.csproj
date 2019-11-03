@@ -15,6 +15,21 @@
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -173,18 +188,20 @@
     <Compile Include="GP\Evaluators\DefaultFitnessEvaluator.cs" />
     <Compile Include="GP\Evaluators\IFitnessEvaluator.cs" />
     <Compile Include="GP\Evaluators\ProgramFitnessEvaluator.cs" />
-    <Compile Include="GP\SemanticGP\BoolMidpointCalculator.cs" />
+    <Compile Include="GP\SemanticGP\BoolGeometricCalculator.cs" />
     <Compile Include="GP\SemanticGP\CombinatorialSemantics.cs" />
     <Compile Include="GP\SemanticGP\ApproximatelyGeometricSemanticCrossover.cs" />
+    <Compile Include="GP\SemanticGP\IGeometricOperator.cs" />
+    <Compile Include="GP\SemanticGP\ISemanticOperator.cs" />
     <Compile Include="GP\SemanticGP\ISemanticPropagator.cs" />
     <Compile Include="GP\SemanticGP\RandomDesiredOperator.cs" />
-    <Compile Include="GP\SemanticGP\IMidpointCalculator.cs" />
-    <Compile Include="GP\SemanticGP\IntMidpointCalculator.cs" />
+    <Compile Include="GP\SemanticGP\IGeometricCalculator.cs" />
+    <Compile Include="GP\SemanticGP\IntGeometricCalculator.cs" />
     <Compile Include="GP\SemanticGP\ApproximatelySemanticMutator.cs" />
     <Compile Include="GP\SemanticGP\IInvertible.cs" />
     <Compile Include="GP\SemanticGP\IResultSemanticsOperator.cs" />
     <Compile Include="GP\SemanticGP\ISemanticSubTreePool.cs" />
-    <Compile Include="GP\SemanticGP\SemanticBackPropagator.cs" />
+    <Compile Include="GP\SemanticGP\PawlakSemanticBackPropagator.cs" />
     <Compile Include="GP\SemanticGP\SemanticMDLFitnessEvaluator.cs" />
     <Compile Include="GP\SemanticGP\Semantics.cs" />
     <Compile Include="GP\Operators\CrossoverBase.cs" />
@@ -229,12 +246,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AbstractSyntaxTree\TreeNode.cs" />
-    <Compile Include="Util\AppDomainHelper.cs" />
     <Compile Include="Util\IDeepCloneable.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Util\MultiValueDictionary.cs" />
     <Compile Include="Util\RandomValueGenerator.cs" />
-    <Compile Include="Util\Singleton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -246,7 +261,18 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.9.3\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

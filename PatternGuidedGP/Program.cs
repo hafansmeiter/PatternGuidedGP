@@ -17,6 +17,7 @@ using PatternGuidedGP.GP;
 using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Operators;
 using PatternGuidedGP.GP.Problems;
+using PatternGuidedGP.GP.SemanticGP;
 using PatternGuidedGP.GP.Tests;
 using PatternGuidedGP.Pangea;
 using PatternGuidedGP.Util;
@@ -25,22 +26,37 @@ namespace PatternGuidedGP {
 	class Program {
 		
 		static void Main(string[] args) {
-			Logger.Level = 0;
+			int runConfig, runProblem;
+			EvaluateArgs(args, out runConfig, out runProblem);
 
-			var subTreePool = new FitnessBasedSubTreePool();
+			Logger.Level = 1;
 
-			var compiler = new CSharpCompiler();
-			var defaultEvaluator = new DefaultFitnessEvaluator() {
-				Compiler = compiler
-			};
-			var mdlEvaluator = new MDLFitnessEvaluator() {
-				Compiler = compiler,
-				//SubTreePool = subTreePool
-			};
+			int maxTreeDepth = 5;
+			int maxMutationTreeDepth = 3;
+			int populationSize = 50;
+			int generations = 20;
+
+			var semanticsBasedSubTreePool = new SemanticsBasedSubTreePool();
+			var generator = new KozaTreeGeneratorGrow();
 
 			var configurations = new[] {
-				new RunConfiguration("Standard PANGEA") { FitnessEvaluator = mdlEvaluator },
-				new RunConfiguration("Standard GP") { FitnessEvaluator = defaultEvaluator },
+				new RunConfiguration("Standard GP") {
+					FitnessEvaluator = new DefaultFitnessEvaluator(),
+					Crossover = new RandomSubtreeCrossover(maxTreeDepth),
+					Mutator = new RandomSubtreeMutator(generator, maxTreeDepth, maxMutationTreeDepth)
+				},
+				new RunConfiguration("Standard PANGEA") {
+					FitnessEvaluator = new MDLFitnessEvaluator(),
+					Crossover = new RandomSubtreeCrossover(maxTreeDepth),
+					Mutator = new RandomSubtreeMutator(generator, maxTreeDepth, maxMutationTreeDepth)
+				},
+				new RunConfiguration("PANGEA + Semantic Backpropagation Operators") {
+					FitnessEvaluator = new SemanticMDLFitnessEvaluator() {
+						SubTreePool = semanticsBasedSubTreePool
+					},
+					Crossover = new ApproximatelyGeometricSemanticCrossover(semanticsBasedSubTreePool, maxTreeDepth),
+					Mutator = new ApproximatelySemanticMutator(semanticsBasedSubTreePool, maxTreeDepth)
+				}
 			};
 
 			Problem[] problems = new Problem[] {
@@ -55,25 +71,37 @@ namespace PatternGuidedGP {
 				new ParityProblem(6)
 			};
 
+			if (runConfig >= 0) {
+				configurations = new[] { configurations[runConfig] };
+			}
+			if (runProblem >= 0) {
+				problems = new[] { problems[runProblem] };
+			}
+
 			foreach (var config in configurations) {
+				Logger.FileName = "..\\..\\..\\" + config.Name + ".txt";
 				Logger.WriteLine(0, "Run configuration: " + config.Name);
 				foreach (var problem in problems) {
 					Logger.WriteLine(0, problem.GetType().Name + ":");
 					problem.FitnessEvaluator = config.FitnessEvaluator;
-
-					var generator = new KozaTreeGeneratorGrow();
 					generator.TreeNodeRepository = problem.TreeNodeRepository;
+					if (config.Crossover is IGeometricOperator) {
+						((IGeometricOperator)config.Crossover).GeometricCalculator = problem.GeometricCalculator;
+					}
+					if (config.Mutator is ISemanticOperator) {
+						((ISemanticOperator)config.Mutator).DesiredSemantics = problem.TestSuite.Semantics;
+					}
 
 					int solved = 0;
 					for (int i = 0; i < config.Runs; i++) {
-						DefaultAlgorithm algorithm = new DefaultAlgorithm(populationSize: 100, generations: 50) {
-							Crossover = new RandomSubtreeCrossover(maxTreeDepth: 7),
+						DefaultAlgorithm algorithm = new DefaultAlgorithm(populationSize, generations) {
+							Crossover = config.Crossover,
 							CrossoverRate = 0.7,
 							Elitism = 5,
-							Initializer = new RampedHalfHalfInitializer(maxTreeDepth: 7, repository: problem.TreeNodeRepository),
-							MaxTreeDepth = 9,
+							Initializer = new RampedHalfHalfInitializer(maxTreeDepth, problem.TreeNodeRepository),
+							MaxTreeDepth = 9,	// not used
 							MutationRate = 0.2,
-							Mutator = new RandomSubtreeMutator(generator, maxTreeDepth: 7, maxMutationTreeDepth: 3),
+							Mutator = config.Mutator,
 							Selector = new TournamentSelector(7)
 						};
 
@@ -86,8 +114,18 @@ namespace PatternGuidedGP {
 					Logger.WriteLine(0, "=====================================================");
 				}
 			}
+		}
 
-			Console.ReadKey();
+		private static void EvaluateArgs(string [] args, out int runConfig, out int runProblem) {
+			runConfig = -1;
+			runProblem = -1;
+			foreach (var arg in args) {
+				if (arg.StartsWith("/config:")) {
+					runConfig = int.Parse(arg.Substring(8));
+				} else if (arg.StartsWith("/problem:")) {
+					runProblem = int.Parse(arg.Substring(9));
+				}
+			}
 		}
 	}
 }

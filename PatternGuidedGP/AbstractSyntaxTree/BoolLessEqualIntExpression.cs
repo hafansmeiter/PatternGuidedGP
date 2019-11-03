@@ -13,7 +13,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			return SyntaxKind.LessThanOrEqualExpression;
 		}
 
-		public override bool IsInvertible => true;
+		public override bool IsInvertible => false;
 
 		public override IEnumerable<object> Invert(object desiredValue, int k, object complementValue, out bool ambiguous) {
 			ambiguous = true;

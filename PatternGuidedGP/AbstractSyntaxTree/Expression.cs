@@ -14,11 +14,14 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		private Semantics _semantics;
 		public Semantics Semantics {
 			get => _semantics;
-			set => _semantics = value;
+			set {
+				_semantics = value;
+				_isSemanticsEvaluated = true;
+			}
 		}
 
 		private bool _isSemanticsEvaluated;
-		public bool IsSemanticsEvaluated {
+		public bool SemanticsEvaluated {
 			get => _isSemanticsEvaluated;
 			set => _isSemanticsEvaluated = value;
 		}

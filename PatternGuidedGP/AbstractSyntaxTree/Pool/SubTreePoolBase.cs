@@ -65,6 +65,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 
 		public bool Contains(TreeNode node) {
 			foreach (var item in _items) {
+				Console.WriteLine("SubTreePoolBase.Contains: Equals=" + item.Node.Equals(node) + 
+					"; EqualsTreeNode=" + item.Node.EqualsTreeNode(node));
+				if (item.Node.Equals(node) != item.Node.EqualsTreeNode(node)) {
+					Console.WriteLine("Not equal!");
+					item.Node.Equals(node);
+				}
 				if (item.Node.EqualsTreeNode(node)) {
 					return true;
 				}

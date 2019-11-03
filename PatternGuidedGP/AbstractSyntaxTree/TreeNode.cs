@@ -24,7 +24,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public abstract Type[] ChildTypes { get; }
 
 		public virtual bool IsTraceable { get; } = false;
-		public virtual bool IsBackPropagationBase { get; } = false;
 	
 		public TreeNode Parent { get; set; }
 		public List<TreeNode> Children { get; private set; }
@@ -153,7 +152,44 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			}
 		}
 
-		public bool EqualsTreeNode(TreeNode other) {
+		// Get root node for semantic backpropagation.
+		// Relevant if this tree node is returned as root by method IsBackPropagable.
+		// Mostly, return either this tree node or a direct child.
+		public virtual TreeNode GetBackPropagationRoot() {
+			return null;
+		}
+
+		public virtual bool IsBackPropagationRootFor(TreeNode origin) {
+			return false;
+		}
+
+		public virtual bool IsBackPropagable(out TreeNode root) {
+			var current = this;
+			while ((current = current.Parent) != null) {
+				if (current.IsBackPropagationRootFor(this)) {
+					root = current.GetBackPropagationRoot();
+					return true;
+				}
+			}
+			root = null;
+			return false;
+		}
+
+		public IList<TreeNode> GetPathTo(TreeNode node) {
+			var path = new LinkedList<TreeNode>();
+			var current = node;
+			while (current != this) {   // not including node itself
+				path.AddFirst(current);
+				current = current.Parent;
+				if (current == null) {  // no path exists from this node to given node -> return null
+					return null;
+				}
+			}
+			return path.ToList();
+		}
+
+		public override bool Equals(object obj) {
+			TreeNode other = obj as TreeNode;
 			if (other == null) {
 				return false;
 			}
@@ -168,38 +204,20 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 				return false;
 			}
 			for (int i = 0; i < Children.Count; i++) {
-				if (!Children[i].EqualsTreeNode(other.Children[i])) {
+				if (!Children[i].Equals(other.Children[i])) {
 					return false;
 				}
 			}
 			return true;
 		}
 
-		// Get root node for semantic backpropagation.
-		// Relevant if this tree node is returned as root by method IsBackPropagable.
-		// Mostly, return either this tree node or a direct child.
-		public virtual TreeNode GetBackPropagationRoot() {
-			return null;
-		}
-
-		public bool IsBackPropagable(out TreeNode root) {
-			var current = this;
-			while ((current = current.Parent) != null) {
-				if (current.IsBackPropagationBase) {
-					root = current.GetBackPropagationRoot();
-					return true;
-				}
-			}
-			root = null;
-			return false;
-		}
-
-		public IEnumerable<TreeNode> GetPathTo(TreeNode node) {
-			var current = this;
-			while (current != node) {   // not including node itself
-				yield return current;
-				current = current.Parent;
-			}
+		public override int GetHashCode() {
+			var hashCode = -1987626574;
+			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Description);
+			hashCode = hashCode * -1521134295 + EqualityComparer<Type>.Default.GetHashCode(Type);
+			hashCode = hashCode * -1521134295 + EqualityComparer<Type[]>.Default.GetHashCode(ChildTypes);
+			hashCode = hashCode * -1521134295 + EqualityComparer<List<TreeNode>>.Default.GetHashCode(Children);
+			return hashCode;
 		}
 	}
 }

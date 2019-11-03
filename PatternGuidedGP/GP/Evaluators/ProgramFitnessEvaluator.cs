@@ -25,7 +25,7 @@ namespace PatternGuidedGP.GP.Evaluators {
 			}
 		}
 
-		public ICompiler Compiler { get; set; }
+		public ICompiler Compiler { get; set; } = new CSharpCompiler();	// default
 
 		public virtual double Evaluate(Individual individual, Problem problem) {
 			TestSuite testSuite = problem.TestSuite;
@@ -33,7 +33,7 @@ namespace PatternGuidedGP.GP.Evaluators {
 				testSuite.TestCases.First(),
 				problem.CodeTemplate);
 			Logger.WriteLine(4, "Run test method:");
-			Logger.WriteLine(4, compilationUnit.ToString());
+			Logger.WriteLine(4, compilationUnit.NormalizeWhitespace().ToString());
 
 			AppDomain appDomain = null;// AppDomain.CreateDomain("AppDomain");
 			var testable = GetTestableObject(appDomain, compilationUnit);
@@ -57,7 +57,7 @@ namespace PatternGuidedGP.GP.Evaluators {
 			//AppDomain.Unload(appDomain);
 
 			FitnessResult fitness = CalculateFitness(individual, testSuite, results);
-			OnEvaluationFinished(individual, fitness);
+			OnEvaluationFinished(individual, fitness, results);
 			return fitness.Fitness;
 		}
 
@@ -69,7 +69,7 @@ namespace PatternGuidedGP.GP.Evaluators {
 		protected virtual void OnTestRunFinished(Individual individual, TestCase testCase, object result) {
 		}
 
-		protected virtual void OnEvaluationFinished(Individual individual, FitnessResult fitness) {
+		protected virtual void OnEvaluationFinished(Individual individual, FitnessResult fitness, object [] results) {
 		}
 
 		protected virtual object RunTestCase(ITestable testable, TestCase test) {

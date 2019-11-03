@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.SemanticGP {
-	class ApproximatelySemanticMutator : IMutator {
+	class ApproximatelySemanticMutator : IMutator, ISemanticOperator {
 		public IResultSemanticsOperator ResultSemanticsOperator { get; set; } = new RandomDesiredOperator();
 		public ISemanticSubTreePool SubTreePool { get; set; }
 		public Semantics DesiredSemantics { get; set; }

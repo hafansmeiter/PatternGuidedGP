@@ -2,6 +2,7 @@
 using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.GP.Evaluators;
+using PatternGuidedGP.GP.SemanticGP;
 using PatternGuidedGP.GP.Tests;
 using PatternGuidedGP.Util;
 using System;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.GP.Problems {
 	abstract class Problem {
 		public IFitnessEvaluator FitnessEvaluator { get; set; }
+		public IGeometricCalculator GeometricCalculator { get; set; }
 		public TestSuite TestSuite { get; protected set; }
 		public CompilationUnitSyntax CodeTemplate { get; protected set; }
 		public TreeNodeRepository TreeNodeRepository { get; } = new TreeNodeRepository();
@@ -20,7 +22,7 @@ namespace PatternGuidedGP.GP.Problems {
 		public abstract Type ReturnType { get; }
 		public abstract Type ParameterType { get; }
 		public int ParameterCount { get; set; }
-
+		
 		public Problem(int n, bool initialize = true) {
 			ParameterCount = n;
 			if (initialize) {
@@ -31,6 +33,7 @@ namespace PatternGuidedGP.GP.Problems {
 		protected void Initialize() {
 			TestSuite = GetTestSuite();
 			CodeTemplate = GetCodeTemplate();
+			GeometricCalculator = GetGeometricCalculator();
 			AddTreeNodes(TreeNodeRepository);
 
 			Logger.WriteLine(4, GetType().Name + " test suite:");
@@ -40,6 +43,15 @@ namespace PatternGuidedGP.GP.Problems {
 				}
 				Logger.WriteLine(4, "-> " + test.Result.ToString());
 			}
+		}
+
+		protected virtual IGeometricCalculator GetGeometricCalculator() {
+			if (ReturnType == typeof(bool)) {
+				return new BoolGeometricCalculator();
+			} else if (ReturnType == typeof(int)) {
+				return new IntGeometricCalculator();
+			}
+			return null;
 		}
 
 		protected virtual void AddTreeNodes(TreeNodeRepository repository) {

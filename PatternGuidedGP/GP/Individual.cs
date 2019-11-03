@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.GP {
 	class Individual : IComparable<Individual>, ISemanticsProvider {
 
+		public SyntaxTree SyntaxTree { get; set; }
+
 		private double _fitness = 0.0;
 		public double Fitness {
 			get {
@@ -29,16 +31,18 @@ namespace PatternGuidedGP.GP {
 				_fitnessEvaluated = value;
 			}
 		}
-		public SyntaxTree SyntaxTree { get; set; }
 
 		private Semantics _semantics;
 		public Semantics Semantics {
 			get => _semantics;
-			set => _semantics = value;
+			set {
+				_semantics = value;
+				_isSemanticsEvaluated = true;
+			}
 		}
 
 		private bool _isSemanticsEvaluated;
-		public bool IsSemanticsEvaluated {
+		public bool SemanticsEvaluated {
 			get => _isSemanticsEvaluated;
 			set => _isSemanticsEvaluated = value;
 		}
@@ -52,6 +56,8 @@ namespace PatternGuidedGP.GP {
 			SyntaxTree = (SyntaxTree) other.SyntaxTree.DeepClone();
 			Fitness = other.Fitness;
 			FitnessEvaluated = other.FitnessEvaluated;
+			Semantics = other.Semantics;
+			SemanticsEvaluated = other.SemanticsEvaluated;
 		}
 
 		public int CompareTo(Individual other) {
@@ -72,7 +78,7 @@ namespace PatternGuidedGP.GP {
 		}
 
 		public override int GetHashCode() {
-			return base.GetHashCode();
+			return 745505790 + EqualityComparer<SyntaxTree>.Default.GetHashCode(SyntaxTree);
 		}
 	}
 }

@@ -100,7 +100,7 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		public static int ToDatasetValue(object o) {
-			int value = -1;
+			int value = 0;
 			if (o != null) {
 				if (o.GetType() == typeof(int)) {
 					value = (int)o;

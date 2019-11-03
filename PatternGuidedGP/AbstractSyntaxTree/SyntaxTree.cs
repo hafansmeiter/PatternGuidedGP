@@ -108,7 +108,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override bool Equals(object obj) {
 			var tree = obj as SyntaxTree;
 			return tree != null &&
-				   Root.EqualsTreeNode(tree.Root);
+				   Root.Equals(tree.Root);
+		}
+
+		public override int GetHashCode() {
+			return -1490287827 + EqualityComparer<TreeNode>.Default.GetHashCode(Root);
 		}
 	}
 }

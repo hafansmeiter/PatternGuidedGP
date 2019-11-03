@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.SemanticGP {
-	class IntMidpointCalculator : IMidpointCalculator {
+	class IntGeometricCalculator : IGeometricCalculator {
 
 		// Algorithm details: Pawlak et al. - Competent Geometric Semantic GP page 187 
 		public Semantics GetMidpoint(Semantics semantics1, Semantics semantics2) {

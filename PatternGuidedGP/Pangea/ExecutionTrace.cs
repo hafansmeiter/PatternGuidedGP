@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.Pangea {
 
-	[Serializable]
 	public class ExecutionTrace {
 
-		[Serializable]
 		public class Entry {
 			public ulong NodeId { get; set; }
 			public IList<ExecutionRecord> Records { get; set; } = new List<ExecutionRecord>();

@@ -119,8 +119,18 @@ namespace PatternGuidedGP.GP.Problems {
 																.WithAdditionalAnnotations(new SyntaxAnnotation("ReturnType"))
 														)
 														))))),
-										SyntaxFactory.Block()
-											.WithAdditionalAnnotations(new SyntaxAnnotation("SyntaxPlaceholder")),
+										SyntaxFactory.TryStatement(
+											SyntaxFactory.SingletonList<CatchClauseSyntax>(
+												SyntaxFactory.CatchClause()
+												.WithDeclaration(
+													SyntaxFactory.CatchDeclaration(
+														SyntaxFactory.IdentifierName("Exception"))
+													.WithIdentifier(
+														SyntaxFactory.Identifier("ex")))))
+										.WithBlock(
+											SyntaxFactory.Block(
+												SyntaxFactory.Block()
+													.WithAdditionalAnnotations(new SyntaxAnnotation("SyntaxPlaceholder")))),
 										SyntaxFactory.ReturnStatement(
 											SyntaxFactory.IdentifierName("ret"))))
 										)

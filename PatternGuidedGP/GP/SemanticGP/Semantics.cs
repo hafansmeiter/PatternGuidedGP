@@ -42,11 +42,29 @@ namespace PatternGuidedGP.GP.SemanticGP {
 		public static double HammingDistance(Semantics semantics1, Semantics semantics2) {
 			double distance = 0.0;
 			for (int i = 0; i < Math.Min(semantics1.Length, semantics2.Length); i++) {
-				if (!semantics1[i].Equals(semantics2[i])) {
+				if (semantics1[i] == null || semantics2[i] == null) {
+					if (semantics1[i] == null && semantics2[i] != null ||
+						semantics1[i] != null && semantics2[i] == null) {
+						distance++;
+					}
+				} else if (!semantics1[i].Equals(semantics2[i])) {
 					distance++;
 				}
 			}
 			return distance;
+		}
+
+		public override string ToString() {
+			StringBuilder builder = new StringBuilder();
+			builder.Append("[");
+			for (int i = 0; i < Length; i++) {
+				if (i > 0) {
+					builder.Append(", ");
+				}
+				builder.Append(_values[i].ToString());
+			}
+			builder.Append("]");
+			return builder.ToString();
 		}
 	}
 }

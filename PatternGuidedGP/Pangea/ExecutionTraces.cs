@@ -8,14 +8,11 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.Pangea {
 	 
 	public class ExecutionTraces : MarshalByRefObject {
-		private IList<ExecutionTrace> _traces { get; } = new List<ExecutionTrace>();
-		private ExecutionTrace _current;
-		private ExecutionTrace _emptyExecutionTrace = new ExecutionTrace();
+		static private IList<ExecutionTrace> _traces { get; } = new List<ExecutionTrace>();
+		static private ExecutionTrace _current;
+		static private ExecutionTrace _emptyExecutionTrace = new ExecutionTrace();
 
-		public ExecutionTraces() {
-		}
-
-		public ExecutionTrace Current {
+		static public ExecutionTrace Current {
 			get {
 				if (_current == null) {
 					_current = new ExecutionTrace();
@@ -24,18 +21,18 @@ namespace PatternGuidedGP.Pangea {
 			}
 		}
 
-		public IList<ExecutionTrace> Traces {
+		static public IList<ExecutionTrace> Traces {
 			get {
 				return _traces;
 			}
 		}
 
-		public void Reset() {
+		static public void Reset() {
 			_current = null;
 			_traces.Clear();
 		}
 
-		public void FinishCurrent() {
+		static public void FinishCurrent() {
 			if (_current == null) {
 				_current = _emptyExecutionTrace;
 			}

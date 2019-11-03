@@ -28,11 +28,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		public override object GetComplementValue(int k, int semanticsIndex) {
 			if (k == 0) {
-				if (Right.IsSemanticsEvaluated) {
+				if (Right.SemanticsEvaluated) {
 					return Right.Semantics[semanticsIndex];
 				}
 			} else if (k == 1) {
-				if (Left.IsSemanticsEvaluated) {
+				if (Left.SemanticsEvaluated) {
 					return Left.Semantics[semanticsIndex];
 				}
 			}
