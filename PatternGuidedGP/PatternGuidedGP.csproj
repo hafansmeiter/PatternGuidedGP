@@ -130,6 +130,7 @@
     <Compile Include="AbstractSyntaxTree\Pool\FitnessBasedSubTreePool.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\IPoolItemSelector.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\ISubTreePool.cs" />
+    <Compile Include="AbstractSyntaxTree\Pool\RandomPoolItemSelector.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\RankBasedPoolItemSelector.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\SubTreePoolBase.cs" />
     <Compile Include="AbstractSyntaxTree\SyntaxTree.cs" />

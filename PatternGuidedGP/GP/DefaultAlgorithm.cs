@@ -34,9 +34,10 @@ namespace PatternGuidedGP.GP {
 		}
 
 		private Individual EvaluatePopulation(Problem problem) {
-			problem.Evaluate(Population);
+			int evaluationCount = problem.Evaluate(Population);
 			Population.Sort();
 			//Console.WriteLine("Best:\n{0}", Population.GetFittest());
+			Logger.WriteLine(1, string.Format("Evaluated " + evaluationCount + "/" + Population.Size));
 			Logger.WriteLine(1, string.Format("Best fitness: {0}, Avg: {1}", Population.GetFittest().Fitness, Population.GetAverageFitness()));
 
 			if (IsSolutionFound()) {
@@ -61,7 +62,9 @@ namespace PatternGuidedGP.GP {
 				IList<Individual> children = new List<Individual>();
 				// create child by crossover or copy from old population
 				if (RandomValueGenerator.Instance.GetDouble() < CrossoverRate) {
-					foreach (var child in Crossover.cross(Selector.Select(population), Selector.Select(population))) {
+					var individual1 = Selector.Select(population);
+					var individual2 = Selector.Select(population);
+					foreach (var child in Crossover.cross(individual1, individual2)) {
 						children.Add(new Individual(child));
 					}
 				}

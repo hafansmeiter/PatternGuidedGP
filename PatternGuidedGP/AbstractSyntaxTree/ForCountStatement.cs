@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -16,6 +17,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		public Expression<int> Count => Children[0] as Expression<int>;
 		public Statement ContentBlock => Children[1] as Statement;
+
+		public int MaxLoops { get; set; } = 10000;
 
 		protected override CSharpSyntaxNode GenerateSyntax() {
 			string indexName = "i" + Id;
@@ -38,7 +41,22 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 						SyntaxFactory.BinaryExpression(
 							SyntaxKind.LessThanExpression,
 							SyntaxFactory.IdentifierName(indexName),
-							(ExpressionSyntax) Count.GetSyntaxNode()))
+							SyntaxFactory.InvocationExpression(
+								SyntaxFactory.MemberAccessExpression(
+									SyntaxKind.SimpleMemberAccessExpression,
+									SyntaxFactory.IdentifierName("Math"),
+									SyntaxFactory.IdentifierName("Min")))
+							.WithArgumentList(
+								SyntaxFactory.ArgumentList(
+									SyntaxFactory.SeparatedList<ArgumentSyntax>(
+										new SyntaxNodeOrToken[]{
+											SyntaxFactory.Argument(
+												SyntaxFactory.LiteralExpression(
+													SyntaxKind.NumericLiteralExpression,
+													SyntaxFactory.Literal(MaxLoops))),
+											SyntaxFactory.Token(SyntaxKind.CommaToken),
+											SyntaxFactory.Argument(
+												(ExpressionSyntax) Count.GetSyntaxNode())})))))
 					.WithIncrementors(
 						SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(
 							SyntaxFactory.PostfixUnaryExpression(

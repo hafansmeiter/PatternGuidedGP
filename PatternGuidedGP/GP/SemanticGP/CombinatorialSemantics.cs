@@ -44,12 +44,12 @@ namespace PatternGuidedGP.GP.SemanticGP {
 						// if candidate has no semantic value, take the worst distance of the other candidates
 						// if no other candidate has a semantic value, ignore i'th value
 						bool distanceFound;
-						double worstDistance = GetWorstDistance((double) value, allCandidates, i, out distanceFound);
+						double worstDistance = GetWorstDistance((int) value, allCandidates, i, out distanceFound);
 						if (distanceFound) {
 							distance += worstDistance; 
 						}
 					} else {
-						var dist = Math.Abs((double)value - (double)candidate[i]);
+						var dist = Math.Abs((int)value - (int)candidate[i]);
 						distance += dist;
 					}
 				}
@@ -57,12 +57,12 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			return distance;
 		}
 
-		private static double GetWorstDistance(double value, IEnumerable<Semantics> allCandidates, int i, out bool distanceFound) {
+		private static double GetWorstDistance(int value, IEnumerable<Semantics> allCandidates, int i, out bool distanceFound) {
 			var found = false;
-			var worst = Double.MinValue;
+			var worst = int.MinValue;
 			foreach (var candidate in allCandidates) {
 				if (candidate[i] != null) {
-					var distance = Math.Abs(((double)candidate[i]) - value);
+					var distance = Math.Abs(((int)candidate[i]) - value);
 					if (distance > worst) {
 						worst = distance;
 					}

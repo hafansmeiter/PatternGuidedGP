@@ -26,7 +26,9 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			var midpoint = GeometricCalculator.GetMidpoint(individual1.Semantics, individual2.Semantics);
 
 			var child1 = new Individual(individual1);
+			child1.FitnessEvaluated = false;
 			var child2 = new Individual(individual2);
+			child2.FitnessEvaluated = false;
 			bool mutatedChild1 = ResultSemanticsOperator.Operate(midpoint,
 				child1, SubTreePool, MaxTreeDepth);
 			bool mutatedChild2 = ResultSemanticsOperator.Operate(midpoint,

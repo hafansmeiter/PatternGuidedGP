@@ -24,11 +24,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 	abstract class SubTreePoolBase : ISubTreePool {
 		public bool DuplicateCheck { get; set; } = true;
 		public int MaxSize { get; set; } = 50;
-		protected SortedSet<PoolItem> _items
-			= new SortedSet<PoolItem>();
+		protected List<PoolItem> _items
+			= new List<PoolItem>();
 
 		public IPoolItemSelector<PoolItem> Selector { get; set; }
-			= new RankBasedPoolItemSelector<PoolItem>();
+			= new RandomPoolItemSelector<PoolItem>();
 
 		public virtual TreeNode GetRandom(Type type) {
 			var items = GetItemsByType(type);
@@ -55,6 +55,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			var item = CreateItem(node, data);
 			if (_items.Count < MaxSize || _items.Last().CompareTo(item) >= 0) {
 				_items.Add(item);
+				Sort();
 				if (_items.Count > MaxSize) {
 					_items.Remove(_items.Last());
 				}
@@ -70,6 +71,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 				}
 			}
 			return false;
+		}
+
+		protected void Sort() {
+			_items.Sort();
 		}
 
 		protected abstract PoolItem CreateItem(TreeNode node, object data);

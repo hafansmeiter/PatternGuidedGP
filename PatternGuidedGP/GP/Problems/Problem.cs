@@ -77,14 +77,17 @@ namespace PatternGuidedGP.GP.Problems {
 		protected abstract TestSuite GetTestSuite();
 		protected abstract CompilationUnitSyntax GetCodeTemplate();
 
-		public void Evaluate(Population population) {
+		public int Evaluate(Population population) {
+			int evaluationCount = 0;
 			foreach (var individual in population.Individuals) {
 				Logger.WriteLine(4, "Individual tree height: " + individual.SyntaxTree.Height);
 				if (!individual.FitnessEvaluated) {
 					double fitness = FitnessEvaluator.Evaluate(individual, this);
 					individual.Fitness = fitness;
+					evaluationCount++;
 				}
 			}
+			return evaluationCount;
 		}
 	}
 }
