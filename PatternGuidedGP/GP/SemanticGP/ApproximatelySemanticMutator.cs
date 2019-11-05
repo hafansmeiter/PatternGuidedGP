@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.SemanticGP {
 	class ApproximatelySemanticMutator : IMutator, ISemanticOperator {
-		public IResultSemanticsOperator ResultSemanticsOperator { get; set; } = new RandomDesiredOperator();
+		public IResultSemanticsOperator ResultSemanticsOperator { get; set; } = new PawlakRandomDesiredOperator();
 		public ISemanticSubTreePool SubTreePool { get; set; }
 		public Semantics DesiredSemantics { get; set; }
 		public int MaxTreeDepth { get; set; }

@@ -27,6 +27,9 @@ namespace PatternGuidedGP.GP {
 				if (solution != null) {
 					return solution;
 				}
+				if (SubTreePool != null) {
+					SubTreePool.GenerationFinished();
+				}
 			}
 			Logger.WriteLine(1, "No solution found.");
 			Logger.WriteLine(2, string.Format("Returning best:\n{0}", Population.GetFittest()));
@@ -37,7 +40,7 @@ namespace PatternGuidedGP.GP {
 			int evaluationCount = problem.Evaluate(Population);
 			Population.Sort();
 			//Console.WriteLine("Best:\n{0}", Population.GetFittest());
-			Logger.WriteLine(1, string.Format("Evaluated " + evaluationCount + "/" + Population.Size));
+			Logger.WriteLine(1, string.Format("Evaluated " + evaluationCount + "/" + Population.Size + " individuals"));
 			Logger.WriteLine(1, string.Format("Best fitness: {0}, Avg: {1}", Population.GetFittest().Fitness, Population.GetAverageFitness()));
 
 			if (IsSolutionFound()) {
@@ -85,7 +88,7 @@ namespace PatternGuidedGP.GP {
 				}
 			}
 			if (!AllowDuplicates) {
-				Logger.WriteLine(1, "Generated duplicates: " + duplicates);
+				Logger.WriteLine(2, "Generated duplicates: " + duplicates);
 			}
 			return nextGen;
 		}

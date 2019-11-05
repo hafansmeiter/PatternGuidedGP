@@ -1,4 +1,5 @@
-﻿using PatternGuidedGP.GP.Operators;
+﻿using PatternGuidedGP.AbstractSyntaxTree.Pool;
+using PatternGuidedGP.GP.Operators;
 using PatternGuidedGP.GP.Problems;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace PatternGuidedGP.GP {
 		public IMutator Mutator { get; set; }
 		public ICrossover Crossover { get; set; }
 		public ISelector Selector { get; set; }
+		public ISubTreePool SubTreePool { get; set; }
 
 		public double MutationRate { get; set; }
 		public double CrossoverRate { get; set; }   // otherwise take over individuals unchanged

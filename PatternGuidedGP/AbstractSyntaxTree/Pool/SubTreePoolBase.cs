@@ -5,26 +5,32 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
-	class PoolItem : IComparable<PoolItem> {
+	abstract class PoolItem : IComparable<PoolItem> {
 		public TreeNode Node { get; }
 
 		public PoolItem(TreeNode node) {
 			Node = node;
 		}
 
-		public virtual double GetFitness() {
-			return 0.0;
-		}
+		public abstract double GetFitness();
 
-		public int CompareTo(PoolItem other) {
-			return GetFitness().CompareTo(other.GetFitness());
+		public virtual int CompareTo(PoolItem other) {
+			var ret = GetFitness().CompareTo(other.GetFitness());
+			if (ret == 0) {
+				ret = Node.GetSubTreeNodes().Count() - other.Node.GetSubTreeNodes().Count();
+			}
+			return ret;
 		}
 	}
 
 	abstract class SubTreePoolBase : ISubTreePool {
 		public bool DuplicateCheck { get; set; } = true;
-		public int MaxSize { get; set; } = 50;
-		protected List<PoolItem> _items
+		public int MaxSizePerType { get; set; } = 50;
+		public int KeepItemsOnGenerationChange { get; set; } = 25;
+
+		protected List<PoolItem> _boolTreeItems
+			= new List<PoolItem>();
+		protected List<PoolItem> _intTreeItems
 			= new List<PoolItem>();
 
 		public IPoolItemSelector<PoolItem> Selector { get; set; }
@@ -40,8 +46,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			}
 		}
 
-		protected virtual IList<PoolItem> GetItemsByType(Type type) {
-			return _items.Where(item => item.Node.Type == type).ToList();
+		protected virtual List<PoolItem> GetItemsByType(Type type) {
+			if (type == typeof(bool)) {
+				return _boolTreeItems;
+			} else {
+				return _intTreeItems;
+			}
 		}
 
 		protected PoolItem GetRandomFromList(IList<PoolItem> list) {
@@ -53,11 +63,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 				return false;
 			}
 			var item = CreateItem(node, data);
-			if (_items.Count < MaxSize || _items.Last().CompareTo(item) >= 0) {
-				_items.Add(item);
-				Sort();
-				if (_items.Count > MaxSize) {
-					_items.Remove(_items.Last());
+			var items = GetItemsByType(node.Type);
+			if (items.Count < MaxSizePerType || items.Last().CompareTo(item) >= 0) {
+				items.Add(item);
+				items.Sort();
+				if (items.Count > MaxSizePerType) {
+					items.Remove(items.Last());
 				}
 				return true;
 			}
@@ -65,18 +76,31 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 		}
 
 		public bool Contains(TreeNode node) {
-			foreach (var item in _items) {
-				if (item.Node.Equals(node)) {
-					return true;
-				}
-			}
-			return false;
+			return FindNode(node) != null;
 		}
 
-		protected void Sort() {
-			_items.Sort();
+		public PoolItem FindNode(TreeNode node) {
+			var items = GetItemsByType(node.Type);
+			foreach (var item in items) {
+				if (item.Node.Equals(node)) {
+					return item;
+				}
+			}
+			return null;
+		}
+
+		protected void RemoveLastItems(List<PoolItem> items, int n) {
+			if (n <= 0) {
+				return;
+			}
+			items.RemoveRange(KeepItemsOnGenerationChange, n);
 		}
 
 		protected abstract PoolItem CreateItem(TreeNode node, object data);
+
+		public virtual void GenerationFinished() {
+			RemoveLastItems(_boolTreeItems, _boolTreeItems.Count - KeepItemsOnGenerationChange);
+			RemoveLastItems(_intTreeItems, _intTreeItems.Count - KeepItemsOnGenerationChange);
+		}
 	}
 }

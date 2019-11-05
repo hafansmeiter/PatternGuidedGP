@@ -14,7 +14,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 
 		public IGeometricCalculator GeometricCalculator { get; set; }
 		public ISemanticSubTreePool SubTreePool { get; set; }
-		public IResultSemanticsOperator ResultSemanticsOperator { get; set; } = new RandomDesiredOperator();
+		public IResultSemanticsOperator ResultSemanticsOperator { get; set; } = new PawlakRandomDesiredOperator();
 		public int MaxTreeDepth { get; set; }
 
 		public ApproximatelyGeometricSemanticCrossover(ISemanticSubTreePool subTreePool, int maxTreeDepth) {

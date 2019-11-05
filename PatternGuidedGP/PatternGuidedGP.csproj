@@ -132,6 +132,7 @@
     <Compile Include="AbstractSyntaxTree\Pool\ISubTreePool.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\RandomPoolItemSelector.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\RankBasedPoolItemSelector.cs" />
+    <Compile Include="AbstractSyntaxTree\Pool\RecordBasedSubTreePool.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\SubTreePoolBase.cs" />
     <Compile Include="AbstractSyntaxTree\SyntaxTree.cs" />
     <Compile Include="AbstractSyntaxTree\AssignmentStatement.cs" />
@@ -180,7 +181,6 @@
     <Compile Include="Compiler\ITestable.cs" />
     <Compile Include="Compiler\CSharp\TestClassProxy.cs" />
     <Compile Include="Compiler\ICompiler.cs" />
-    <Compile Include="GPExtensions\RecordBasedSubTreePool.cs" />
     <Compile Include="GP\AlgorithmBase.cs" />
     <Compile Include="GP\DefaultAlgorithm.cs" />
     <Compile Include="GP\IAlgorithm.cs" />
@@ -192,10 +192,11 @@
     <Compile Include="GP\SemanticGP\BoolGeometricCalculator.cs" />
     <Compile Include="GP\SemanticGP\CombinatorialSemantics.cs" />
     <Compile Include="GP\SemanticGP\ApproximatelyGeometricSemanticCrossover.cs" />
+    <Compile Include="GP\SemanticGP\FitnessEvaluatingRandomDesiredOperator.cs" />
     <Compile Include="GP\SemanticGP\IGeometricOperator.cs" />
     <Compile Include="GP\SemanticGP\ISemanticOperator.cs" />
     <Compile Include="GP\SemanticGP\ISemanticPropagator.cs" />
-    <Compile Include="GP\SemanticGP\RandomDesiredOperator.cs" />
+    <Compile Include="GP\SemanticGP\PawlakRandomDesiredOperator.cs" />
     <Compile Include="GP\SemanticGP\IGeometricCalculator.cs" />
     <Compile Include="GP\SemanticGP\IntGeometricCalculator.cs" />
     <Compile Include="GP\SemanticGP\ApproximatelySemanticMutator.cs" />
