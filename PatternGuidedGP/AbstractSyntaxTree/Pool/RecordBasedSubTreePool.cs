@@ -51,6 +51,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 				} else {
 					recordItem.Deteriorated++;
 				}
+				GetItemsByType(treeNode.Type).Sort();
 			}
 		}
 	}
