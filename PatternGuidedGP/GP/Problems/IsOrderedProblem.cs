@@ -8,7 +8,7 @@ using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.GP.Tests;
 
 namespace PatternGuidedGP.GP.Problems {
-	class IsOrderedProblem : CodingProblem {
+	class IsOrderedProblem : ScalarCodingProblem {
 		public override Type ReturnType => typeof(bool);
 		public override Type ParameterType => typeof(int);
 

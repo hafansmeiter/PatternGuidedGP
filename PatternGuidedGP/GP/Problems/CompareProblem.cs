@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using PatternGuidedGP.GP.Tests;
 
 namespace PatternGuidedGP.GP.Problems {
-	class CompareProblem : CodingProblem {
+	class CompareProblem : ScalarCodingProblem {
 		public override Type ReturnType => typeof(bool);
 		public override Type ParameterType => typeof(bool);
 

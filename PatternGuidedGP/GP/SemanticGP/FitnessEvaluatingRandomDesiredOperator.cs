@@ -9,6 +9,8 @@ using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Problems;
 
 namespace PatternGuidedGP.GP.SemanticGP {
+
+	[Obsolete]
 	class FitnessEvaluatingRandomDesiredOperator : PawlakRandomDesiredOperator {
 
 		public IFitnessEvaluator FitnessEvaluator { get; set; }

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Problems {
-	class MajorityProblem : CodingProblem {
+	class MajorityProblem : ScalarCodingProblem {
 		public override Type ReturnType => typeof(bool);
 		public override Type ParameterType => typeof(bool);
 

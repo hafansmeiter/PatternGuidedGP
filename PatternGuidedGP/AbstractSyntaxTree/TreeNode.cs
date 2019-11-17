@@ -99,7 +99,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		// interface ICSharpSyntaxGenerator
 		public virtual CSharpSyntaxNode GetSyntaxNode() {
-			// Annotations not required anymore
+			// Annotations Node and Type not required anymore
 			// as GP-operators work with ASTs
 			return GenerateSyntax().WithAdditionalAnnotations(
 				new SyntaxAnnotation("Id", Id.ToString()),

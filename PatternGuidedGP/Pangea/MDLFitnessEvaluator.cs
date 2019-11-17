@@ -34,12 +34,12 @@ namespace PatternGuidedGP.Pangea {
 		public ISubTreePool SubTreePool { get; set; }
 
 		protected override void PrepareTestRuns(Individual individual, TestSuite testSuite) {
-			ExecutionTraces.Reset();
+			Singleton<ExecutionTraces>.Instance.Reset();
 		}
 
 		protected override FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {
 			double fitness = base.CalculateFitness(individual, testSuite, results).Fitness; // standard fitness f0
-			var dataset = MLDataset.FromExecutionTraces(individual, ExecutionTraces.Traces);
+			var dataset = MLDataset.FromExecutionTraces(individual, Singleton<ExecutionTraces>.Instance.Traces);
 			LogDatasetFeatures(dataset);
 
 			if (dataset.Features.Count() > 0) {
@@ -65,7 +65,7 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		protected override void OnTestRunFinished(Individual individual, TestCase testCase, object result) {
-			ExecutionTraces.FinishCurrent();
+			Singleton<ExecutionTraces>.Instance.FinishCurrent();
 		}
 
 		protected override void OnEvaluationFinished(Individual individual, FitnessResult fitness, object[] results) {
@@ -165,7 +165,7 @@ namespace PatternGuidedGP.Pangea {
 							SyntaxFactory.CatchDeclaration(
 								SyntaxFactory.IdentifierName("Exception"))
 							.WithIdentifier(
-								SyntaxFactory.Identifier("e")))))
+								SyntaxFactory.Identifier("ex")))))
 				.WithBlock(
 					SyntaxFactory.Block(
 						SyntaxFactory.ExpressionStatement(
@@ -174,9 +174,26 @@ namespace PatternGuidedGP.Pangea {
 									SyntaxKind.SimpleMemberAccessExpression,
 									SyntaxFactory.MemberAccessExpression(
 										SyntaxKind.SimpleMemberAccessExpression,
-										SyntaxFactory.IdentifierName("ExecutionTraces"),
+										SyntaxFactory.MemberAccessExpression(
+											SyntaxKind.SimpleMemberAccessExpression,
+											SyntaxFactory.GenericName(
+												SyntaxFactory.Identifier("Singleton"))
+											.WithTypeArgumentList(
+												SyntaxFactory.TypeArgumentList(
+													SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
+														SyntaxFactory.IdentifierName("ExecutionTraces")))),
+											SyntaxFactory.IdentifierName("Instance")),
 										SyntaxFactory.IdentifierName("Current")),
 									SyntaxFactory.IdentifierName("Add")))
+							// does not work cross-appdomain 
+							/*SyntaxFactory.InvocationExpression(
+								SyntaxFactory.MemberAccessExpression(
+									SyntaxKind.SimpleMemberAccessExpression,
+									SyntaxFactory.MemberAccessExpression(
+										SyntaxKind.SimpleMemberAccessExpression,
+										SyntaxFactory.IdentifierName("ExecutionTraces"),
+										SyntaxFactory.IdentifierName("Current")),
+									SyntaxFactory.IdentifierName("Add")))*/
 							.WithArgumentList(
 								SyntaxFactory.ArgumentList(
 									SyntaxFactory.SeparatedList<ArgumentSyntax>(
@@ -185,6 +202,12 @@ namespace PatternGuidedGP.Pangea {
 												SyntaxKind.NumericLiteralExpression,
 												SyntaxFactory.Literal(tracedNode.Id))),
 											SyntaxFactory.Argument(
+												SyntaxFactory.LiteralExpression(
+													SyntaxKind.NumericLiteralExpression,
+													SyntaxFactory.Literal(node.Id))),
+											SyntaxFactory.Argument(
+												(ExpressionSyntax) node.GetSyntaxNode())
+											/*SyntaxFactory.Argument(
 													SyntaxFactory.ObjectCreationExpression(
 														SyntaxFactory.IdentifierName("ExecutionRecord"))
 													.WithArgumentList(
@@ -201,7 +224,7 @@ namespace PatternGuidedGP.Pangea {
 															)
 														)
 													)
-												)
+												)*/
 											}
 										)
 									)

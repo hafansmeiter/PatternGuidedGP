@@ -12,13 +12,15 @@ namespace PatternGuidedGP.GP.SemanticGP {
 	class PawlakRandomDesiredOperator : IResultSemanticsOperator {
 		public ISemanticPropagator SemanticBackPropagator { get; set; } = new PawlakSemanticBackPropagator();
 
-		public bool Operate(Semantics resultSemantics, Individual individual, ISemanticSubTreePool subTreePool, int maxTreeDepth) {
+		public bool Operate(Semantics resultSemantics, Individual individual, ISemanticSubTreePool subTreePool, 
+			int maxTreeDepth, out bool triedBackPropagation) {
 			SyntaxTree tree = (SyntaxTree)individual.SyntaxTree.DeepClone();
 			TreeNode exchangeNode = tree.GetRandomNode();
 			Type nodeType = exchangeNode.Type;
-
+			
 			TreeNode root;
 			if (exchangeNode.IsBackPropagable(out root)) {
+				triedBackPropagation = true;
 				var desiredSemantics = DoSemanticBackPropagation(resultSemantics, exchangeNode, root);
 				TreeNode newNode = DoLibrarySearch(individual, subTreePool, nodeType, desiredSemantics);
 
@@ -31,6 +33,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 					return false;
 				}
 			}
+			triedBackPropagation = false;
 			return false;
 		}
 

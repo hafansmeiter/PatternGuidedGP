@@ -16,6 +16,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 		public ISemanticSubTreePool SubTreePool { get; set; }
 		public IResultSemanticsOperator ResultSemanticsOperator { get; set; } = new PawlakRandomDesiredOperator();
 		public int MaxTreeDepth { get; set; }
+		public ICrossover Fallback { get; set; }
 
 		public ApproximatelyGeometricSemanticCrossover(ISemanticSubTreePool subTreePool, int maxTreeDepth) {
 			SubTreePool = subTreePool;
@@ -25,15 +26,27 @@ namespace PatternGuidedGP.GP.SemanticGP {
 		public IEnumerable<Individual> cross(Individual individual1, Individual individual2) {
 			var midpoint = GeometricCalculator.GetMidpoint(individual1.Semantics, individual2.Semantics);
 
+			bool triedBackPropagation1;
+			var child1 = GenerateChildren(individual1, individual2, midpoint, out triedBackPropagation1);
+
+			bool triedBackPropagation2;
+			var child2 = GenerateChildren(individual2, individual1, midpoint, out triedBackPropagation2);
+
+			if (!triedBackPropagation1 && !triedBackPropagation2 && Fallback != null) {
+				return Fallback.cross(individual1, individual2);
+			}
+
+			return new[] { child1, child2 };
+		}
+
+		private Individual GenerateChildren(Individual individual1, Individual individual2, 
+			Semantics midpoint, out bool triedBackPropagation) {
 			var child1 = new Individual(individual1);
 			child1.FitnessEvaluated = false;
-			var child2 = new Individual(individual2);
-			child2.FitnessEvaluated = false;
-			bool mutatedChild1 = ResultSemanticsOperator.Operate(midpoint,
-				child1, SubTreePool, MaxTreeDepth);
-			bool mutatedChild2 = ResultSemanticsOperator.Operate(midpoint,
-				child2, SubTreePool, MaxTreeDepth);
-			return new[] { mutatedChild1 ? child1 : individual1, mutatedChild2 ? child2 : individual2 };
+
+			var mutatedChild1 = ResultSemanticsOperator.Operate(midpoint,
+				child1, SubTreePool, MaxTreeDepth, out triedBackPropagation);
+			return mutatedChild1 ? child1 : individual1;
 		}
 	}
 }

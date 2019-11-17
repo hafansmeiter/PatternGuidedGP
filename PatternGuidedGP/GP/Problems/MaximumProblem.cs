@@ -8,7 +8,7 @@ using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.GP.Tests;
 
 namespace PatternGuidedGP.GP.Problems {
-	class MaximumProblem : CodingProblem {
+	class MaximumProblem : ScalarCodingProblem {
 		public override Type ReturnType => typeof(int);
 		public override Type ParameterType => typeof(int);
 

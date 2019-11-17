@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.Pangea {
 
-	public class ExecutionTrace {
+	public class ExecutionTrace : MarshalByRefObject {
 
-		public class Entry {
+		public class Entry : MarshalByRefObject {
 			public ulong NodeId { get; set; }
 			public IList<ExecutionRecord> Records { get; set; } = new List<ExecutionRecord>();
 
@@ -37,13 +37,17 @@ namespace PatternGuidedGP.Pangea {
 			_entries.Clear();
 		}
 
+		public void Add(ulong nodeId, ulong recordNodeId, object recordValue) {
+			Add(nodeId, new ExecutionRecord(recordNodeId, recordValue));
+		}
+
 		public void Add(ulong nodeId, params ExecutionRecord[] traces) {
-			Logger.WriteLine(4, "Execution Trace for " + nodeId);
-			foreach (var trace in traces) {
+			//Logger.WriteLine(4, "Execution Trace for " + nodeId);
+			/*foreach (var trace in traces) {
 				Logger.Write(4, trace.ToString());
-			}
+			}*/
 			_entries.Add(new Entry(nodeId, traces));
-			Logger.WriteLine(4, "");
+			//Logger.WriteLine(4, "");
 		}
 	}
 }

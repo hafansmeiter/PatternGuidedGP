@@ -35,7 +35,8 @@ namespace PatternGuidedGP.GP.Evaluators {
 			Logger.WriteLine(4, "Run test method:");
 			Logger.WriteLine(4, compilationUnit.NormalizeWhitespace().ToString());
 
-			AppDomain appDomain = null;// AppDomain.CreateDomain("AppDomain");
+			//AppDomain appDomain = null;
+			AppDomain appDomain = AppDomain.CreateDomain("AppDomain");
 			var testable = GetTestableObject(appDomain, compilationUnit);
 
 			PrepareTestRuns(individual, testSuite);
@@ -54,7 +55,7 @@ namespace PatternGuidedGP.GP.Evaluators {
 				OnTestRunFinished(individual, test, results[i]);
 			}
 
-			//AppDomain.Unload(appDomain);
+			AppDomain.Unload(appDomain);
 
 			FitnessResult fitness = CalculateFitness(individual, testSuite, results);
 			OnEvaluationFinished(individual, fitness, results);

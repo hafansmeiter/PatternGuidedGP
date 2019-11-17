@@ -20,10 +20,12 @@ namespace PatternGuidedGP.GP.Operators {
 			Type nodeType = exchangeNode.Type;
 
 			TreeNode newNode = SyntaxTreeProvider.GetSyntaxTree(MaxMutationTreeDepth, nodeType);
-			bool replaced = tree.ReplaceTreeNode(exchangeNode, newNode);
-			if (replaced && tree.Height <= MaxTreeDepth) {
-				individual.SyntaxTree = tree;
-				return true;
+			if (newNode != null) {
+				bool replaced = tree.ReplaceTreeNode(exchangeNode, newNode);
+				if (replaced && tree.Height <= MaxTreeDepth) {
+					individual.SyntaxTree = tree;
+					return true;
+				}
 			}
 			return false;
 		}

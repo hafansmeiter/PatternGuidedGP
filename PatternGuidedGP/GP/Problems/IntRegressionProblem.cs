@@ -11,6 +11,7 @@ using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.GP.Tests;
 
 namespace PatternGuidedGP.GP.Problems {
+	[Obsolete]
 	abstract class IntRegressionProblem : Problem {
 
 		public override Type RootType => typeof(int);

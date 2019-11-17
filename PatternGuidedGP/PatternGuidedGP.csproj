@@ -189,6 +189,9 @@
     <Compile Include="GP\Evaluators\DefaultFitnessEvaluator.cs" />
     <Compile Include="GP\Evaluators\IFitnessEvaluator.cs" />
     <Compile Include="GP\Evaluators\ProgramFitnessEvaluator.cs" />
+    <Compile Include="GP\Operators\MultiRandomCrossover.cs" />
+    <Compile Include="GP\Operators\MultiRandomMutator.cs" />
+    <Compile Include="GP\Operators\MultiRandomOperator.cs" />
     <Compile Include="GP\SemanticGP\BoolGeometricCalculator.cs" />
     <Compile Include="GP\SemanticGP\CombinatorialSemantics.cs" />
     <Compile Include="GP\SemanticGP\ApproximatelyGeometricSemanticCrossover.cs" />
@@ -224,7 +227,7 @@
     <Compile Include="GP\Problems\ContainsFirstProblem.cs" />
     <Compile Include="GP\Problems\AllEqualProblem.cs" />
     <Compile Include="GP\Problems\BoolClassificationProblem.cs" />
-    <Compile Include="GP\Problems\CodingProblem.cs" />
+    <Compile Include="GP\Problems\ScalarCodingProblem.cs" />
     <Compile Include="GP\Problems\IntRegressionProblem.cs" />
     <Compile Include="GP\Problems\MajorityProblem.cs" />
     <Compile Include="GP\Problems\MultiplexerProblem.cs" />
@@ -248,10 +251,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AbstractSyntaxTree\TreeNode.cs" />
+    <Compile Include="Util\AppDomainHelper.cs" />
     <Compile Include="Util\IDeepCloneable.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Util\MultiValueDictionary.cs" />
     <Compile Include="Util\RandomValueGenerator.cs" />
+    <Compile Include="Util\Singleton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

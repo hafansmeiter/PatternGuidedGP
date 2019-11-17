@@ -12,6 +12,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override string Description => "if";
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
+		public override bool IsTraceable => true;
 		public override int RequiredTreeDepth => 3;
 		public override Type[] ChildTypes {
 			get => _childTypes;
@@ -46,6 +47,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 				return SyntaxFactory.IfStatement((ExpressionSyntax)Condition.GetSyntaxNode(),
 					SyntaxFactory.Block((StatementSyntax)IfBlock.GetSyntaxNode()));
 			}
+		}
+
+		public override IEnumerable<TreeNode> GetExecutionTraceNodes() {
+			return new[] { Condition };
 		}
 	}
 }

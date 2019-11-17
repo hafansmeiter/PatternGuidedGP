@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.Pangea {
 	interface ITraceable {
+		bool IsTraceable { get; }
 		IEnumerable<TreeNode> GetExecutionTraceNodes();
 	}
 }

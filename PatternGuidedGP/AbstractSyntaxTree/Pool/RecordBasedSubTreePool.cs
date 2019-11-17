@@ -1,5 +1,6 @@
 ﻿using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.AbstractSyntaxTree.Pool;
+using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
-	class RecordBasedSubTreePool : SubTreePoolBase {
+	class RecordBasedSubTreePool : SubTreePoolBase, ISyntaxTreeProvider {
 		protected class RecordTreeNodeItem : PoolItem {
 			// double type, because score may be decreased (e.g. halvened) over generations
 			public double Improved { get; set; }
@@ -22,24 +23,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			public override double GetFitness() {
 				return Deteriorated / Improved;
 			}
-
-			public void DecreaseScore() {
-				Improved /= 2;
-				Deteriorated /= 2;
-			}
 		}
 
 		protected override PoolItem CreateItem(TreeNode node, object data) {
 			return new RecordTreeNodeItem(node, 1, 1);	// start with fitness 1
-		}
-
-		public override void GenerationFinished() {
-			base.GenerationFinished();
-			foreach (var item in _boolTreeItems) {
-				var recordItem = item as RecordTreeNodeItem;
-				recordItem.DecreaseScore();
-
-			} 
 		}
 
 		public void UpdateRecord(TreeNode treeNode, bool improved) {
@@ -52,6 +39,16 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 					recordItem.Deteriorated++;
 				}
 				GetItemsByType(treeNode.Type).Sort();
+			}
+		}
+
+		public TreeNode GetSyntaxTree(int maxDepth, Type type) {
+			var items = GetItemsByType(type).Where(item => item.Node.GetTreeHeight() <= maxDepth).ToList();
+			if (items.Count == 0) {
+				return null;
+			}
+			else {
+				return GetRandomFromList(items).Node;
 			}
 		}
 	}

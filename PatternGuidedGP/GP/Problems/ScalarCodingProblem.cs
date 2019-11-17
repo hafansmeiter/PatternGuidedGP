@@ -11,11 +11,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Problems {
-	abstract class CodingProblem : Problem {
+	abstract class ScalarCodingProblem : Problem {
 
 		public override Type RootType => typeof(void);
 
-		public CodingProblem(int parameterCount, bool initialize = true) 
+		public ScalarCodingProblem(int parameterCount, bool initialize = true) 
 			: base(parameterCount, initialize) {
 		}
 
@@ -60,10 +60,6 @@ namespace PatternGuidedGP.GP.Problems {
 					new UsingDirectiveSyntax[]{
 						SyntaxFactory.UsingDirective(
 							SyntaxFactory.IdentifierName("System")),
-						SyntaxFactory.UsingDirective(
-							SyntaxFactory.QualifiedName(
-								SyntaxFactory.IdentifierName("System"),
-								SyntaxFactory.IdentifierName("Reflection"))),
 						SyntaxFactory.UsingDirective(
 							SyntaxFactory.QualifiedName(
 								SyntaxFactory.IdentifierName("PatternGuidedGP"),
@@ -126,7 +122,7 @@ namespace PatternGuidedGP.GP.Problems {
 													SyntaxFactory.CatchDeclaration(
 														SyntaxFactory.IdentifierName("Exception"))
 													.WithIdentifier(
-														SyntaxFactory.Identifier("ex")))))
+														SyntaxFactory.Identifier("mainException")))))
 										.WithBlock(
 											SyntaxFactory.Block(
 												SyntaxFactory.Block()

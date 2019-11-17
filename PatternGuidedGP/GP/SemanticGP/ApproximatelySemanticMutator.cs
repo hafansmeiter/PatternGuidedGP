@@ -16,6 +16,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 		public ISemanticSubTreePool SubTreePool { get; set; }
 		public Semantics DesiredSemantics { get; set; }
 		public int MaxTreeDepth { get; set; }
+		public IMutator Fallback { get; set; }
 
 		public ApproximatelySemanticMutator(ISemanticSubTreePool subTreePool, int maxTreeDepth) {
 			SubTreePool = subTreePool;
@@ -23,7 +24,14 @@ namespace PatternGuidedGP.GP.SemanticGP {
 		}
 		
 		public bool Mutate(Individual individual) {
-			return ResultSemanticsOperator.Operate(DesiredSemantics, individual, SubTreePool, MaxTreeDepth);
+			bool triedBackPropagation;
+			bool mutated = ResultSemanticsOperator.Operate(DesiredSemantics, individual, 
+				SubTreePool, MaxTreeDepth, out triedBackPropagation);
+			if (!triedBackPropagation && Fallback != null) {
+				return Fallback.Mutate(individual);
+			}
+			return mutated;
+
 		}
 	}
 }

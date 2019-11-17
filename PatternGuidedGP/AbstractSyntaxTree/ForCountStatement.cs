@@ -12,6 +12,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override string Description => "for";
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
+		public override bool IsTraceable => true; 
 		public override int RequiredTreeDepth => 3;
 		public override Type[] ChildTypes => new[] { typeof(int), typeof(void) };
 
@@ -19,6 +20,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public Statement ContentBlock => Children[1] as Statement;
 
 		public int MaxLoops { get; set; } = 10000;
+
+		public override IEnumerable<TreeNode> GetExecutionTraceNodes() {
+			return new[] { Count };
+		}
 
 		protected override CSharpSyntaxNode GenerateSyntax() {
 			string indexName = "i" + Id;
