@@ -11,12 +11,12 @@ namespace PatternGuidedGP.GP.Operators {
 		private KozaTreeGenerator _generatorFull = new KozaTreeGeneratorFull();
 		private KozaTreeGenerator _generatorGrow = new KozaTreeGeneratorGrow();
 
-		public RampedHalfHalfInitializer(int maxTreeDepth, TreeNodeRepository repository) : base(maxTreeDepth, repository) {
+		public RampedHalfHalfInitializer(int maxTreeDepth, IInstructionSetRepository repository) : base(maxTreeDepth, repository) {
 		}
 
 		public override void Initialize(Population population, Type rootType) {
-			_generatorFull.TreeNodeRepository = TreeNodeRepository;
-			_generatorGrow.TreeNodeRepository = TreeNodeRepository;
+			_generatorFull.InstructionSetRepository = InstructionSetRepository;
+			_generatorGrow.InstructionSetRepository = InstructionSetRepository;
 			for (int i = 0; i < population.Size; i++) {
 				TreeNode root;
 				if (i % 2 == 0) {

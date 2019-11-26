@@ -52,7 +52,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		}
 
 		public override IEnumerable<TreeNode> GetExecutionTraceNodes() {
-			return AssignedExpression.GetSubTreeNodes(includeRoot: false);
+			return AssignedExpression.GetSubTreeNodes();	// need to include root to have semantics evaluated
 		}
 
 		public override bool IsBackPropagationRootFor(TreeNode origin) {

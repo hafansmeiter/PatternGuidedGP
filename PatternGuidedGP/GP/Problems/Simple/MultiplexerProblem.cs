@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PatternGuidedGP.GP.Problems.Simple;
 using PatternGuidedGP.GP.Tests;
 
-namespace PatternGuidedGP.GP.Problems {
-	class MultiplexerProblem : ScalarCodingProblem {
+namespace PatternGuidedGP.GP.Problems.Simple {
+	class MultiplexerProblem : SimpleCodingProblem {
 		public override Type ReturnType => typeof(bool);
 		public override Type ParameterType => typeof(bool);
 

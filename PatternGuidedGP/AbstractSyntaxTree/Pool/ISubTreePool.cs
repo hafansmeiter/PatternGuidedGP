@@ -10,5 +10,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 		bool Add(TreeNode node, object data);
 		TreeNode GetRandom(Type type);
 		void GenerationFinished();
+		void Clear();
 	}
 }

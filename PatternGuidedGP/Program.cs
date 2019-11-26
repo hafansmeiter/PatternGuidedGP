@@ -17,6 +17,7 @@ using PatternGuidedGP.GP;
 using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Operators;
 using PatternGuidedGP.GP.Problems;
+using PatternGuidedGP.GP.Problems.Simple;
 using PatternGuidedGP.GP.SemanticGP;
 using PatternGuidedGP.GP.Tests;
 using PatternGuidedGP.Pangea;
@@ -27,8 +28,8 @@ namespace PatternGuidedGP {
 		private static string LOG_PATH = "..\\..\\..\\Logs\\";
 
 		static void Main(string[] args) {
-			int runConfig, runProblem;
-			EvaluateArgs(args, out runConfig, out runProblem);
+			int runConfig, runProblem, fromConfig = 0, fromProblem = 0;
+			EvaluateArgs(args, out runConfig, out runProblem, out fromConfig, out fromProblem);
 
 			Logger.Level = 0;
 
@@ -107,15 +108,15 @@ namespace PatternGuidedGP {
 			};
 
 			Problem[] problems = new Problem[] {
-				new AllEqualProblem(3),
-				new ContainsFirstProblem(3),
-				new CountZeroesProblem(3),
-				new IsOrderedProblem(3),
-				new MajorityProblem(3),
-				new MaximumProblem(3),
-				new CompareProblem(6),
-				new MultiplexerProblem(6, 2),
-				new ParityProblem(6)
+				new AllEqualProblem(3),			// 0
+				new ContainsFirstProblem(3),	// 1
+				new CountZeroesProblem(3),		// 2
+				new IsOrderedProblem(3),		// 3
+				new MajorityProblem(3),			// 4
+				new MaximumProblem(3),			// 5
+				new CompareProblem(6),			// 6
+				new MultiplexerProblem(6, 2),	// 7
+				new ParityProblem(6)			// 8
 			};
 
 			if (runConfig >= 0) {
@@ -129,16 +130,28 @@ namespace PatternGuidedGP {
 				Logger.FileName = GetLogFilename(config);
 				Logger.WriteLine(0, "Run configuration: " + config.Name + 
 					" (Population: " + config.PopulationSize + ", generations: " + config.Generations);
-				foreach (var problem in problems) {
+				for (int j = fromProblem; j < problems.Length - fromProblem; j++) {
+					var problem = problems[j];
 					Logger.WriteLine(0, problem.GetType().Name + ":");
 					problem.FitnessEvaluator = config.FitnessEvaluator;
-					generator.TreeNodeRepository = problem.TreeNodeRepository;
+					generator.InstructionSetRepository = problem.InstructionSetRepository;
 					if (config.Crossover is IGeometricOperator) {
 						((IGeometricOperator)config.Crossover).GeometricCalculator = problem.GeometricCalculator;
+					}
+					if (config.Crossover is MultiRandomCrossover) {
+						((IGeometricOperator) ((MultiRandomCrossover)config.Crossover).Options[0]).GeometricCalculator 
+							= problem.GeometricCalculator;
 					}
 					if (config.Mutator is ISemanticOperator) {
 						((ISemanticOperator)config.Mutator).DesiredSemantics = problem.TestSuite.Semantics;
 					}
+					if (config.Mutator is MultiRandomMutator) {
+						((ISemanticOperator)((MultiRandomMutator)config.Mutator).Options[0]).DesiredSemantics 
+							= problem.TestSuite.Semantics;
+					}
+
+					semanticsBasedSubTreePool.Clear();
+					recordBasedSubTreePool.Clear();
 
 					int solved = 0;
 					for (int i = 0; i < config.Runs; i++) {
@@ -146,11 +159,11 @@ namespace PatternGuidedGP {
 							Crossover = config.Crossover,
 							CrossoverRate = 0.7,
 							Elitism = 5,
-							Initializer = new RampedHalfHalfInitializer(maxTreeDepth, problem.TreeNodeRepository),
+							Initializer = new RampedHalfHalfInitializer(maxTreeDepth, problem.InstructionSetRepository),
 							MaxTreeDepth = 9,   // not used
 							MutationRate = 0.2,
 							Mutator = config.Mutator,
-							Selector = new TournamentSelector(7)
+							Selector = new TournamentSelector(4)
 						};
 
 						Individual bestSolution = algorithm.Run(problem);
@@ -164,20 +177,27 @@ namespace PatternGuidedGP {
 			}
 		}
 
-		private static void EvaluateArgs(string [] args, out int runConfig, out int runProblem) {
+		private static void EvaluateArgs(string [] args, out int runConfig, out int runProblem, 
+			out int fromConfig, out int fromProblem) {
 			runConfig = -1;
 			runProblem = -1;
+			fromConfig = 0;
+			fromProblem = 0;
 			foreach (var arg in args) {
 				if (arg.StartsWith("/config:")) {
 					runConfig = int.Parse(arg.Substring(8));
 				} else if (arg.StartsWith("/problem:")) {
 					runProblem = int.Parse(arg.Substring(9));
+				} else if (arg.StartsWith("/fromConfig:")) {
+					fromConfig = int.Parse(arg.Substring(12));
+				} else if (arg.StartsWith("/fromProblem:")) {
+					fromProblem = int.Parse(arg.Substring(13));
 				}
 			}
 		}
 
 		private static string GetLogFilename(RunConfiguration config) {
-			return LOG_PATH + (config.Name + GetTimestamp() + ".txt").Replace(' ', '_').Replace('.', '-');
+			return LOG_PATH + (config.Name + GetTimestamp()).Replace(' ', '_').Replace('.', '-') + ".txt";
 		}
 
 		private static string GetTimestamp() {

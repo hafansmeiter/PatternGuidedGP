@@ -5,25 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
+using PatternGuidedGP.GP.Problems.Simple;
 using PatternGuidedGP.GP.Tests;
 
-namespace PatternGuidedGP.GP.Problems {
-	class CountZeroesProblem : ScalarCodingProblem {
-		public override Type ReturnType => typeof(int);
+namespace PatternGuidedGP.GP.Problems.Simple {
+	class ContainsFirstProblem : SimpleCodingProblem {
+		public override Type ReturnType => typeof(bool);
 		public override Type ParameterType => typeof(int);
 
-		public CountZeroesProblem(int parameterCount) : base(parameterCount) {
+		public ContainsFirstProblem(int parameterCount) : base(parameterCount) {
 		}
 
 		protected override TestSuite GetTestSuite() {
 			return new IntTestSuiteGenerator().Create(ParameterCount, parameters => {
-				int zeroes = 0;
-				for (int i = 0; i < parameters.Length; i++) {
-					if ((int) parameters[i] == 0) {
-						zeroes++;
+				int value = (int) parameters[0];
+				for (int i = 1; i < parameters.Length; i++) {
+					if (value == (int) parameters[i]) {
+						return true;
 					}
 				}
-				return zeroes;
+				return false;
 			});
 		}
 	}

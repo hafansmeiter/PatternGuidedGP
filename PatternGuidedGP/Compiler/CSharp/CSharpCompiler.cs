@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using PatternGuidedGP.Pangea;
+using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP.Compiler.CSharp {
 	class CSharpCompiler : ICompiler {
@@ -37,8 +38,10 @@ namespace PatternGuidedGP.Compiler.CSharp {
 					proxy.Initialize(ms.GetBuffer(), "ProblemClass", "Test");
 					return proxy;
 				} else {
+					Logger.WriteLine(0, "Code does not compile:");
+					Logger.WriteLine(0, syntax.NormalizeWhitespace().ToString());
 					foreach (var error in compilationResult.Diagnostics) {
-						Console.WriteLine(error.ToString());
+						Logger.WriteLine(0, error.ToString());
 					}
 				}
 				return null;

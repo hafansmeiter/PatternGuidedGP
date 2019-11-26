@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
-	class TreeNodeRepository : ITreeNodeRepository {
+	class InstructionSetRepository : IInstructionSetRepository {
 		private class TreeNodeDictionary {
 			private IDictionary<int, HashSet<TreeNode>> _nodeLists = new Dictionary<int, HashSet<TreeNode>>();
 			private int _maxDepth = 0;

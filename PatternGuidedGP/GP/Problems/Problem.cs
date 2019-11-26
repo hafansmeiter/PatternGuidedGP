@@ -17,10 +17,10 @@ namespace PatternGuidedGP.GP.Problems {
 		public IGeometricCalculator GeometricCalculator { get; set; }
 		public TestSuite TestSuite { get; protected set; }
 		public CompilationUnitSyntax CodeTemplate { get; protected set; }
-		public TreeNodeRepository TreeNodeRepository { get; } = new TreeNodeRepository();
+
+		public IInstructionSetRepository InstructionSetRepository { get; protected set; }
 		public abstract Type RootType { get; }
 		public abstract Type ReturnType { get; }
-		public abstract Type ParameterType { get; }
 		public int ParameterCount { get; set; }
 		
 		public Problem(int n, bool initialize = true) {
@@ -32,9 +32,15 @@ namespace PatternGuidedGP.GP.Problems {
 
 		protected void Initialize() {
 			TestSuite = GetTestSuite();
-			CodeTemplate = GetCodeTemplate();
 			GeometricCalculator = GetGeometricCalculator();
-			AddTreeNodes(TreeNodeRepository);
+
+			var codeBuilder = new CodeTemplateBuilder();
+			GetCodeTemplate(codeBuilder);
+			CodeTemplate = codeBuilder.Build();
+
+			var instructionSetBuilder= new InstructionSetBuilder();
+			GetInstructionSet(instructionSetBuilder);
+			InstructionSetRepository = instructionSetBuilder.Build();
 
 			Logger.WriteLine(4, GetType().Name + " test suite:");
 			foreach (var test in TestSuite.TestCases) {
@@ -54,28 +60,20 @@ namespace PatternGuidedGP.GP.Problems {
 			return null;
 		}
 
-		protected virtual void AddTreeNodes(TreeNodeRepository repository) {
-			if (ParameterType == typeof(int)) {
-				AddIntParameters(repository);
-			} else if (ParameterType == typeof(bool)) {
-				AddBoolParameters(repository);
-			}
-		}
-
-		protected void AddIntParameters(TreeNodeRepository repository) {
-			for (int i = 0; i < ParameterCount; i++) {
-				repository.Add(new IntIdentifierExpression(((char)('a' + i)).ToString()));
-			}
-		}
-
-		protected void AddBoolParameters(TreeNodeRepository repository) {
-			for (int i = 0; i < ParameterCount; i++) {
-				repository.Add(new BoolIdentifierExpression(((char)('a' + i)).ToString()));
-			}
-		}
-
 		protected abstract TestSuite GetTestSuite();
-		protected abstract CompilationUnitSyntax GetCodeTemplate();
+
+		protected virtual void GetCodeTemplate(CodeTemplateBuilder builder) {
+			builder.UseReturnType(ReturnType);
+		}
+
+		protected virtual void GetInstructionSet(InstructionSetBuilder builder) {
+			if (ReturnType == typeof(int)) {
+				builder.AddIntTargetVariable();
+			}
+			else if (ReturnType == typeof(bool)) {
+				builder.AddBoolTargetVariable();
+			}
+		}
 
 		public int Evaluate(Population population) {
 			int evaluationCount = 0;

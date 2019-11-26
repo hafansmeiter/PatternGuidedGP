@@ -12,5 +12,33 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.ModuloExpression;
 		}
+
+		public override bool AcceptChild(TreeNode child, int index) {
+			if (index != 1) {
+				return true;
+			}
+			else {
+				if (child is IntConstantExpression) {
+					var constant = child as IntConstantExpression;
+					return (int)constant.Value != 0;
+				}
+				else if (child is FloatConstantExpression) {
+					var constant = child as FloatConstantExpression;
+					return (float)constant.Value != 0;
+				}
+				else {
+					return false;
+				}
+			}
+		}
+
+		public override TreeNodeFilter GetChildSelectionFilter(int childIndex) {
+			if (childIndex == 1) {
+				return (nodes) => nodes.Where(node => AcceptChild(node, childIndex));
+			}
+			else {
+				return base.GetChildSelectionFilter(childIndex);
+			}
+		}
 	}
 }

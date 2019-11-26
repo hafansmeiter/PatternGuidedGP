@@ -84,8 +84,9 @@ namespace PatternGuidedGP.GP.Evaluators {
 
 		protected virtual CompilationUnitSyntax CreateCompilationUnit(SyntaxNode syntax, TestCase sample, CompilationUnitSyntax template) {
 			var newSyntax = ReplacePlaceholder(template, syntax);
-			newSyntax = ReplaceParameterList(newSyntax, sample);
-			newSyntax = ReplaceReturnType(newSyntax, sample);
+			// replacing types moved to CodeTemplateBuilder
+			//newSyntax = ReplaceParameterList(newSyntax, sample);
+			//newSyntax = ReplaceReturnType(newSyntax, sample);
 			return newSyntax.NormalizeWhitespace();
 		}
 
@@ -96,26 +97,6 @@ namespace PatternGuidedGP.GP.Evaluators {
 		private CompilationUnitSyntax ReplacePlaceholder(CompilationUnitSyntax template, SyntaxNode syntax) {
 			var returnValueNode = template.GetAnnotatedNodes("SyntaxPlaceholder").First();
 			return template.ReplaceNode(returnValueNode, syntax);
-		}
-
-		private CompilationUnitSyntax ReplaceParameterList(CompilationUnitSyntax template, TestCase sample) {
-			var parameterListNode = template.GetAnnotatedNodes("ParameterList").First();
-			var parameterList = new ParameterSyntax[sample.Parameter.Length];
-			for (int i = 0; i < parameterList.Length; i++) {
-				parameterList[i] = SyntaxFactory.Parameter(SyntaxFactory.Identifier(((char)('a' + i)).ToString()))
-					.WithType(SyntaxFactory.PredefinedType(
-						SyntaxFactory.Token(GetTypeSyntax(sample.Parameter[i].GetType()))));
-			}
-			return template.ReplaceNode(parameterListNode, SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(parameterList)));
-		}
-
-		private CompilationUnitSyntax ReplaceReturnType(CompilationUnitSyntax template, TestCase sample) {
-			SyntaxNode returnTypeNode;
-			while ((returnTypeNode = template.GetAnnotatedNodes("ReturnType").FirstOrDefault()) != null) {
-				template = template.ReplaceNode(returnTypeNode, SyntaxFactory.PredefinedType(
-					SyntaxFactory.Token(GetTypeSyntax(sample.Result.GetType()))));
-			}
-			return template;
 		}
 
 		/*private CompilationUnitSyntax ReplaceReturnValue(CompilationUnitSyntax template, TestCase test) {
@@ -133,16 +114,6 @@ namespace PatternGuidedGP.GP.Evaluators {
 				return Activator.CreateInstance(type);
 			}
 			return null;
-		}
-
-		private SyntaxKind GetTypeSyntax(Type type) {
-			if (type == typeof(bool)) {
-				return SyntaxKind.BoolKeyword;
-			} else if (type == typeof(int)) {
-				return SyntaxKind.IntKeyword;
-			} else {
-				return SyntaxKind.VoidKeyword;
-			}
 		}
 	}
 }

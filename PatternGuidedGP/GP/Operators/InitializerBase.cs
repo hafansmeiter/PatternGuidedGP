@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Operators {
 	abstract class InitializerBase : IInitializer {
-		public TreeNodeRepository TreeNodeRepository { get; set; }
+		public IInstructionSetRepository InstructionSetRepository { get; set; }
 		public int MaxTreeDepth { get; set; }
 
-		public InitializerBase(int maxTreeDepth, TreeNodeRepository repository) {
-			TreeNodeRepository = repository;
+		public InitializerBase(int maxTreeDepth, IInstructionSetRepository repository) {
+			InstructionSetRepository = repository;
 			MaxTreeDepth = maxTreeDepth;
 		}
 

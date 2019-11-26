@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 	abstract class KozaTreeGenerator : ISyntaxTreeProvider {
-		public ITreeNodeRepository TreeNodeRepository { get; set; }
+		public IInstructionSetRepository InstructionSetRepository { get; set; }
 
 		public TreeNode GetSyntaxTree(int maxDepth, Type type) {
 			var root = GetRootNode(type, maxDepth);
@@ -27,7 +27,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 				do {
 					var filter = node.GetChildSelectionFilter(i);
 					if (filter != null) {
-						child = TreeNodeRepository.GetRandomAny(type, maxDepth, filter);
+						child = InstructionSetRepository.GetRandomAny(type, maxDepth, filter);
 					} else {
 						if (maxDepth == 1) {
 							child = SelectTerminalNode(type);
@@ -40,7 +40,9 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 					}
 				} while (true);
 				node.AddChild(child);
-				AddChildren(child, maxDepth - 1);
+				// Math.Max: ensure also terminal nodes can have children
+				// e.g. Arrays require and index for access
+				AddChildren(child, Math.Max(maxDepth - 1, 1));		
 			}
 		}
 
@@ -48,7 +50,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 		protected abstract TreeNode SelectNonTerminalNode(Type type, int maxDepth);
 
 		private TreeNode GetRootNode(Type type, int maxDepth) {
-			return TreeNodeRepository.GetRandomNonTerminal(type, maxDepth);
+			return InstructionSetRepository.GetRandomNonTerminal(type, maxDepth);
 		}
 	}
 }

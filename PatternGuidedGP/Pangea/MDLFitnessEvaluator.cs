@@ -46,7 +46,7 @@ namespace PatternGuidedGP.Pangea {
 				var input = dataset.ToRawInputDataset();
 
 				var expected = GetExpectedOutputDataset(testSuite);
-				var actual = GetActualOutputDataset(results);
+				var actual = GetActualOutputDataset(results, testSuite.TestCases[0].Result.GetType());
 
 				LogDataset(input, expected, actual);
 
@@ -116,20 +116,28 @@ namespace PatternGuidedGP.Pangea {
 			return Math.Round(new ZeroOneLoss(expected).Loss(actual) * expected.Length);
 		}
 
-		private DecisionTree CreateDecisionTree(int[][] input, int[] output) {
+		private DecisionTree CreateDecisionTree(int?[][] input, int[] output) {
 			var learner = new C45Learning();
 			DecisionTree tree = null;
 			try {
 				tree = learner.Learn(input, output);
 			}
-			catch (Exception e) { }
+			catch (Exception e) {
+				Console.WriteLine(e.Message);
+				Console.WriteLine(e.ToString());
+			}
 			return tree;
 		}
 
-		private int[] GetActualOutputDataset(object[] results) {
+		private int[] GetActualOutputDataset(object[] results, Type type) {
 			int[] dataset = new int[results.Length];
 			for (int i = 0; i < dataset.Length; i++) {
-				dataset[i] = MLDataset.ToDatasetValue(results[i]);
+				if (type == typeof (bool)) {
+					// ensure no result will be counted as false result
+					dataset[i] = MLDataset.ToDatasetValue(results[i]) ?? -1;
+				} else {
+					dataset[i] = MLDataset.ToDatasetValue(results[i]).GetValueOrDefault();
+				}
 			}
 			return dataset;
 		}
@@ -137,7 +145,7 @@ namespace PatternGuidedGP.Pangea {
 		private int[] GetExpectedOutputDataset(TestSuite testSuite) {
 			int[] dataset = new int[testSuite.TestCases.Count];
 			for (int i = 0; i < dataset.Length; i++) {
-				dataset[i] = MLDataset.ToDatasetValue(testSuite.TestCases[i].Result);
+				dataset[i] = MLDataset.ToDatasetValue(testSuite.TestCases[i].Result).GetValueOrDefault();
 			}
 			return dataset;
 		}
@@ -244,7 +252,7 @@ namespace PatternGuidedGP.Pangea {
 			}
 		}
 
-		private void LogDataset(int[][] input, int[] expected, int[] actual) {
+		private void LogDataset(int?[][] input, int[] expected, int[] actual) {
 			// Log input matrix and outputs
 			Logger.WriteLine(4, "\nInput:");
 			for (int i = 0; i < input.Length; i++) {

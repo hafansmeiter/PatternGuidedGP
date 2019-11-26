@@ -102,5 +102,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			RemoveLastItems(_boolTreeItems, _boolTreeItems.Count - KeepItemsOnGenerationChange);
 			RemoveLastItems(_intTreeItems, _intTreeItems.Count - KeepItemsOnGenerationChange);
 		}
+
+		public void Clear() {
+			_boolTreeItems.Clear();
+			_intTreeItems.Clear();
+		}
 	}
 }

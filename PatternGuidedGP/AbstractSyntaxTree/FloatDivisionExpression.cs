@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	class IntDivisionExpression : BinaryExpression<int, int, int> {
+	class FloatDivisionExpression : BinaryExpression<float, float, float> {
 		public override string Description => "/";
 
 		public override SyntaxKind GetKind() {
@@ -16,8 +16,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override bool IsInvertible => true;
 
 		public override IEnumerable<object> Invert(object desiredValue, int k, object complementValue, out bool ambiguous) {
-			var desired = (int)desiredValue;
-			var complement = (int)complementValue;
+			var desired = (float)desiredValue;
+			var complement = (float)complementValue;
 			if (k == 0) {
 				ambiguous = false;
 				return new object[] { desired * complement };
@@ -42,7 +42,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 				if (child is IntConstantExpression) {
 					var constant = child as IntConstantExpression;
 					return (int)constant.Value != 0;
-				} else if (child is FloatConstantExpression) {
+				}
+				else if (child is FloatConstantExpression) {
 					var constant = child as FloatConstantExpression;
 					return (float)constant.Value != 0;
 				}
