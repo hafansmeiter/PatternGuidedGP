@@ -1,4 +1,7 @@
-﻿using PatternGuidedGP.Pangea;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PatternGuidedGP.Pangea;
 using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
@@ -8,16 +11,25 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class SyntaxTree : ICloneable, IDeepCloneable {
-		public TreeNode Root { get; private set; }
-		public int Height { get; private set; }
+		public List<TreeNode> RootNodes { get; private set; } = new List<TreeNode>();
+		public int Height => _heights.Max();
 
-		public SyntaxTree(TreeNode root) {
-			Root = root;
-			CalculateTreeHeight();
+		private List<int> _heights = new List<int>();
+
+		public SyntaxTree(params TreeNode[] nodes) {
+			RootNodes = nodes.ToList();
+			foreach (var node in nodes) {
+				_heights.Add(CalculateTreeHeight(node));
+			}
 		}
 
-		private void CalculateTreeHeight() {
-			Height = GetTreeHeight(Root);
+		public void AddRootNode(TreeNode node) {
+			RootNodes.Add(node);
+			_heights.Add(CalculateTreeHeight(node));
+		}
+
+		private int CalculateTreeHeight(TreeNode node) {
+			return GetTreeHeight(node);
 		}
 
 		public IEnumerable<TreeNode> GetTraceableNodes() {
@@ -34,14 +46,28 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			bool replaced = true;
 			if (oldNode.Parent != null) {
 				replaced = oldNode.Parent.ReplaceChild(oldNode, newNode);
+				if (replaced) {
+					var root = GetRootNode(newNode);
+					var index = RootNodes.IndexOf(root);
+					_heights[index] = CalculateTreeHeight(root);
+				}
 			} else {
-				Root = newNode;
-				newNode.Parent = null;
-			}
-			if (replaced) {
-				CalculateTreeHeight();
+				var index = RootNodes.IndexOf(oldNode);
+				if (index >= 0) {
+					RootNodes[index] = newNode;
+					newNode.Parent = null;
+					_heights[index] = CalculateTreeHeight(newNode);
+				}
 			}
 			return replaced;
+		}
+
+		private TreeNode GetRootNode(TreeNode node) {
+			var root = node;
+			while (root.Parent != null) {
+				root = root.Parent;
+			}
+			return root;
 		}
 
 		private int GetTreeHeight(TreeNode node) {
@@ -50,13 +76,17 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		public TreeNode GetRandomNode() {
 			var nodesPerLevel = new MultiValueDictionary<int, TreeNode>();
-			GetNodeHeights(Root, nodesPerLevel, _ => true);
+			foreach (var root in RootNodes) {
+				GetNodeHeights(root, nodesPerLevel, _ => true, 0);
+			}
 			return UniformRandomSelect(nodesPerLevel);
 		}
 
 		public TreeNode GetRandomNode(Type type) {
 			var nodesPerLevel = new MultiValueDictionary<int, TreeNode>();
-			GetNodeHeights(Root, nodesPerLevel, node => node.Type == type);
+			foreach (var root in RootNodes) {
+				GetNodeHeights(root, nodesPerLevel, node => node.Type == type, 0);
+			}
 			return UniformRandomSelect(nodesPerLevel);
 		}
 
@@ -70,25 +100,28 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			return levelNodes.ElementAt(nodeIndex);
 		}
 
-		private int GetNodeHeights(TreeNode node, 
+		public SyntaxNode GetSyntaxNode() {
+			return SyntaxFactory.Block(RootNodes.Select(node => (StatementSyntax) node.GetSyntaxNode()));
+		}
+
+		private void GetNodeHeights(TreeNode node, 
 			MultiValueDictionary<int, TreeNode> heights,
-			Predicate<TreeNode> addNodePredicate) {
-			int nodeHeight = 1;
-			int maxChildHeight = 0;
+			Predicate<TreeNode> addNodePredicate,
+			int height) {
 			foreach (var child in node.Children) {
-				int height = GetNodeHeights(child, heights, addNodePredicate);
-				if (height > maxChildHeight) {
-					maxChildHeight = height;
-				}
+				GetNodeHeights(child, heights, addNodePredicate, height + 1);
 			}
 			if (addNodePredicate(node)) {
-				heights.Add(nodeHeight + maxChildHeight, node);
+				heights.Add(height, node);
 			}
-			return nodeHeight + maxChildHeight;
 		}
 
 		public IEnumerable<TreeNode> GetTreeNodes() {
-			return Root.GetSubTreeNodes(true);
+			var list = new List<TreeNode>();
+			foreach (var node in RootNodes) {
+				list.AddRange(node.GetSubTreeNodes(true));
+			}
+			return list;
 		}
 
 		public object Clone() {
@@ -98,22 +131,41 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		public object DeepClone() {
 			SyntaxTree copy = (SyntaxTree)Clone();
-			copy.Root = (TreeNode) Root.DeepClone();
+			copy.RootNodes = RootNodes.ConvertAll(node => (TreeNode) node.DeepClone());
+			copy._heights = new List<int>(_heights);
 			return copy;
 		}
 
 		public override string ToString() {
-			return Root.ToString();
+			StringBuilder builder = new StringBuilder();
+			foreach (var node in RootNodes) {
+				builder.Append(node.ToString());
+			}
+			return builder.ToString();
 		}
 
 		public override bool Equals(object obj) {
 			var tree = obj as SyntaxTree;
-			return tree != null &&
-				   Root.Equals(tree.Root);
+			if (tree == null) {
+				return false;
+			}
+			if (tree.RootNodes.Count != RootNodes.Count) {
+				return false;
+			}
+			for (int i = 0; i < RootNodes.Count; i++) {
+				if (!RootNodes[i].Equals(tree.RootNodes[i])) {
+					return false;
+				}
+			}
+			return true;
 		}
 
 		public override int GetHashCode() {
-			return -1490287827 + EqualityComparer<TreeNode>.Default.GetHashCode(Root);
+			int hashCode = -1490287827;
+			foreach (var node in RootNodes) {
+				hashCode += EqualityComparer<TreeNode>.Default.GetHashCode(node);
+			}
+			return hashCode;
 		}
 	}
 }

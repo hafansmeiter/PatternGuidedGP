@@ -87,6 +87,9 @@ namespace PatternGuidedGP.GP.Problems {
 			else if (type == typeof(int)) {
 				return SyntaxKind.IntKeyword;
 			}
+			else if (type == typeof(float)) {
+				return SyntaxKind.FloatKeyword;
+			}
 			else {
 				return SyntaxKind.VoidKeyword;
 			}

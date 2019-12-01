@@ -13,8 +13,17 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public ForLoopVariable(bool assignable = false) : base("i", assignable) {
 		}
 
+		public override void Initialize() {
+			base.Initialize();
+		}
+
 		public bool IsInScopeOf(TreeNode node) {
-			return node is ForLoopTimesStatement;
+			bool isInScope = node is ForLoopTimesStatement;
+			if (isInScope) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 }

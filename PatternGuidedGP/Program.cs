@@ -50,7 +50,7 @@ namespace PatternGuidedGP {
 				};
 				RunProblems(simpleProblems, runConfig, runProblem, fromConfig, fromProblem);
 			} else if (problemSet == "advanced") {
-				SyntaxConfiguration.Current = new SyntaxConfiguration.Advanced();
+				SyntaxConfiguration.Current = new SyntaxConfiguration.Simple();
 				Problem[] advancedProblems = new Problem[] {
 					// Advanced Problems
 					new AverageProblem(),			// 0

@@ -67,9 +67,10 @@ namespace PatternGuidedGP.GP.Problems {
 		protected virtual void GetInstructionSet(InstructionSetBuilder builder) {
 			if (ReturnType == typeof(int)) {
 				builder.AddIntTargetVariable();
-			}
-			else if (ReturnType == typeof(bool)) {
+			} else if (ReturnType == typeof(bool)) {
 				builder.AddBoolTargetVariable();
+			} else if (ReturnType == typeof(float)) {
+				builder.AddFloatTargetVariable();
 			}
 		}
 

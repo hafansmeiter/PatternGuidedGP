@@ -44,19 +44,20 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 		}
 
 		protected override void GetCodeTemplate(CodeTemplateBuilder builder) {
+			base.GetCodeTemplate(builder);
 			builder.AddParameter(typeof(float), "values", true)
 				.AddParameter(typeof(int), "length", false)
 				.SetParameters();
 		}
 
 		protected override void GetInstructionSet(InstructionSetBuilder builder) {
+			base.GetInstructionSet(builder);
 			builder.AddFloatDomain()
 				.AddIntegerDomain()
 				.AddBooleanDomain()
 				.AddIfStatement()
 				.AddForLoopTimesStatement()
 				.AddForLoopVariable()
-				.AddFloatTargetVariable()
 				.AddFloatVariable("values", true)
 				.AddIntVariable("length");
 		}

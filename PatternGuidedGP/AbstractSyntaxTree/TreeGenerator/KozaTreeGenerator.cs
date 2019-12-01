@@ -24,7 +24,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 				do {
 					var filter = node.GetChildSelectionFilter(i);
 					if (filter != null) {	// choose from any, because full tree generation might not be possible due to filtering
-						child = InstructionSetRepository.GetRandomAny(type, maxDepth, filter);
+						child = InstructionSetRepository.GetRandomAny(type, Math.Max(1, maxDepth), filter);
 					} else if (maxDepth <= 1) {
 						child = SelectTerminalNode(type);
 					} else {
@@ -33,12 +33,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 					if (maxDepth == 0 && child.ChildTypes.Length > 0) {	// array index must be a single terminal if already on max depth
 						continue;
 					}
-					if (node.AcceptChild(child, i)) {
+					if (node.AcceptChild(child, i)) {	
 						break;
 					}
 				} while (true);
 				node.AddChild(child);
-				AddChildren(child, maxDepth - 1);		
+				AddChildren(child, maxDepth - 1);
 			}
 		}
 

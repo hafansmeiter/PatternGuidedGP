@@ -44,7 +44,7 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		protected override CompilationUnitSyntax CreateCompilationUnit(Individual individual, TestCase sample, CompilationUnitSyntax template) {
-			var syntax = individual.SyntaxTree.Root.GetSyntaxNode();
+			var syntax = individual.SyntaxTree.GetSyntaxNode();
 			var compSyntax = base.CreateCompilationUnit(syntax, sample, template);
 
 			var traceableNodes = individual.SyntaxTree.GetTraceableNodes();
@@ -56,20 +56,18 @@ namespace PatternGuidedGP.Pangea {
 			return compSyntax;
 		}
 
-		
-
 		private SyntaxNode GetStorageCallSyntax(TreeNode tracedNode) {
 			// Code example: 
 			// ret = a + b;
 			// Store execution trace for code (23, 1, 2, 3 are node ids):
 			// try {
-			//   ExecutionTraces.Current.Add(23, new ExecutionRecord(1, a + b));
+			//   ExecutionTraces.Current.Add(23, 1, a + b);
 			// } catch (Exception e) {}
 			// try {
-			//   ExecutionTraces.Current.Add(23, new ExecutionRecord(2, a));
+			//   ExecutionTraces.Current.Add(23, 2, a);
 			// } catch (Exception e) {}
 			// try {
-			//   ExecutionTraces.Current.Add(23, new ExecutionRecord(3, b));
+			//   ExecutionTraces.Current.Add(23, 3, b);
 			// } catch (Exception e) {}
 
 			var statements = new List<StatementSyntax>();

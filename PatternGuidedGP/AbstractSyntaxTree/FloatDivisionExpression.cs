@@ -35,22 +35,18 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		}
 
 		public override bool AcceptChild(TreeNode child, int index) {
-			if (index != 1) {
-				return true;
-			}
-			else {
+			bool accept = true;
+			if (index == 1) {
 				if (child is IntConstantExpression) {
 					var constant = child as IntConstantExpression;
-					return (int)constant.Value != 0;
+					accept = (int)constant.Value != 0;
 				}
 				else if (child is FloatConstantExpression) {
 					var constant = child as FloatConstantExpression;
-					return (float)constant.Value != 0;
-				}
-				else {
-					return false;
+					accept = (float)constant.Value != 0;
 				}
 			}
+			return accept ? base.AcceptChild(child, index) : false;
 		}
 
 		public override TreeNodeFilter GetChildSelectionFilter(int childIndex) {

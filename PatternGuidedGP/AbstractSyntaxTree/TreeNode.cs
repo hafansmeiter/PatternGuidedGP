@@ -29,6 +29,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public ulong Id { get; private set; }
 		private static ulong _currentId = 0;
 
+		public int HashCode => GetHashCode();
+
 		// nodes get cloned -> no constructor
 		// use method Initialize instead
 		public virtual void Initialize() {
@@ -133,7 +135,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			return true;
 		}
 
-		private TreeNode FindParent(Predicate<TreeNode> predicate) {
+		public TreeNode FindParent(Predicate<TreeNode> predicate) {
 			var current = this;
 			do {
 				if (predicate(current)) {
@@ -205,19 +207,33 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			if (other == null) {
 				return false;
 			}
-			if (Children != null && other.Children == null
-				|| Children == null && other.Children != null
-				|| Children.Count != other.Children.Count) {
-				return false;
-			}
 			// use Description instead of GetType to compare types
 			// as this comparison considers identifier names.
 			if (Description != other.Description) {
 				return false;
 			}
-			for (int i = 0; i < Children.Count; i++) {
-				if (!Children[i].Equals(other.Children[i])) {
-					return false;
+			if (ChildTypes != null && other.ChildTypes == null
+				|| ChildTypes == null && other.ChildTypes != null
+				|| (ChildTypes != null && other.ChildTypes != null && ChildTypes.Length != other.ChildTypes.Length)) {
+				return false;
+			}
+			if (ChildTypes != null && other.ChildTypes != null) {
+				for (int i = 0; i < ChildTypes.Length; i++) {
+					if (!ChildTypes[i].Equals(other.ChildTypes[i])) {
+						return false;
+					}
+				}
+			}
+			if (Children != null && other.Children == null
+				|| Children == null && other.Children != null
+				|| (Children != null && other.Children != null && Children.Count != other.Children.Count)) {
+				return false;
+			}
+			if (Children != null && other.Children != null) {
+				for (int i = 0; i < Children.Count; i++) {
+					if (!Children[i].Equals(other.Children[i])) {
+						return false;
+					}
 				}
 			}
 			return true;
@@ -227,7 +243,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			var hashCode = -1987626574;
 			hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Description);
 			hashCode = hashCode * -1521134295 + EqualityComparer<Type>.Default.GetHashCode(Type);
-			hashCode = hashCode * -1521134295 + EqualityComparer<Type[]>.Default.GetHashCode(ChildTypes);
+			foreach (var child in ChildTypes)
+				hashCode *= -1521134295 + EqualityComparer<Type>.Default.GetHashCode(child);
 			hashCode = hashCode * -1521134295 + EqualityComparer<List<TreeNode>>.Default.GetHashCode(Children);
 			return hashCode;
 		}

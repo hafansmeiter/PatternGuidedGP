@@ -1,5 +1,6 @@
 ﻿using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
+using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,14 +19,18 @@ namespace PatternGuidedGP.GP.Operators {
 			_generatorFull.InstructionSetRepository = InstructionSetRepository;
 			_generatorGrow.InstructionSetRepository = InstructionSetRepository;
 			for (int i = 0; !population.IsFull; i++) {
-				TreeNode root;
-				if (i % 2 == 0) {
-					root = _generatorFull.GetSyntaxTree(MaxTreeDepth, rootType);
-				} else {
-					root = _generatorGrow.GetSyntaxTree(MaxTreeDepth, rootType);
+				var syntaxTree = new SyntaxTree();
+				var rootStatements = RandomValueGenerator.Instance.GetInt(SyntaxConfiguration.Current.RootMaxStatements) + 1;
+				for (int j = 0; j < rootStatements; j++) {
+					TreeNode root;
+					if (i % 2 == 0) {
+						root = _generatorFull.GetSyntaxTree(MaxTreeDepth, rootType);
+					} else {
+						root = _generatorGrow.GetSyntaxTree(MaxTreeDepth, rootType);
+					}
+					syntaxTree.AddRootNode(root);
 				}
-				Individual individual = new Individual(new SyntaxTree(root));
-				population.Add(individual);
+				population.Add(new Individual(syntaxTree));
 			}
 		}
 	}

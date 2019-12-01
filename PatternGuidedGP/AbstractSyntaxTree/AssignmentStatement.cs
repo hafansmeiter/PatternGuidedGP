@@ -31,16 +31,16 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		// accept only identifiers on left hand side
 		public override bool AcceptChild(TreeNode child, int index) {
-			if (index > 0) {
-				return true;
-			} else {
-				if (child.IsVariable) {
+			bool accept = true;
+			if (index == 0) {
+				if (child is IdentifierExpression<T>) {
 					IdentifierExpression<T> variable = child as IdentifierExpression<T>;
-					return variable.IsAssignable;
+					accept = variable.IsAssignable;
 				} else {
-					return false;
+					accept = false;
 				}
 			}
+			return accept ? base.AcceptChild(child, index) : false;
 		}
 
 		public override TreeNodeFilter GetChildSelectionFilter(int childIndex) {

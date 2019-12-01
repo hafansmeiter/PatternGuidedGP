@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using SyntaxTree = PatternGuidedGP.AbstractSyntaxTree.SyntaxTree;
 
 namespace PatternGuidedGP.GP.Evaluators {
 	class ProgramFitnessEvaluator : IFitnessEvaluator {
@@ -21,8 +22,8 @@ namespace PatternGuidedGP.GP.Evaluators {
 		public IFitnessCalculator FitnessCalculator { get; set; }
 		public ICompiler Compiler { get; set; } = new CSharpCompiler();	// default
 
-		public bool AdjustCodeRequired { get; set; } = false;
-		public bool AdjustLoopVariablesRequired { get; set; } = false;
+		public bool AdjustCodeRequired { get; set; } = true;
+		public bool AdjustLoopVariablesRequired { get; set; } = true;
 
 		public virtual FitnessResult Evaluate(Individual individual, Problem problem) {
 			TestSuite testSuite = problem.TestSuite;
@@ -32,7 +33,6 @@ namespace PatternGuidedGP.GP.Evaluators {
 			Logger.WriteLine(4, "Run test method:");
 			Logger.WriteLine(4, compilationUnit.NormalizeWhitespace().ToString());
 
-			//AppDomain appDomain = null;
 			AppDomain appDomain = AppDomain.CreateDomain("AppDomain");
 			var testable = GetTestableObject(appDomain, compilationUnit);
 
@@ -73,17 +73,23 @@ namespace PatternGuidedGP.GP.Evaluators {
 		}
 
 		protected virtual CompilationUnitSyntax CreateCompilationUnit(Individual individual, TestCase sample, CompilationUnitSyntax template) {
-			var root = individual.SyntaxTree.Root;
+			var syntaxTree = individual.SyntaxTree;
 			if (AdjustCodeRequired) {
-				AdjustCode(root);
+				AdjustCode(syntaxTree);
 			}
-			var syntax = root.GetSyntaxNode();
+			var syntax = syntaxTree.GetSyntaxNode();
 			return CreateCompilationUnit(syntax, sample, template);
 		}
 
-		private void AdjustCode(TreeNode root) {
+		private void AdjustCode(SyntaxTree tree) {
 			if (AdjustLoopVariablesRequired) {
-				AdjustLoopVariables(root, "");
+				AdjustLoopVariables(tree);
+			}
+		}
+
+		private void AdjustLoopVariables(SyntaxTree tree) {
+			foreach (var node in tree.RootNodes) {
+				AdjustLoopVariables(node, "");
 			}
 		}
 
@@ -91,7 +97,8 @@ namespace PatternGuidedGP.GP.Evaluators {
 			if (node is ForLoopTimesStatement) {
 				var forStatement = node as ForLoopTimesStatement;
 				loopVariableName = forStatement.LoopVariableName;
-			} else if (node is ForLoopVariable) {
+			}
+			else if (node is ForLoopVariable) {
 				var loopVariable = node as ForLoopVariable;
 				loopVariable.Name = loopVariableName;
 			}

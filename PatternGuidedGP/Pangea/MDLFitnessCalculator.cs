@@ -64,8 +64,8 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		private double GetClassificationError(DecisionTree decisionTree, int?[][] input, int[] expected) {
-			var actual = decisionTree.Decide(input);
-			return Math.Round(new ZeroOneLoss(expected).Loss(actual) * expected.Length);
+			var predicted = decisionTree.Decide(input);
+			return Math.Round(new ZeroOneLoss(expected).Loss(predicted) * expected.Length);
 		}
 
 		private DecisionTree CreateDecisionTree(int?[][] input, int[] output) {

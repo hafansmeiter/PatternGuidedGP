@@ -10,7 +10,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override string Description => "false";
 
 		public override bool IsVariable => false;
-
+		
 		protected override CSharpSyntaxNode GenerateSyntax() {
 			return SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression);
 		}

@@ -33,10 +33,6 @@ namespace PatternGuidedGP.Pangea {
 			_entries = new List<Entry>();
 		}
 
-		public void Reset() {
-			_entries.Clear();
-		}
-
 		public void Add(ulong nodeId, ulong recordNodeId, object recordValue) {
 			Add(nodeId, new ExecutionRecord(recordNodeId, recordValue));
 		}
