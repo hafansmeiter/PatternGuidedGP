@@ -10,7 +10,7 @@ using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.Pangea;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	class AssignmentStatement<T> : Statement, ITraceable {
+	abstract class AssignmentStatement<T> : Statement, ITraceable {
 		public override string Description => "=";
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;

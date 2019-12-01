@@ -16,7 +16,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override int RequiredTreeDepth => 3;
 		public override Type[] ChildTypes => _childTypes.ToArray();
 		public bool IsTraceable => true;
-		
+		public override int OperatorId => 002;
+
 		public bool HasElseClause { get; private set; } = false;
 
 		public Expression<bool> Condition => Children[0] as Expression<bool>;

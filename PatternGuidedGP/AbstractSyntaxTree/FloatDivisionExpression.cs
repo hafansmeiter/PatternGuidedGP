@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class FloatDivisionExpression : BinaryExpression<float, float, float> {
 		public override string Description => "/";
+		public override int OperatorId => 303;
 
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.DivideExpression;

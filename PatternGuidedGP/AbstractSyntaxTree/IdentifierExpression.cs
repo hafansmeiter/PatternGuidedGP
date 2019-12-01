@@ -11,6 +11,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override bool IsVariable => true;
 		public bool IsAssignable { get; set; }
 		public string Name { get; set; }
+		public override int OperatorId => -1;
 
 		public IdentifierExpression(string name, bool assignable = false) {
 			Name = name;

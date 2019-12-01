@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolNotEqualIntExpression : BinaryExpression<bool, int, int> {
 		public override string Description => "!=";
+		public override int OperatorId => 116;
 
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.NotEqualsExpression;

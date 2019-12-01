@@ -38,17 +38,15 @@ namespace PatternGuidedGP.Pangea {
 			dataset.Count = count;
 			for (int i = 0; i < count; i++) {
 				var trace = traces[i];
-				foreach (var entry in trace.Entries) {
-					foreach (var record in entry.Records) {
-						object[] featureValues;
-						if (!dataset._features.TryGetValue(record.NodeId, out featureValues)) {
-							featureValues = new object[count];
-							dataset._features.Add(record.NodeId, featureValues);
-							dataset._featureData.Add(record.NodeId, 
-								new MLDatasetFeature(record.NodeId, record.Value.GetType()));
-						}
-						featureValues[i] = record.Value;
+				foreach (var record in trace.Records) {
+					object[] featureValues;
+					if (!dataset._features.TryGetValue(record.NodeId, out featureValues)) {
+						featureValues = new object[count];
+						dataset._features.Add(record.NodeId, featureValues);
+						dataset._featureData.Add(record.NodeId, 
+							new MLDatasetFeature(record.NodeId, record.Value.GetType()));
 					}
+					featureValues[i] = record.Value;
 				}
 			}
 			return dataset;

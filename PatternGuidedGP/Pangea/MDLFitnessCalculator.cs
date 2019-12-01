@@ -28,7 +28,7 @@ namespace PatternGuidedGP.Pangea {
 
 				var decisionTree = CreateDecisionTree(input, expected);
 				if (decisionTree != null) {
-					double error = GetClassificationError(decisionTree, input, expected);
+					int error = GetClassificationError(decisionTree, input, expected);
 					int treeSize = GetTreeSize(decisionTree);
 					double mdlFitness = CalculateMDLFitness(error, treeSize, results.Length);
 					fitness *= mdlFitness;
@@ -40,7 +40,7 @@ namespace PatternGuidedGP.Pangea {
 			return new MDLFitnessResult(fitness, dataset);
 		}
 
-		private double CalculateMDLFitness(double error, int treeSize, int n) {
+		private double CalculateMDLFitness(int error, int treeSize, int n) {
 			var treeSizeFactor = Math.Log(treeSize + 1, 2);
 			var classificationErrorFactor = ((error + 1) / (n + 1));
 			return treeSizeFactor * classificationErrorFactor;
@@ -63,9 +63,9 @@ namespace PatternGuidedGP.Pangea {
 			}
 		}
 
-		private double GetClassificationError(DecisionTree decisionTree, int?[][] input, int[] expected) {
+		private int GetClassificationError(DecisionTree decisionTree, int?[][] input, int[] expected) {
 			var predicted = decisionTree.Decide(input);
-			return Math.Round(new ZeroOneLoss(expected).Loss(predicted) * expected.Length);
+			return (int) Math.Round(new ZeroOneLoss(expected).Loss(predicted) * expected.Length);
 		}
 
 		private DecisionTree CreateDecisionTree(int?[][] input, int[] output) {

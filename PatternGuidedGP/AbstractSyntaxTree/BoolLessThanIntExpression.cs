@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolLessThanIntExpression : BinaryExpression<bool, int, int> {
 		public override string Description => "<";
+		public override int OperatorId => 113;
 
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.LessThanExpression;

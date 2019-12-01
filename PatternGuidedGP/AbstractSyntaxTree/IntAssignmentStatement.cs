@@ -6,5 +6,6 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class IntAssignmentStatement : AssignmentStatement<int> {
+		public override int OperatorId => 202;
 	}
 }

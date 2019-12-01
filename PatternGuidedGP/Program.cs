@@ -44,13 +44,13 @@ namespace PatternGuidedGP {
 					new IsOrderedProblem(3),		// 3
 					new MajorityProblem(3),			// 4
 					new MaximumProblem(3),			// 5
-					new CompareProblem(6),			// 6
+					/*new CompareProblem(6),			// 6
 					new MultiplexerProblem(6, 2),	// 7
-					new ParityProblem(6)            // 8
+					new ParityProblem(6)            // 8*/
 				};
 				RunProblems(simpleProblems, runConfig, runProblem, fromConfig, fromProblem);
 			} else if (problemSet == "advanced") {
-				SyntaxConfiguration.Current = new SyntaxConfiguration.Simple();
+				SyntaxConfiguration.Current = new SyntaxConfiguration.Advanced();
 				Problem[] advancedProblems = new Problem[] {
 					// Advanced Problems
 					new AverageProblem(),			// 0

@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class IntMultiplicationExpression : BinaryExpression<int, int, int> {
 		public override string Description => "*";
+		public override int OperatorId => 205;
 
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.MultiplyExpression;

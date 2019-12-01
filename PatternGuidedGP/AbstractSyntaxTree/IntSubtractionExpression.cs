@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class IntSubtractionExpression : BinaryExpression<int, int, int> {
 		public override string Description => "-";
+		public override int OperatorId => 206;
 
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.SubtractExpression;

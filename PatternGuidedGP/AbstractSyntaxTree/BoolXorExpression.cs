@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolXorExpression : BinaryExpression<bool, bool, bool> {
 		public override string Description => "XOR";
+		public override int OperatorId => 119;
 
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.ExclusiveOrExpression;

@@ -9,5 +9,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override Type[] ChildTypes => new Type[] { };
 		public override bool IsTerminal => true;
 		public override int RequiredTreeDepth => 1;
+		public override int OperatorId => -1;
 	}
 }

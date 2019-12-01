@@ -10,14 +10,16 @@ namespace PatternGuidedGP.Pangea {
 	public class ExecutionRecord {
 		public ulong NodeId { get; }
 		public object Value { get; }
+		public int OperatorId { get; }
 
-		public ExecutionRecord(ulong nodeId, object value) {
+		public ExecutionRecord(ulong nodeId, object value, int operatorId) {
 			NodeId = nodeId;
 			Value = value;
+			OperatorId = operatorId;
 		}
 
 		public override string ToString() {
-			return "[" + NodeId + " => " + Value + "]";
+			return "[" + NodeId + " (" + OperatorId + ") => " + Value + "]";
 		}
 	}
 }

@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class IntAdditionExpression : BinaryExpression<int, int, int> {
 		public override string Description => "+";
+		public override int OperatorId => 201;
 
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.AddExpression;

@@ -60,14 +60,15 @@ namespace PatternGuidedGP.Pangea {
 			// Code example: 
 			// ret = a + b;
 			// Store execution trace for code (23, 1, 2, 3 are node ids):
+			// e.g.: ExecutionTraces.Current.Add(result node id: 23, operation node id: 1, result: a + b, operation_code: 201);
 			// try {
-			//   ExecutionTraces.Current.Add(23, 1, a + b);
+			//   ExecutionTraces.Current.Add(23, 1, a + b, 201);
 			// } catch (Exception e) {}
 			// try {
-			//   ExecutionTraces.Current.Add(23, 2, a);
+			//   ExecutionTraces.Current.Add(23, 2, a, -1);
 			// } catch (Exception e) {}
 			// try {
-			//   ExecutionTraces.Current.Add(23, 3, b);
+			//   ExecutionTraces.Current.Add(23, 3, b, -1);
 			// } catch (Exception e) {}
 
 			var statements = new List<StatementSyntax>();
@@ -99,15 +100,6 @@ namespace PatternGuidedGP.Pangea {
 											SyntaxFactory.IdentifierName("Instance")),
 										SyntaxFactory.IdentifierName("Current")),
 									SyntaxFactory.IdentifierName("Add")))
-							// does not work cross-appdomain 
-							/*SyntaxFactory.InvocationExpression(
-								SyntaxFactory.MemberAccessExpression(
-									SyntaxKind.SimpleMemberAccessExpression,
-									SyntaxFactory.MemberAccessExpression(
-										SyntaxKind.SimpleMemberAccessExpression,
-										SyntaxFactory.IdentifierName("ExecutionTraces"),
-										SyntaxFactory.IdentifierName("Current")),
-									SyntaxFactory.IdentifierName("Add")))*/
 							.WithArgumentList(
 								SyntaxFactory.ArgumentList(
 									SyntaxFactory.SeparatedList<ArgumentSyntax>(
@@ -120,32 +112,18 @@ namespace PatternGuidedGP.Pangea {
 													SyntaxKind.NumericLiteralExpression,
 													SyntaxFactory.Literal(node.Id))),
 											SyntaxFactory.Argument(
-												(ExpressionSyntax) node.GetSyntaxNode())
-											/*SyntaxFactory.Argument(
-													SyntaxFactory.ObjectCreationExpression(
-														SyntaxFactory.IdentifierName("ExecutionRecord"))
-													.WithArgumentList(
-														SyntaxFactory.ArgumentList(
-															SyntaxFactory.SeparatedList(
-																new ArgumentSyntax[] {
-																	SyntaxFactory.Argument(
-																		SyntaxFactory.LiteralExpression(
-																			SyntaxKind.NumericLiteralExpression,
-																			SyntaxFactory.Literal(node.Id))),
-																	SyntaxFactory.Argument(
-																		(ExpressionSyntax) node.GetSyntaxNode())
-																}
-															)
-														)
-													)
-												)*/
-											}
-										)
+												(ExpressionSyntax) node.GetSyntaxNode()),
+											SyntaxFactory.Argument(
+												SyntaxFactory.LiteralExpression(
+													SyntaxKind.NumericLiteralExpression,
+													SyntaxFactory.Literal(node.OperatorId)))
+										}
 									)
 								)
 							)
 						)
-					)));
+					)
+				)));
 			return SyntaxFactory.Block(statements);
 		}
 	}

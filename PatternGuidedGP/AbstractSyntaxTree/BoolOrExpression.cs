@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolOrExpression : BinaryExpression<bool, bool, bool> {
 		public override string Description => "||";
+		public override int OperatorId => 118;
 
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.LogicalOrExpression;

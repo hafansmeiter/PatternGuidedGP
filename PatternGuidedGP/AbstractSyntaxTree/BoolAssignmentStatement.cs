@@ -6,5 +6,6 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolAssignmentStatement : AssignmentStatement<bool> {
+		public override int OperatorId => 102;
 	}
 }

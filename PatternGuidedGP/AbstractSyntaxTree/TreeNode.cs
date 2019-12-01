@@ -26,10 +26,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public TreeNode Parent { get; set; }
 		public List<TreeNode> Children { get; private set; }
 
+		// for distinguishing operation in Pangea ML-dataset
+		public abstract int OperatorId { get; }
+
 		public ulong Id { get; private set; }
 		private static ulong _currentId = 0;
 
-		public int HashCode => GetHashCode();
 
 		// nodes get cloned -> no constructor
 		// use method Initialize instead

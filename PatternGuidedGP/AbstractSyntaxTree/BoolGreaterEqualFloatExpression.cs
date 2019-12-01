@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class BoolGreaterEqualFloatExpression : BinaryExpression<bool, float, float> {
 		public override string Description => ">=";
+		public override int OperatorId => 106;
 
 		public override SyntaxKind GetKind() {
 			return SyntaxKind.GreaterThanOrEqualExpression;
