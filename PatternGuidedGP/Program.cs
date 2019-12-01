@@ -17,6 +17,7 @@ using PatternGuidedGP.GP;
 using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Operators;
 using PatternGuidedGP.GP.Problems;
+using PatternGuidedGP.GP.Problems.Advanced;
 using PatternGuidedGP.GP.Problems.Simple;
 using PatternGuidedGP.GP.SemanticGP;
 using PatternGuidedGP.GP.Tests;
@@ -29,20 +30,47 @@ namespace PatternGuidedGP {
 
 		static void Main(string[] args) {
 			int runConfig, runProblem, fromConfig = 0, fromProblem = 0;
-			EvaluateArgs(args, out runConfig, out runProblem, out fromConfig, out fromProblem);
+			string problemSet;
+			EvaluateArgs(args, out runConfig, out runProblem, out fromConfig, out fromProblem, out problemSet);
+			Logger.Level = 4;
 
-			Logger.Level = 0;
+			if (problemSet == "simple") {
+				SyntaxConfiguration.Current = new SyntaxConfiguration.Simple();
+				Problem[] simpleProblems = new Problem[] {
+					// Simple Problems
+					new AllEqualProblem(3),			// 0
+					new ContainsFirstProblem(3),	// 1
+					new CountZeroesProblem(3),		// 2
+					new IsOrderedProblem(3),		// 3
+					new MajorityProblem(3),			// 4
+					new MaximumProblem(3),			// 5
+					new CompareProblem(6),			// 6
+					new MultiplexerProblem(6, 2),	// 7
+					new ParityProblem(6)            // 8
+				};
+				RunProblems(simpleProblems, runConfig, runProblem, fromConfig, fromProblem);
+			} else if (problemSet == "advanced") {
+				SyntaxConfiguration.Current = new SyntaxConfiguration.Advanced();
+				Problem[] advancedProblems = new Problem[] {
+					// Advanced Problems
+					new AverageProblem(),			// 0
+					new MedianProblem()				// 1
+				};
+				RunProblems(advancedProblems, runConfig, runProblem, fromConfig, fromProblem);
+			}
+		}
 
+		static void RunProblems(Problem [] problems, int runConfig, int runProblem, int fromConfig, int fromProblem) {
 			int maxTreeDepth = 7;
 			int maxMutationTreeDepth = 3;
 
 			var semanticsBasedSubTreePool = new SemanticsBasedSubTreePool();
 			var recordBasedSubTreePool = new RecordBasedSubTreePool();
-			var generator = new KozaTreeGeneratorGrow();
+			var generator = new KozaTreeGeneratorFull();
 
 			var configurations = new[] {
 				new RunConfiguration("Standard GP") {
-					FitnessEvaluator = new DefaultFitnessEvaluator(),
+					FitnessEvaluator = new ProgramFitnessEvaluator(),
 					Crossover = new RandomSubtreeCrossover(maxTreeDepth),
 					Mutator = new RandomSubtreeMutator(generator, maxTreeDepth, maxMutationTreeDepth)
 				},
@@ -107,18 +135,6 @@ namespace PatternGuidedGP {
 				}
 			};
 
-			Problem[] problems = new Problem[] {
-				new AllEqualProblem(3),			// 0
-				new ContainsFirstProblem(3),	// 1
-				new CountZeroesProblem(3),		// 2
-				new IsOrderedProblem(3),		// 3
-				new MajorityProblem(3),			// 4
-				new MaximumProblem(3),			// 5
-				new CompareProblem(6),			// 6
-				new MultiplexerProblem(6, 2),	// 7
-				new ParityProblem(6)			// 8
-			};
-
 			if (runConfig >= 0) {
 				configurations = new[] { configurations[runConfig] };
 			}
@@ -150,20 +166,21 @@ namespace PatternGuidedGP {
 							= problem.TestSuite.Semantics;
 					}
 
-					semanticsBasedSubTreePool.Clear();
-					recordBasedSubTreePool.Clear();
 
 					int solved = 0;
 					for (int i = 0; i < config.Runs; i++) {
-						DefaultAlgorithm algorithm = new DefaultAlgorithm(config.PopulationSize, config.Generations) {
+						semanticsBasedSubTreePool.Clear();
+						recordBasedSubTreePool.Clear();
+
+						DefaultAlgorithm algorithm = new DefaultAlgorithm(config.PopulationSize, config.Generations, false) {
 							Crossover = config.Crossover,
-							CrossoverRate = 0.7,
+							CrossoverRate = 0.8,
 							Elitism = 5,
 							Initializer = new RampedHalfHalfInitializer(maxTreeDepth, problem.InstructionSetRepository),
 							MaxTreeDepth = 9,   // not used
 							MutationRate = 0.2,
 							Mutator = config.Mutator,
-							Selector = new TournamentSelector(4)
+							Selector = new TournamentSelector(7)
 						};
 
 						Individual bestSolution = algorithm.Run(problem);
@@ -178,11 +195,12 @@ namespace PatternGuidedGP {
 		}
 
 		private static void EvaluateArgs(string [] args, out int runConfig, out int runProblem, 
-			out int fromConfig, out int fromProblem) {
+			out int fromConfig, out int fromProblem, out string problemSet) {
 			runConfig = -1;
 			runProblem = -1;
 			fromConfig = 0;
 			fromProblem = 0;
+			problemSet = "";
 			foreach (var arg in args) {
 				if (arg.StartsWith("/config:")) {
 					runConfig = int.Parse(arg.Substring(8));
@@ -192,6 +210,8 @@ namespace PatternGuidedGP {
 					fromConfig = int.Parse(arg.Substring(12));
 				} else if (arg.StartsWith("/fromProblem:")) {
 					fromProblem = int.Parse(arg.Substring(13));
+				} else if (arg.StartsWith("/problemSet:")) {
+					problemSet = arg.Substring(12);
 				}
 			}
 		}

@@ -17,7 +17,7 @@ namespace PatternGuidedGP.GP.Operators {
 		public override void Initialize(Population population, Type rootType) {
 			_generatorFull.InstructionSetRepository = InstructionSetRepository;
 			_generatorGrow.InstructionSetRepository = InstructionSetRepository;
-			for (int i = 0; i < population.Size; i++) {
+			for (int i = 0; !population.IsFull; i++) {
 				TreeNode root;
 				if (i % 2 == 0) {
 					root = _generatorFull.GetSyntaxTree(MaxTreeDepth, rootType);

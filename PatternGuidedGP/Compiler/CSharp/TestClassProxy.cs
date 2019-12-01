@@ -18,7 +18,7 @@ namespace PatternGuidedGP.Compiler.CSharp {
 		public object RunTest(params object[] parameter) {
 			try {
 				return _method.Invoke(null, parameter);
-			} catch (Exception ex) {
+			} catch (Exception /*exception*/) {
 				//Logger.WriteLine(4, "Exception: " + ex.GetType().Name);
 				// Code does not run properly, e.g. DivideByZeroException
 				// Count as negative run

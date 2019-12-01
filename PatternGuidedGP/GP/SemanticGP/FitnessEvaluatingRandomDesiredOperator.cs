@@ -21,7 +21,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			var treeNode = base.DoLibrarySearch(individual, subTreePool, nodeType, desiredSemantics);
 			var recordSubTreePool = subTreePool as RecordBasedSubTreePool;
 			if (recordSubTreePool != null) {
-				double fitness = FitnessEvaluator.Evaluate(individual, Problem);
+				var fitness = FitnessEvaluator.Evaluate(individual, Problem).Fitness;
 				// treat equal fitness like worse fitness => emphasize on improvements
 				bool improved = fitness < individual.Fitness;
 				recordSubTreePool.UpdateRecord(treeNode, improved);

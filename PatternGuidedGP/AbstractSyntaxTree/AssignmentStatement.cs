@@ -10,13 +10,13 @@ using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.Pangea;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	class AssignmentStatement<T> : Statement {
+	class AssignmentStatement<T> : Statement, ITraceable {
 		public override string Description => "=";
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
 		public override int RequiredTreeDepth => 2;
-		public override bool IsTraceable => true;
 		public override Type[] ChildTypes => new[] { typeof(T), typeof(T) };
+		public bool IsTraceable => true;
 
 		public IdentifierExpression<T> Variable => Children[0] as IdentifierExpression<T>;
 		public Expression<T> AssignedExpression => Children[1] as Expression<T>;
@@ -36,7 +36,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			} else {
 				if (child.IsVariable) {
 					IdentifierExpression<T> variable = child as IdentifierExpression<T>;
-					return variable.IsTargetVariable;
+					return variable.IsAssignable;
 				} else {
 					return false;
 				}
@@ -51,7 +51,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			}
 		}
 
-		public override IEnumerable<TreeNode> GetExecutionTraceNodes() {
+		public IEnumerable<TreeNode> GetExecutionTraceNodes() {
 			return AssignedExpression.GetSubTreeNodes();	// need to include root to have semantics evaluated
 		}
 

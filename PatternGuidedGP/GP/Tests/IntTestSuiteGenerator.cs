@@ -13,7 +13,7 @@ namespace PatternGuidedGP.GP.Tests {
 				object[] parameters = new object[parameterCount];
 				for (int j = 0; j < parameterCount; j++) {
 					int k = ((int)Math.Pow(parameterCount, parameterCount - j - 1));
-					parameters[j] = (i / k) % parameterCount;
+					parameters[j] = (i / k) % parameterCount + 1;
 				}
 				var result = resultDelegate.Invoke(parameters);
 				cases.Add(new TestCase(parameters, result));

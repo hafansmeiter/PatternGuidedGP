@@ -128,6 +128,8 @@ namespace PatternGuidedGP.Pangea {
 				}
 				else if (o.GetType() == typeof(bool)) {
 					value = (bool)o ? 1 : 0;
+				} else if (o.GetType() == typeof(float)) {
+					//value = (float)o;
 				}
 			}
 			return value;

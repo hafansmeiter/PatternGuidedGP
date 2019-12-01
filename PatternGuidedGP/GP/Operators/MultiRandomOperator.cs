@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Operators {
-	class MultiRandomOperator<TOperator> {
+	abstract class MultiRandomOperator<TOperator> {
 		public IList<TOperator> Options { get; set; } = new List<TOperator>();
 
 		protected TOperator GetRandom() {

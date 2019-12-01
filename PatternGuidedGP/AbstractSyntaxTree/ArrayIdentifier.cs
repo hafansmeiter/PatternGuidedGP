@@ -12,9 +12,9 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override int RequiredTreeDepth => 1; // index is not a subtree as it is not considered as logical tree node
 		public Expression<int> Index => Children[0] as Expression<int>;
 
-		public ArrayIdentifier(string name, bool targetVariable = false) : base(name, targetVariable) {
+		public ArrayIdentifier(string name, bool assignable = false) : base(name, assignable) {
 			Name = name;
-			IsTargetVariable = targetVariable;
+			IsAssignable = assignable;
 		}
 
 		protected override CSharpSyntaxNode GenerateSyntax() {

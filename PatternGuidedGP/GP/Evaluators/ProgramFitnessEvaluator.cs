@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.Compiler;
 using PatternGuidedGP.Compiler.CSharp;
 using PatternGuidedGP.GP.Problems;
@@ -15,19 +16,15 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Evaluators {
-	abstract class ProgramFitnessEvaluator : IFitnessEvaluator {
+	class ProgramFitnessEvaluator : IFitnessEvaluator {
 
-		protected class FitnessResult {
-			public double Fitness { get; private set; }
-
-			public FitnessResult(double fitness) {
-				Fitness = fitness;
-			}
-		}
-
+		public IFitnessCalculator FitnessCalculator { get; set; }
 		public ICompiler Compiler { get; set; } = new CSharpCompiler();	// default
 
-		public virtual double Evaluate(Individual individual, Problem problem) {
+		public bool AdjustCodeRequired { get; set; } = false;
+		public bool AdjustLoopVariablesRequired { get; set; } = false;
+
+		public virtual FitnessResult Evaluate(Individual individual, Problem problem) {
 			TestSuite testSuite = problem.TestSuite;
 			CompilationUnitSyntax compilationUnit = CreateCompilationUnit(individual, 
 				testSuite.TestCases.First(),
@@ -47,7 +44,7 @@ namespace PatternGuidedGP.GP.Evaluators {
 				TestCase test = testSuite.TestCases[i];
 				try {
 					results[i] = RunTestCase(testable, test);
-				} catch (Exception ex) {
+				} catch (Exception /*exception*/) {
 					//Logger.WriteLine(4, "Exception: " + ex.GetType().Name);
 					// Code does not run properly, e.g. DivideByZeroException
 					// Count as negative run
@@ -57,12 +54,10 @@ namespace PatternGuidedGP.GP.Evaluators {
 
 			AppDomain.Unload(appDomain);
 
-			FitnessResult fitness = CalculateFitness(individual, testSuite, results);
+			FitnessResult fitness = FitnessCalculator.CalculateFitness(individual, testSuite, results);
 			OnEvaluationFinished(individual, fitness, results);
-			return fitness.Fitness;
+			return fitness;
 		}
-
-		protected abstract FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results);
 
 		protected virtual void PrepareTestRuns(Individual individual, TestSuite testSuite) {
 		}
@@ -78,8 +73,31 @@ namespace PatternGuidedGP.GP.Evaluators {
 		}
 
 		protected virtual CompilationUnitSyntax CreateCompilationUnit(Individual individual, TestCase sample, CompilationUnitSyntax template) {
-			var syntax = individual.SyntaxTree.Root.GetSyntaxNode();
+			var root = individual.SyntaxTree.Root;
+			if (AdjustCodeRequired) {
+				AdjustCode(root);
+			}
+			var syntax = root.GetSyntaxNode();
 			return CreateCompilationUnit(syntax, sample, template);
+		}
+
+		private void AdjustCode(TreeNode root) {
+			if (AdjustLoopVariablesRequired) {
+				AdjustLoopVariables(root, "");
+			}
+		}
+
+		private void AdjustLoopVariables(TreeNode node, string loopVariableName) {
+			if (node is ForLoopTimesStatement) {
+				var forStatement = node as ForLoopTimesStatement;
+				loopVariableName = forStatement.LoopVariableName;
+			} else if (node is ForLoopVariable) {
+				var loopVariable = node as ForLoopVariable;
+				loopVariable.Name = loopVariableName;
+			}
+			foreach (var child in node.Children) {
+				AdjustLoopVariables(child, loopVariableName);
+			}
 		}
 
 		protected virtual CompilationUnitSyntax CreateCompilationUnit(SyntaxNode syntax, TestCase sample, CompilationUnitSyntax template) {

@@ -21,47 +21,12 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.Pangea {
 
 	// MDL = Minimum description length: https://en.wikipedia.org/wiki/Minimum_description_length
-	class MDLFitnessEvaluator : DefaultFitnessEvaluator {
-		protected class MDLFitnessResult : FitnessResult {
-			public MLDataset Dataset { get; private set; }
-
-			public MDLFitnessResult(double fitness, MLDataset dataset)
-				: base(fitness) {
-				Dataset = dataset;
-			}
-		}
-
+	class MDLFitnessEvaluator : ProgramFitnessEvaluator {
+		
 		public ISubTreePool SubTreePool { get; set; }
 
 		protected override void PrepareTestRuns(Individual individual, TestSuite testSuite) {
 			Singleton<ExecutionTraces>.Instance.Reset();
-		}
-
-		protected override FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {
-			double fitness = base.CalculateFitness(individual, testSuite, results).Fitness; // standard fitness f0
-			var dataset = MLDataset.FromExecutionTraces(individual, Singleton<ExecutionTraces>.Instance.Traces);
-			LogDatasetFeatures(dataset);
-
-			if (dataset.Features.Count() > 0) {
-				var input = dataset.ToRawInputDataset();
-
-				var expected = GetExpectedOutputDataset(testSuite);
-				var actual = GetActualOutputDataset(results, testSuite.TestCases[0].Result.GetType());
-
-				LogDataset(input, expected, actual);
-
-				var decisionTree = CreateDecisionTree(input, expected);
-				if (decisionTree != null) {
-					double error = GetClassificationError(decisionTree, expected, actual);
-					int treeLength = GetTreeLength(decisionTree);
-					double mdlFitness = CalculateMDLFitness(error, treeLength, results.Length);
-					fitness *= mdlFitness;
-
-					var rules = decisionTree.ToRules();
-					LogResult(fitness, error, treeLength, mdlFitness, rules);
-				}
-			}
-			return new MDLFitnessResult(fitness, dataset);
 		}
 
 		protected override void OnTestRunFinished(Individual individual, TestCase testCase, object result) {
@@ -91,64 +56,7 @@ namespace PatternGuidedGP.Pangea {
 			return compSyntax;
 		}
 
-		private double CalculateMDLFitness(double error, int treeLength, int n) {
-			return Math.Log(treeLength + 1, 2) * ((error + 1) / (n + 1));
-		}
-
-		private int GetTreeLength(DecisionTree decisionTree) {
-			var root = decisionTree.Root;
-			int length = 0;
-			GetSubtreeLength(root, ref length);
-			return length;
-		}
-
-		private void GetSubtreeLength(DecisionNode node, ref int length) {
-			length++;
-			if (node.IsLeaf) {
-				return;
-			}
-			foreach (var branch in node.Branches) {
-				GetSubtreeLength(branch, ref length);
-			}
-		}
-
-		private double GetClassificationError(DecisionTree decisionTree, int[] expected, int[] actual) {
-			return Math.Round(new ZeroOneLoss(expected).Loss(actual) * expected.Length);
-		}
-
-		private DecisionTree CreateDecisionTree(int?[][] input, int[] output) {
-			var learner = new C45Learning();
-			DecisionTree tree = null;
-			try {
-				tree = learner.Learn(input, output);
-			}
-			catch (Exception e) {
-				Console.WriteLine(e.Message);
-				Console.WriteLine(e.ToString());
-			}
-			return tree;
-		}
-
-		private int[] GetActualOutputDataset(object[] results, Type type) {
-			int[] dataset = new int[results.Length];
-			for (int i = 0; i < dataset.Length; i++) {
-				if (type == typeof (bool)) {
-					// ensure no result will be counted as false result
-					dataset[i] = MLDataset.ToDatasetValue(results[i]) ?? -1;
-				} else {
-					dataset[i] = MLDataset.ToDatasetValue(results[i]).GetValueOrDefault();
-				}
-			}
-			return dataset;
-		}
-
-		private int[] GetExpectedOutputDataset(TestSuite testSuite) {
-			int[] dataset = new int[testSuite.TestCases.Count];
-			for (int i = 0; i < dataset.Length; i++) {
-				dataset[i] = MLDataset.ToDatasetValue(testSuite.TestCases[i].Result).GetValueOrDefault();
-			}
-			return dataset;
-		}
+		
 
 		private SyntaxNode GetStorageCallSyntax(TreeNode tracedNode) {
 			// Code example: 
@@ -165,7 +73,7 @@ namespace PatternGuidedGP.Pangea {
 			// } catch (Exception e) {}
 
 			var statements = new List<StatementSyntax>();
-			statements.AddRange(tracedNode.GetExecutionTraceNodes().Select(node =>
+			statements.AddRange(((ITraceable) tracedNode).GetExecutionTraceNodes().Select(node =>
 				SyntaxFactory.TryStatement(
 					SyntaxFactory.SingletonList<CatchClauseSyntax>(
 						SyntaxFactory.CatchClause()
@@ -241,37 +149,6 @@ namespace PatternGuidedGP.Pangea {
 						)
 					)));
 			return SyntaxFactory.Block(statements);
-		}
-
-		private void LogResult(double fitness, double error, int treeLength, double mdlFitness, Accord.MachineLearning.DecisionTrees.Rules.DecisionSet rules) {
-			Logger.WriteLine(3, "Error: " + error + ", Tree length: " + treeLength);
-			Logger.WriteLine(3, "Fitness: " + fitness * mdlFitness + ", default fitness: " + fitness + ", mdl fitness: " + mdlFitness);
-			Logger.WriteLine(3, "Rules: " + rules.ToString());
-			if (mdlFitness == 0) {
-				Logger.WriteLine(3, "MDL fitness is zero.");
-			}
-		}
-
-		private void LogDataset(int?[][] input, int[] expected, int[] actual) {
-			// Log input matrix and outputs
-			Logger.WriteLine(4, "\nInput:");
-			for (int i = 0; i < input.Length; i++) {
-				Logger.Write(4, "\n" + i + ": ");
-				for (int j = 0; j < input[i].Length; j++) {
-					Logger.Write(4, input[i][j] + ", ");
-				}
-				Logger.Write(4, "Exp: " + expected[i]);
-				Logger.Write(4, ", Act: " + actual[i]);
-			}
-			Logger.WriteLine(4, "");
-		}
-
-		private void LogDatasetFeatures(MLDataset dataset) {
-			Logger.Write(4, "Features: ");
-			foreach (var feature in dataset.Features) {
-				Logger.Write(4, feature.ToString() + ",");
-			}
-			Logger.WriteLine(4, "");
 		}
 	}
 }

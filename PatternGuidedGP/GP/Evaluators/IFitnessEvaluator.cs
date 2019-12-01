@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Evaluators {
 	interface IFitnessEvaluator {
-		double Evaluate(Individual individual, Problem problem);
+		IFitnessCalculator FitnessCalculator { get; set; }
+		FitnessResult Evaluate(Individual individual, Problem problem);
 	}
 }

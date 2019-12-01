@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Tests {
 	class TestSuite {
-		public IList<TestCase> TestCases { get; set; } = new List<TestCase>();
+		public IList<TestCase> TestCases { get; private set; } = new List<TestCase>();
+
 		public Semantics Semantics {
 			get {
 				if (_semantics == null) {
@@ -23,6 +24,9 @@ namespace PatternGuidedGP.GP.Tests {
 
 		public TestSuite(IList<TestCase> cases) {
 			TestCases = cases;
+		}
+
+		public TestSuite() {
 		}
 	}
 }

@@ -14,15 +14,23 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.GP.Problems {
 	abstract class Problem {
 		public IFitnessEvaluator FitnessEvaluator { get; set; }
-		public IGeometricCalculator GeometricCalculator { get; set; }
 		public TestSuite TestSuite { get; protected set; }
 		public CompilationUnitSyntax CodeTemplate { get; protected set; }
+
+		public abstract IFitnessCalculator FitnessCalculator { get; }
+		public IGeometricCalculator GeometricCalculator { get; protected set; }
 
 		public IInstructionSetRepository InstructionSetRepository { get; protected set; }
 		public abstract Type RootType { get; }
 		public abstract Type ReturnType { get; }
 		public int ParameterCount { get; set; }
 		
+		public Problem(bool initialize = true) {
+			if (initialize) {
+				Initialize();
+			}
+		}
+
 		public Problem(int n, bool initialize = true) {
 			ParameterCount = n;
 			if (initialize) {
@@ -32,7 +40,6 @@ namespace PatternGuidedGP.GP.Problems {
 
 		protected void Initialize() {
 			TestSuite = GetTestSuite();
-			GeometricCalculator = GetGeometricCalculator();
 
 			var codeBuilder = new CodeTemplateBuilder();
 			GetCodeTemplate(codeBuilder);
@@ -49,15 +56,6 @@ namespace PatternGuidedGP.GP.Problems {
 				}
 				Logger.WriteLine(4, "-> " + test.Result.ToString());
 			}
-		}
-
-		protected virtual IGeometricCalculator GetGeometricCalculator() {
-			if (ReturnType == typeof(bool)) {
-				return new BoolGeometricCalculator();
-			} else if (ReturnType == typeof(int)) {
-				return new IntGeometricCalculator();
-			}
-			return null;
 		}
 
 		protected abstract TestSuite GetTestSuite();
@@ -77,11 +75,12 @@ namespace PatternGuidedGP.GP.Problems {
 
 		public int Evaluate(Population population) {
 			int evaluationCount = 0;
+			FitnessEvaluator.FitnessCalculator = FitnessCalculator;
 			foreach (var individual in population.Individuals) {
 				Logger.WriteLine(4, "Individual tree height: " + individual.SyntaxTree.Height);
 				if (!individual.FitnessEvaluated) {
-					double fitness = FitnessEvaluator.Evaluate(individual, this);
-					individual.Fitness = fitness;
+					var result = FitnessEvaluator.Evaluate(individual, this);
+					individual.Fitness = result.Fitness;
 					evaluationCount++;
 				}
 			}

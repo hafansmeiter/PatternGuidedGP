@@ -9,12 +9,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 	abstract class IdentifierExpression<T> : NullaryExpression<T> {
 		public override string Description => Name;
 		public override bool IsVariable => true;
-		public bool IsTargetVariable { get; set; }
+		public bool IsAssignable { get; set; }
 		public string Name { get; set; }
 
-		public IdentifierExpression(string name, bool targetVariable = false) {
+		public IdentifierExpression(string name, bool assignable = false) {
 			Name = name;
-			IsTargetVariable = targetVariable;
+			IsAssignable = assignable;
 		}
 
 		protected override CSharpSyntaxNode GenerateSyntax() {

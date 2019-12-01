@@ -48,6 +48,11 @@ namespace PatternGuidedGP.GP.Problems {
 			return this;
 		}
 
+		public InstructionSetBuilder AddForLoopVariable() {
+			_repository.Add(new ForLoopVariable());
+			return this;
+		}
+
 		public InstructionSetBuilder AddBooleanDomain() {
 			_repository.Add(new BoolAndExpression(),
 				new BoolFalseExpression(),
@@ -94,8 +99,8 @@ namespace PatternGuidedGP.GP.Problems {
 			return this;
 		}
 
-		public InstructionSetBuilder AddForCountStatement() {
-			_repository.Add(new ForCountStatement());
+		public InstructionSetBuilder AddForLoopTimesStatement() {
+			_repository.Add(new ForLoopTimesStatement());
 			return this;
 		}
 
@@ -123,10 +128,14 @@ namespace PatternGuidedGP.GP.Problems {
 				new IntSubtractionExpression(),
 				new IntMultiplicationExpression(),
 				new IntDivisionExpression(),
-				new IntModuloExpression(),
-				new IntConstantExpression(0),
-				new IntConstantExpression(1),
-				new IntConstantExpression(2));
+				new IntModuloExpression());
+			return this;
+		}
+
+		public InstructionSetBuilder AddIntegerConstants(params int[] values) {
+			foreach (int val in values) {
+				_repository.Add(new IntConstantExpression(val));
+			}
 			return this;
 		}
 	}

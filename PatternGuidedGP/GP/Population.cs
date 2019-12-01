@@ -14,18 +14,27 @@ namespace PatternGuidedGP.GP {
 			}
 		}
 		public int IndividualCount { get; private set; } = 0;
+		public bool IsFull { get => IndividualCount == Size; }
+
+		public bool AllowDuplicates { get; set; }
 
 		private Individual[] _individuals;
 
-		public Population(int size) {
+		public Population(int size, bool allowDuplicates = true) {
 			Size = size;
+			AllowDuplicates = allowDuplicates;
 			_individuals = new Individual[size];
 		}
 
-		public void Add(params Individual[] individuals) {
+		public int Add(params Individual[] individuals) {
+			int added = 0;
 			for (int i = 0; i < individuals.Length && IndividualCount < Size; i++) {
-				_individuals[IndividualCount++] = individuals[i];
+				if (AllowDuplicates || !ContainsIndividual(individuals[i])) {
+					_individuals[IndividualCount++] = individuals[i];
+					added++;
+				}
 			}
+			return added;
 		}
 
 		public Individual GetFittest() {

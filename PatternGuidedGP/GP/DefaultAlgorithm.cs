@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.GP {
 	class DefaultAlgorithm : AlgorithmBase {
 
-		public DefaultAlgorithm(int populationSize, int generations)
-			: base(populationSize, generations) {
+		public DefaultAlgorithm(int populationSize, int generations, bool allowDuplicates)
+			: base(populationSize, generations, allowDuplicates) {
 		}
 
 		public override Individual Run(Problem problem) {
@@ -57,11 +57,10 @@ namespace PatternGuidedGP.GP {
 		}
 
 		public override Population GetNextGeneration(Population population) {
-			int size = population.Size;
-			Population nextGen = new Population(size);
+			Population nextGen = new Population(population.Size, population.AllowDuplicates);
 			nextGen.Add(population.GetFittest(Elitism).ToArray());
 			int duplicates = 0;
-			while (nextGen.IndividualCount < size) {
+			while (!nextGen.IsFull) {
 				IList<Individual> children = new List<Individual>();
 				// create child by crossover or copy from old population
 				if (RandomValueGenerator.Instance.GetDouble() < CrossoverRate) {
@@ -80,11 +79,8 @@ namespace PatternGuidedGP.GP {
 							child.FitnessEvaluated = false;
 						}
 					}
-					if (AllowDuplicates || !nextGen.ContainsIndividual(child)) {
-						nextGen.Add(child);
-					} else {
-						duplicates++;
-					}
+					int added = nextGen.Add(child);
+					duplicates += 1 - added;
 				}
 			}
 			if (!AllowDuplicates) {

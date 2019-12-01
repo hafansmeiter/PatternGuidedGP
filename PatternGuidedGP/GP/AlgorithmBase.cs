@@ -31,8 +31,8 @@ namespace PatternGuidedGP.GP {
 			}
 		}
 
-		public AlgorithmBase(int populationSize, int generations) {
-			Population = new Population(populationSize);
+		public AlgorithmBase(int populationSize, int generations, bool allowDuplicates = true) {
+			Population = new Population(populationSize, allowDuplicates);
 			Generations = generations;
 		}
 

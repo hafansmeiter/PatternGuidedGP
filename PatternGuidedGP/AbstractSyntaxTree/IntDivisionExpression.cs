@@ -47,7 +47,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 					return (float)constant.Value != 0;
 				}
 				else {
-					return false;
+					return true;
 				}
 			}
 		}

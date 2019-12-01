@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class IntArrayIdentifier : ArrayIdentifier<int> {
-		public IntArrayIdentifier(string name, bool targetVariable = false) : base(name, targetVariable) {
+		public IntArrayIdentifier(string name, bool assignable = true) : base(name, assignable) {
 		}
 	}
 }

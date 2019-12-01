@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	delegate IEnumerable<TreeNode> TreeNodeFilter(IEnumerable<TreeNode> nodes);
 
-	abstract class TreeNode : ICSharpSyntaxGenerator, ITraceable {
+	abstract class TreeNode : ICSharpSyntaxGenerator {
 		public abstract bool IsTerminal { get; }
 		public abstract bool IsVariable { get; }
 		public abstract int RequiredTreeDepth { get; }
@@ -22,14 +22,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public abstract string Description { get; }
 		public abstract Type Type { get; }
 		public abstract Type[] ChildTypes { get; }
-
-		public virtual bool IsTraceable { get; } = false;
 	
 		public TreeNode Parent { get; set; }
 		public List<TreeNode> Children { get; private set; }
 
 		public ulong Id { get; private set; }
-
 		private static ulong _currentId = 0;
 
 		// nodes get cloned -> no constructor
@@ -61,6 +58,25 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			return maxChildHeight + 1;
 		}
 
+		public IEnumerable<TreeNode> GetSubTreeNodes(bool includeRoot = false) {
+			// breadth-first
+			var list = new List<TreeNode>();
+			var queue = new Queue<TreeNode>();
+			queue.Enqueue(this);
+			while (queue.Count > 0) {
+				var node = queue.Dequeue();
+				if (node != this || includeRoot) {
+					list.Add(node);
+				}
+				if (Children != null) {
+					foreach (var child in node.Children) {
+						queue.Enqueue(child);
+					}
+				}
+			}
+			return list;
+		}
+
 		// return true, if newNode is allowed to be placed at oldNode's position
 		// false, otherwise
 		public bool ReplaceChild(TreeNode oldNode, TreeNode newNode) {
@@ -73,11 +89,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 				}
 			}
 			return false;
-		}
-
-		// interface ITraceable
-		public virtual IEnumerable<TreeNode> GetExecutionTraceNodes() {
-			return null;
 		}
 
 		// interface ICloneable
@@ -111,28 +122,29 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		// interface IChildAcceptor
 		public virtual bool AcceptChild(TreeNode child, int index) {
+			var scopedNodes = child.GetSubTreeNodes(true)
+				.Where(node => node is IScoped && ((IScoped)node).IsScoped)
+				.Select(node => (IScoped) node);
+			foreach (var scopedNode in scopedNodes) {
+				if (FindParent(node => scopedNode.IsInScopeOf(node)) == null) {
+					return false;
+				}
+			}
 			return true;
 		}
 
-		public IEnumerable<TreeNode> GetSubTreeNodes(bool includeRoot = false) {
-			// breadth-first
-			var list = new List<TreeNode>();
-			var queue = new Queue<TreeNode>();
-			queue.Enqueue(this);
-			while (queue.Count > 0) {
-				var node = queue.Dequeue();
-				if (node != this || includeRoot) {
-					list.Add(node);
+		private TreeNode FindParent(Predicate<TreeNode> predicate) {
+			var current = this;
+			do {
+				if (predicate(current)) {
+					return current;
 				}
-				foreach (var child in node.Children) {
-					queue.Enqueue(child);
-				}
-			}
-			return list;
+			} while ((current = current.Parent) != null);
+			return null;
 		}
 
 		public virtual TreeNodeFilter GetChildSelectionFilter(int childIndex) {
-			return null;
+			return (nodes) => nodes.Where(node => AcceptChild(node, childIndex));
 		}
 
 		public override string ToString() {

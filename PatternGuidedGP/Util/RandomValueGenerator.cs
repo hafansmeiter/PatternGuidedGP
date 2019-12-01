@@ -25,8 +25,24 @@ namespace PatternGuidedGP.Util {
 			return _random.NextDouble();
 		}
 
+		public double GetDouble(double maxValue) {
+			return GetDouble() * maxValue;
+		}
+
+		public float GetFloat() {
+			return (float)_random.NextDouble();
+		}
+
+		public float GetFloat(float maxValue) {
+			return (float) GetDouble(maxValue);
+		}
+
 		public bool GetBool() {
 			return GetDouble() >= 0.5;
+		}
+
+		public int GetInt(int minValue, int maxValue) {
+			return _random.Next(maxValue - minValue) + minValue;
 		}
 	}
 }

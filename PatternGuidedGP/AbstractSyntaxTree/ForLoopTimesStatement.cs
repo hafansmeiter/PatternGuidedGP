@@ -6,29 +6,42 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PatternGuidedGP.Pangea;
+using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	class ForCountStatement : Statement {
+	class ForLoopTimesStatement : Statement, ITraceable {
 		public override string Description => "for";
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
-		public override bool IsTraceable => true; 
 		public override int RequiredTreeDepth => 3;
-		public override Type[] ChildTypes => new[] { typeof(int), typeof(void) };
+		public override Type[] ChildTypes => _childTypes.ToArray();
+		public bool IsTraceable => true; 
 
 		public Expression<int> Count => Children[0] as Expression<int>;
-		public Statement ContentBlock => Children[1] as Statement;
+		public Statement[] ContentStatements => Children.GetRange(1, _childTypes.Count - 1).Select(c => (Statement)c).ToArray();
 
-		public int MaxLoops { get; set; } = 10000;
+		private IList<Type> _childTypes = new List<Type>();
 
-		public override IEnumerable<TreeNode> GetExecutionTraceNodes() {
+		public string LoopVariableName => "i" + Id;
+
+		public override void Initialize() {
+			base.Initialize();
+			_childTypes = new List<Type>(new[] { typeof(int) });
+			var statements = RandomValueGenerator.Instance.GetInt(SyntaxConfiguration.Current.ForLoopMaxStatements) + 1;
+			for (int i = 0; i < statements; i++) {
+				_childTypes.Add(typeof(void));
+			}
+		}
+
+		public IEnumerable<TreeNode> GetExecutionTraceNodes() {
 			return new[] { Count };
 		}
 
 		protected override CSharpSyntaxNode GenerateSyntax() {
-			string indexName = "i" + Id;
+			string loopVariableName = LoopVariableName;
 			return SyntaxFactory.ForStatement(
-						SyntaxFactory.Block((StatementSyntax) ContentBlock.GetSyntaxNode()))
+						SyntaxFactory.Block(ContentStatements.Select(s => (StatementSyntax)s.GetSyntaxNode())))
 					.WithDeclaration(
 						SyntaxFactory.VariableDeclaration(
 							SyntaxFactory.PredefinedType(
@@ -36,7 +49,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 						.WithVariables(
 							SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(
 								SyntaxFactory.VariableDeclarator(
-									SyntaxFactory.Identifier(indexName))
+									SyntaxFactory.Identifier(loopVariableName))
 								.WithInitializer(
 									SyntaxFactory.EqualsValueClause(
 										SyntaxFactory.LiteralExpression(
@@ -45,7 +58,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 					.WithCondition(
 						SyntaxFactory.BinaryExpression(
 							SyntaxKind.LessThanExpression,
-							SyntaxFactory.IdentifierName(indexName),
+							SyntaxFactory.IdentifierName(loopVariableName),
 							SyntaxFactory.InvocationExpression(
 								SyntaxFactory.MemberAccessExpression(
 									SyntaxKind.SimpleMemberAccessExpression,
@@ -58,7 +71,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 											SyntaxFactory.Argument(
 												SyntaxFactory.LiteralExpression(
 													SyntaxKind.NumericLiteralExpression,
-													SyntaxFactory.Literal(MaxLoops))),
+													SyntaxFactory.Literal(SyntaxConfiguration.Current.ForLoopMaxIterations))),
 											SyntaxFactory.Token(SyntaxKind.CommaToken),
 											SyntaxFactory.Argument(
 												(ExpressionSyntax) Count.GetSyntaxNode())})))))
@@ -66,7 +79,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 						SyntaxFactory.SingletonSeparatedList<ExpressionSyntax>(
 							SyntaxFactory.PostfixUnaryExpression(
 								SyntaxKind.PostIncrementExpression,
-								SyntaxFactory.IdentifierName(indexName))));
+								SyntaxFactory.IdentifierName(loopVariableName))));
 		}
 	}
 }

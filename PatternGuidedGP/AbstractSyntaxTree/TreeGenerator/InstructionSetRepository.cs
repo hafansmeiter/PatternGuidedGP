@@ -66,7 +66,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 				_any.Add(treeNode);
 			}
 
-			public TreeNode GetRandomAny(int maxDepth, TreeNodeFilter filter) {
+			public TreeNode GetRandomAny(int maxDepth, TreeNodeFilter filter = null) {
 				var nodes = _any.GetTreeNodes(maxDepth);
 				if (filter != null) {
 					nodes = filter(nodes).ToList();
@@ -76,15 +76,22 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 				return node;
 			}
 
-			public TreeNode GetRandomNonTerminal(int maxDepth) {
+			public TreeNode GetRandomNonTerminal(int maxDepth, TreeNodeFilter filter = null) {
 				var nodes = _nonTerminals.GetTreeNodes(maxDepth);
+				if (filter != null) {
+					nodes = filter(nodes).ToList();
+				}
 				var node = nodes[RandomValueGenerator.Instance.GetInt(nodes.Count)].Clone() as TreeNode;
 				node.Initialize();
 				return node;
 			}
 
-			public TreeNode GetRandomTerminal() {
-				var node = _terminals[RandomValueGenerator.Instance.GetInt(_terminals.Count)].Clone() as TreeNode;
+			public TreeNode GetRandomTerminal(TreeNodeFilter filter = null) {
+				var nodes = _terminals; 
+				if (filter != null) {
+					nodes = filter(nodes).ToList();
+				}
+				var node = nodes[RandomValueGenerator.Instance.GetInt(nodes.Count)].Clone() as TreeNode;
 				node.Initialize();
 				return node;
 			}

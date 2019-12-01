@@ -9,6 +9,9 @@ namespace PatternGuidedGP.GP.Problems {
 	abstract class CodingProblem : Problem {
 		public override Type RootType => typeof(void);
 
+		public CodingProblem(bool initialize = true) : base(initialize) {
+		}
+
 		public CodingProblem(int n, bool initialize = true) : base(n, initialize) {
 		}
 	}

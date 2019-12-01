@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	class IntIdentifierExpression : IdentifierExpression<int> {
-		public IntIdentifierExpression(string name, bool assignable = false) : base(name, assignable) {
-		}
+	interface IScoped {
+		bool IsScoped { get; }
+
+		bool IsInScopeOf(TreeNode node);
 	}
 }

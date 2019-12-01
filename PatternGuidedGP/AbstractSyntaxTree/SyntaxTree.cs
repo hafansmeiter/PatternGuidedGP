@@ -1,4 +1,5 @@
-﻿using PatternGuidedGP.Util;
+﻿using PatternGuidedGP.Pangea;
+using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		}
 
 		public IEnumerable<TreeNode> GetTraceableNodes() {
-			return GetTreeNodes().Where(node => node.IsTraceable);
+			return GetTreeNodes().Where(node => node is ITraceable && ((ITraceable)node).IsTraceable);
 		}
 
 		public TreeNode FindNodeById(ulong id) {

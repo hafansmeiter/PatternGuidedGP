@@ -145,6 +145,8 @@
     <Compile Include="AbstractSyntaxTree\FloatMultiplicationExpression.cs" />
     <Compile Include="AbstractSyntaxTree\FloatSubtractionExpression.cs" />
     <Compile Include="AbstractSyntaxTree\IntConstantExpression.cs" />
+    <Compile Include="AbstractSyntaxTree\IScoped.cs" />
+    <Compile Include="AbstractSyntaxTree\ForLoopVariable.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\FitnessBasedSubTreePool.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\IPoolItemSelector.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\ISubTreePool.cs" />
@@ -152,6 +154,7 @@
     <Compile Include="AbstractSyntaxTree\Pool\RankBasedPoolItemSelector.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\RecordBasedSubTreePool.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\SubTreePoolBase.cs" />
+    <Compile Include="AbstractSyntaxTree\SyntaxConfiguration.cs" />
     <Compile Include="AbstractSyntaxTree\SyntaxTree.cs" />
     <Compile Include="AbstractSyntaxTree\AssignmentStatement.cs" />
     <Compile Include="AbstractSyntaxTree\BinaryExpression.cs" />
@@ -171,7 +174,7 @@
     <Compile Include="AbstractSyntaxTree\BoolOrExpression.cs" />
     <Compile Include="AbstractSyntaxTree\BoolTrueExpression.cs" />
     <Compile Include="AbstractSyntaxTree\BoolXorExpression.cs" />
-    <Compile Include="AbstractSyntaxTree\ForCountStatement.cs" />
+    <Compile Include="AbstractSyntaxTree\ForLoopTimesStatement.cs" />
     <Compile Include="AbstractSyntaxTree\IdentifierExpression.cs" />
     <Compile Include="AbstractSyntaxTree\IfStatement.cs" />
     <Compile Include="AbstractSyntaxTree\IntAssignmentStatement.cs" />
@@ -201,10 +204,13 @@
     <Compile Include="Compiler\ICompiler.cs" />
     <Compile Include="GP\AlgorithmBase.cs" />
     <Compile Include="GP\DefaultAlgorithm.cs" />
+    <Compile Include="GP\Evaluators\AbsoluteDistanceFitnessCalculator.cs" />
+    <Compile Include="GP\Evaluators\FitnessResult.cs" />
+    <Compile Include="GP\Evaluators\IFitnessCalculator.cs" />
+    <Compile Include="GP\Evaluators\EqualityFitnessCalculator.cs" />
     <Compile Include="GP\IAlgorithm.cs" />
     <Compile Include="GP\IGenerationalAlgorithm.cs" />
     <Compile Include="GP\Individual.cs" />
-    <Compile Include="GP\Evaluators\DefaultFitnessEvaluator.cs" />
     <Compile Include="GP\Evaluators\IFitnessEvaluator.cs" />
     <Compile Include="GP\Evaluators\ProgramFitnessEvaluator.cs" />
     <Compile Include="GP\Operators\MultiRandomCrossover.cs" />
@@ -267,7 +273,9 @@
     <Compile Include="Pangea\ExecutionTrace.cs" />
     <Compile Include="Pangea\ExecutionTraces.cs" />
     <Compile Include="Pangea\ITraceable.cs" />
+    <Compile Include="Pangea\MDLFitnessCalculator.cs" />
     <Compile Include="Pangea\MDLFitnessEvaluator.cs" />
+    <Compile Include="Pangea\MDLFitnessResult.cs" />
     <Compile Include="Pangea\MLDataset.cs" />
     <Compile Include="Pangea\MLDatasetFeature.cs" />
     <Compile Include="Program.cs" />
@@ -277,6 +285,7 @@
     <Compile Include="Util\IDeepCloneable.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Util\MultiValueDictionary.cs" />
+    <Compile Include="Util\ObjectExtensions.cs" />
     <Compile Include="Util\RandomValueGenerator.cs" />
     <Compile Include="Util\Singleton.cs" />
   </ItemGroup>

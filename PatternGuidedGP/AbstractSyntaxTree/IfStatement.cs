@@ -5,51 +5,61 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PatternGuidedGP.Pangea;
 using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	class IfStatement : Statement {
+	class IfStatement : Statement, ITraceable {
 		public override string Description => "if";
 		public override bool IsTerminal => false;
 		public override bool IsVariable => false;
-		public override bool IsTraceable => true;
 		public override int RequiredTreeDepth => 3;
-		public override Type[] ChildTypes {
-			get => _childTypes;
-		}
-		public bool HasElseClause { get; private set; }
+		public override Type[] ChildTypes => _childTypes.ToArray();
+		public bool IsTraceable => true;
+		
+		public bool HasElseClause { get; private set; } = false;
 
 		public Expression<bool> Condition => Children[0] as Expression<bool>;
-		public Statement IfBlock => Children[1] as Statement;
-		public Statement ElseBlock => Children[2] as Statement;
+		public Statement[] IfBlockStatements => Children.GetRange(1, _ifStatements).Select(c => (Statement) c).ToArray();
+		public Statement[] ElseBlockStatements => Children.GetRange(_ifStatements + 1, _elseStatements).Select(c => (Statement) c).ToArray();
 
-		private Type[] _childTypes;
+		private IList<Type> _childTypes = new List<Type>();
+
+		private int _ifStatements;
+		private int _elseStatements;
 
 		public override void Initialize() {
-			// randomly choose if else-clause is present
 			base.Initialize();
-			//if (RandomValueStore.Instance.GetInt(2) == 0) {
-			if (false) {
-				HasElseClause = false;
-				_childTypes = new[] { typeof(bool), typeof(void) };
-			} else {
+			_childTypes = new List<Type>(new[] { typeof(bool) });
+			// create if block
+			CreateBlock(SyntaxConfiguration.Current.MaxIfBlockStatements, ref _ifStatements);
+
+			// randomly choose if else-clause is present
+			if (RandomValueGenerator.Instance.GetDouble() < SyntaxConfiguration.Current.IfHasElseBlockPropability) {
 				HasElseClause = true;
-				_childTypes = new[] { typeof(bool), typeof(void), typeof(void) };
+				CreateBlock(SyntaxConfiguration.Current.MaxElseBlockStatement, ref _elseStatements);
+			}
+		}
+
+		private void CreateBlock(int maxStatements, ref int actualStatements) {
+			actualStatements = RandomValueGenerator.Instance.GetInt(maxStatements) + 1;
+			for (int i = 0; i < actualStatements; i++) {
+				_childTypes.Add(typeof(void));
 			}
 		}
 
 		protected override CSharpSyntaxNode GenerateSyntax() {
 			if (HasElseClause) {
 				return SyntaxFactory.IfStatement((ExpressionSyntax) Condition.GetSyntaxNode(), 
-					SyntaxFactory.Block((StatementSyntax) IfBlock.GetSyntaxNode()))
-				.WithElse(SyntaxFactory.ElseClause(SyntaxFactory.Block((StatementSyntax) ElseBlock.GetSyntaxNode())));
+					SyntaxFactory.Block(IfBlockStatements.Select(s => (StatementSyntax) s.GetSyntaxNode())))
+				.WithElse(SyntaxFactory.ElseClause(SyntaxFactory.Block(ElseBlockStatements.Select(s => (StatementSyntax) s.GetSyntaxNode()))));
 			} else {
 				return SyntaxFactory.IfStatement((ExpressionSyntax)Condition.GetSyntaxNode(),
-					SyntaxFactory.Block((StatementSyntax)IfBlock.GetSyntaxNode()));
+					SyntaxFactory.Block(IfBlockStatements.Select(s => (StatementSyntax)s.GetSyntaxNode())));
 			}
 		}
 
-		public override IEnumerable<TreeNode> GetExecutionTraceNodes() {
+		public IEnumerable<TreeNode> GetExecutionTraceNodes() {
 			return new[] { Condition };
 		}
 	}
