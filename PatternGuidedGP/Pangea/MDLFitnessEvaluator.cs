@@ -24,6 +24,20 @@ namespace PatternGuidedGP.Pangea {
 	class MDLFitnessEvaluator : ProgramFitnessEvaluator {
 		
 		public ISubTreePool SubTreePool { get; set; }
+		public override IFitnessCalculator FitnessCalculator {
+			get => base.FitnessCalculator;
+			set {
+				if (base.FitnessCalculator != null) {
+					((MDLFitnessCalculator)base.FitnessCalculator).StandardFitnessCalculator = value;
+				} else {
+					base.FitnessCalculator = value;
+				}
+			}
+		}
+
+		public MDLFitnessEvaluator() {
+			FitnessCalculator = new MDLFitnessCalculator();	// proxy
+		}
 
 		protected override void PrepareTestRuns(Individual individual, TestSuite testSuite) {
 			Singleton<ExecutionTraces>.Instance.Reset();
@@ -112,7 +126,7 @@ namespace PatternGuidedGP.Pangea {
 													SyntaxKind.NumericLiteralExpression,
 													SyntaxFactory.Literal(node.Id))),
 											SyntaxFactory.Argument(
-												(ExpressionSyntax) node.GetSyntaxNode()),
+												(ExpressionSyntax) node.GetExecutionTraceSyntaxNode()),
 											SyntaxFactory.Argument(
 												SyntaxFactory.LiteralExpression(
 													SyntaxKind.NumericLiteralExpression,

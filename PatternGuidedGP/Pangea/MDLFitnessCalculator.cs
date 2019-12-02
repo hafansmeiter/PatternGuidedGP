@@ -14,15 +14,20 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.Pangea {
 	class MDLFitnessCalculator : IFitnessCalculator {
 		
-		private IFitnessCalculator _standardFitnessCalculator = new EqualityFitnessCalculator();
+		public IFitnessCalculator StandardFitnessCalculator { get; set; } = new EqualityFitnessCalculator();
 
 		public FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {
-			double fitness = _standardFitnessCalculator.CalculateFitness(individual, testSuite, results).Fitness; // standard fitness f0
+			double fitness = StandardFitnessCalculator.CalculateFitness(individual, testSuite, results).Fitness; // standard fitness f0
 			var dataset = MLDataset.FromExecutionTraces(individual, Singleton<ExecutionTraces>.Instance.Traces);
 			LogDatasetFeatures(dataset);
 
 			if (dataset.Features.Count() > 0) {
-				var input = dataset.ToRawInputDataset();
+				// Variant 1 (results of all nodes):
+				//var input = dataset.ToRawInputDataset();
+
+				// Variant 2 (results and operation types of first n and last n operations in chronological order):
+				var input = dataset.ToRawChronologicalInputDataset(3, 3);
+
 				var expected = GetExpectedOutputDataset(testSuite);
 				LogDataset(input, expected);
 

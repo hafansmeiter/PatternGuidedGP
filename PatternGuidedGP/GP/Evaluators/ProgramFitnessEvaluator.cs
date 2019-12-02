@@ -19,7 +19,7 @@ using SyntaxTree = PatternGuidedGP.AbstractSyntaxTree.SyntaxTree;
 namespace PatternGuidedGP.GP.Evaluators {
 	class ProgramFitnessEvaluator : IFitnessEvaluator {
 
-		public IFitnessCalculator FitnessCalculator { get; set; }
+		public virtual IFitnessCalculator FitnessCalculator { get; set; }
 		public ICompiler Compiler { get; set; } = new CSharpCompiler();	// default
 
 		public bool AdjustCodeRequired { get; set; } = true;

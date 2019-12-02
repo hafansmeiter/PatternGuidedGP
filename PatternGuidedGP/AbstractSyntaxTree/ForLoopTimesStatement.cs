@@ -35,8 +35,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			}
 		}
 
+		public override CSharpSyntaxNode GetExecutionTraceSyntaxNode() {
+			return Count.GetSyntaxNode();
+		}
+
 		public IEnumerable<TreeNode> GetExecutionTraceNodes() {
-			return new[] { Count };
+			return new[] { this }.Concat(Count.GetSubTreeNodes(true));
 		}
 
 		protected override CSharpSyntaxNode GenerateSyntax() {

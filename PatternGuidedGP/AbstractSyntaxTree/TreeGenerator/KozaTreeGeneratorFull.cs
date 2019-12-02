@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 	class KozaTreeGeneratorFull : KozaTreeGenerator {
 
-		protected override TreeNode SelectNonTerminalNode(Type type, int maxDepth) {
-			return InstructionSetRepository.GetRandomNonTerminal(type, maxDepth);
+		protected override TreeNode SelectNonTerminalNode(Type type, int maxDepth, TreeNodeFilter filter) {
+			return InstructionSetRepository.GetRandomNonTerminal(type, maxDepth, filter);
 		}
 
-		protected override TreeNode SelectTerminalNode(Type type) {
-			return InstructionSetRepository.GetRandomTerminal(type);
+		protected override TreeNode SelectTerminalNode(Type type, TreeNodeFilter filter) {
+			return InstructionSetRepository.GetRandomTerminal(type, filter);
 		}
 	}
 }

@@ -51,8 +51,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			}
 		}
 
+		public override CSharpSyntaxNode GetExecutionTraceSyntaxNode() {
+			return AssignedExpression.GetSyntaxNode();
+		}
+
 		public IEnumerable<TreeNode> GetExecutionTraceNodes() {
-			return AssignedExpression.GetSubTreeNodes();	// need to include root to have semantics evaluated
+			return new[] { this }.Concat(AssignedExpression.GetSubTreeNodes(true));	// need to include root to have semantics evaluated
 		}
 
 		public override bool IsBackPropagationRootFor(TreeNode origin) {

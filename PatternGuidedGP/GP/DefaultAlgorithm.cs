@@ -16,14 +16,16 @@ namespace PatternGuidedGP.GP {
 		public override Individual Run(Problem problem) {
 			Initializer.Initialize(Population, problem.RootType);
 			Logger.WriteLine(1, "Generation 0: ");
-			Individual solution = EvaluatePopulation(problem);
+			// .csv header
+			Logger.WriteLine(0, "Generation;Best_fitness;Avg_fitness;Evaluated");
+			Individual solution = EvaluatePopulation(problem, 0);
 			if (solution != null) { // initial generation contains solution
 				return solution;
 			}
 			for (int i = 0; i < Generations; i++) {
 				Population = GetNextGeneration(Population);
 				Logger.WriteLine(1, string.Format("Generation {0}: ", (i + 1)));
-				solution = EvaluatePopulation(problem);
+				solution = EvaluatePopulation(problem, i + 1);
 				if (solution != null) {
 					return solution;
 				}
@@ -36,12 +38,19 @@ namespace PatternGuidedGP.GP {
 			return Population.GetFittest();
 		}
 
-		private Individual EvaluatePopulation(Problem problem) {
+		private Individual EvaluatePopulation(Problem problem, int generation) {
 			int evaluationCount = problem.Evaluate(Population);
 			Population.Sort();
 			//Console.WriteLine("Best:\n{0}", Population.GetFittest());
 			Logger.WriteLine(1, string.Format("Evaluated " + evaluationCount + "/" + Population.Size + " individuals"));
 			Logger.WriteLine(1, string.Format("Best fitness: {0}, Avg: {1}", Population.GetFittest().Fitness, Population.GetAverageFitness()));
+
+			// Write statistics in .csv format
+			Logger.WriteLine(0, string.Format("{0};{1};{2};{3}",
+				generation,
+				Population.GetFittest().Fitness, 
+				Population.GetAverageFitness(),
+				evaluationCount));
 
 			if (IsSolutionFound()) {
 				Logger.WriteLine(1, "Solution found.");

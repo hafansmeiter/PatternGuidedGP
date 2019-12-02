@@ -122,6 +122,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 				new SyntaxAnnotation("Type", Type.ToString()));
 		}
 
+		public virtual CSharpSyntaxNode GetExecutionTraceSyntaxNode() {
+			return GetSyntaxNode();
+		}
+
 		protected abstract CSharpSyntaxNode GenerateSyntax();
 
 		// interface IChildAcceptor

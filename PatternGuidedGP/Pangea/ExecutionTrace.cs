@@ -9,18 +9,8 @@ namespace PatternGuidedGP.Pangea {
 
 	public class ExecutionTrace : MarshalByRefObject {
 
-		/*public class Entry : MarshalByRefObject {
-			public ulong NodeId { get; set; }
-			public IList<ExecutionRecord> Records { get; set; } = new List<ExecutionRecord>();
-
-			public Entry(ulong nodeId, ExecutionRecord record) {
-				NodeId = nodeId;
-				Records.Add(record);
-			}
-		}*/
-
 		IList<ExecutionRecord> _records;
-		public IEnumerable<ExecutionRecord> Records {
+		public IList<ExecutionRecord> Records {
 			get {
 				return _records;
 			}

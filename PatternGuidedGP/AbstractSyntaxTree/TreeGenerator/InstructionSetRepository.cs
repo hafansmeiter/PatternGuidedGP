@@ -67,29 +67,23 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 			}
 
 			public TreeNode GetRandomAny(int maxDepth, TreeNodeFilter filter = null) {
-				var nodes = _any.GetTreeNodes(maxDepth);
-				if (filter != null) {
-					nodes = filter(nodes).ToList();
-				}
-				var node = nodes[RandomValueGenerator.Instance.GetInt(nodes.Count)].Clone() as TreeNode;
-				node.Initialize();
-				return node;
+				return SelectRandom(_any.GetTreeNodes(maxDepth), filter);
 			}
 
 			public TreeNode GetRandomNonTerminal(int maxDepth, TreeNodeFilter filter = null) {
-				var nodes = _nonTerminals.GetTreeNodes(maxDepth);
-				if (filter != null) {
-					nodes = filter(nodes).ToList();
-				}
-				var node = nodes[RandomValueGenerator.Instance.GetInt(nodes.Count)].Clone() as TreeNode;
-				node.Initialize();
-				return node;
+				return SelectRandom(_nonTerminals.GetTreeNodes(maxDepth), filter);
 			}
 
 			public TreeNode GetRandomTerminal(TreeNodeFilter filter = null) {
-				var nodes = _terminals; 
+				return SelectRandom(_terminals, filter); 
+			}
+
+			private TreeNode SelectRandom(IList<TreeNode> nodes, TreeNodeFilter filter) {
 				if (filter != null) {
 					nodes = filter(nodes).ToList();
+				}
+				if (nodes.Count == 0) {
+					return null;
 				}
 				var node = nodes[RandomValueGenerator.Instance.GetInt(nodes.Count)].Clone() as TreeNode;
 				node.Initialize();
@@ -109,12 +103,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 			return GetTypeRepository(type).GetRandomAny(maxDepth, filter);
 		}
 
-		public TreeNode GetRandomNonTerminal(Type type, int maxDepth) {
-			return GetTypeRepository(type).GetRandomNonTerminal(maxDepth);
+		public TreeNode GetRandomNonTerminal(Type type, int maxDepth, TreeNodeFilter filter) {
+			return GetTypeRepository(type).GetRandomNonTerminal(maxDepth, filter);
 		}
 
-		public TreeNode GetRandomTerminal(Type type) {
-			return GetTypeRepository(type).GetRandomTerminal();
+		public TreeNode GetRandomTerminal(Type type, TreeNodeFilter filter) {
+			return GetTypeRepository(type).GetRandomTerminal(filter);
 		}
 
 		private SimpleRepository GetTypeRepository(Type type) {

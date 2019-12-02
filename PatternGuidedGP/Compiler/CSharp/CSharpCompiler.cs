@@ -38,11 +38,13 @@ namespace PatternGuidedGP.Compiler.CSharp {
 					proxy.Initialize(ms.GetBuffer(), "ProblemClass", "Test");
 					return proxy;
 				} else {
-					Logger.WriteLine(0, "Code does not compile:");
+					// removed output because of compilation errors: division by constant 0
+
+					/*Logger.WriteLine(0, "Code does not compile:");
 					Logger.WriteLine(0, syntax.NormalizeWhitespace().ToString());
 					foreach (var error in compilationResult.Diagnostics) {
 						Logger.WriteLine(0, error.ToString());
-					}
+					}*/
 				}
 				return null;
 			}

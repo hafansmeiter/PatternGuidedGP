@@ -44,6 +44,12 @@ namespace PatternGuidedGP {
 					new IsOrderedProblem(3),		// 3
 					new MajorityProblem(3),			// 4
 					new MaximumProblem(3),			// 5
+					new AllEqualProblem(4),			// 6
+					new ContainsFirstProblem(4),	// 7
+					new CountZeroesProblem(4),		// 8
+					new IsOrderedProblem(4),		// 9
+					new MajorityProblem(4),			// 10
+					new MaximumProblem(4),			// 11
 					/*new CompareProblem(6),			// 6
 					new MultiplexerProblem(6, 2),	// 7
 					new ParityProblem(6)            // 8*/
@@ -145,7 +151,7 @@ namespace PatternGuidedGP {
 			foreach (var config in configurations) {
 				Logger.FileName = GetLogFilename(config);
 				Logger.WriteLine(0, "Run configuration: " + config.Name + 
-					" (Population: " + config.PopulationSize + ", generations: " + config.Generations);
+					" (Population: " + config.PopulationSize + ", generations: " + config.Generations + ")");
 				for (int j = fromProblem; j < problems.Length - fromProblem; j++) {
 					var problem = problems[j];
 					Logger.WriteLine(0, problem.GetType().Name + ":");
@@ -186,6 +192,7 @@ namespace PatternGuidedGP {
 						Individual bestSolution = algorithm.Run(problem);
 						if (algorithm.IsSolutionFound()) {
 							solved++;
+							Logger.WriteLine(0, "Solution found: \n" + bestSolution.ToString());
 						}
 					}
 					Logger.WriteLine(0, problem.GetType().Name + ": Solved " + solved + "/" + config.Runs);
@@ -217,7 +224,7 @@ namespace PatternGuidedGP {
 		}
 
 		private static string GetLogFilename(RunConfiguration config) {
-			return LOG_PATH + (config.Name + GetTimestamp()).Replace(' ', '_').Replace('.', '-') + ".txt";
+			return LOG_PATH + (config.Name + "_" + GetTimestamp()).Replace(' ', '_').Replace('.', '-') + ".txt";
 		}
 
 		private static string GetTimestamp() {

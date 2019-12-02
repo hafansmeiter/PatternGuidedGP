@@ -14,7 +14,7 @@ namespace PatternGuidedGP.GP {
 		public IMutator Mutator { get; set; }
 		public IFitnessEvaluator FitnessEvaluator { get; set; }
 		public int Runs { get; set; } = 10;
-		public int PopulationSize { get; set; } = 1000;
+		public int PopulationSize { get; set; } = 300;
 		public int Generations { get; set; } = 100;
 
 		public RunConfiguration(string name) {

@@ -60,8 +60,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			}
 		}
 
+		public override CSharpSyntaxNode GetExecutionTraceSyntaxNode() {
+			return Condition.GetSyntaxNode();
+		}
+
 		public IEnumerable<TreeNode> GetExecutionTraceNodes() {
-			return new[] { Condition };
+			return new[] { this }.Concat(Condition.GetSubTreeNodes(true));
 		}
 	}
 }

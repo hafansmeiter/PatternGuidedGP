@@ -23,12 +23,13 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 				TreeNode child;
 				do {
 					var filter = node.GetChildSelectionFilter(i);
-					if (filter != null) {	// choose from any, because full tree generation might not be possible due to filtering
-						child = InstructionSetRepository.GetRandomAny(type, Math.Max(1, maxDepth), filter);
-					} else if (maxDepth <= 1) {
-						child = SelectTerminalNode(type);
+					if (maxDepth <= 1) {
+						child = SelectTerminalNode(type, filter);
 					} else {
-						child = SelectNonTerminalNode(type, maxDepth);
+						child = SelectNonTerminalNode(type, Math.Max(1, maxDepth), filter);
+					}
+					if (child == null) {    // no valid child found due to filtering
+						child = SelectAnyNode(type, Math.Max(1, maxDepth), filter);
 					}
 					if (maxDepth == 0 && child.ChildTypes.Length > 0) {	// array index must be a single terminal if already on max depth
 						continue;
@@ -42,11 +43,15 @@ namespace PatternGuidedGP.AbstractSyntaxTree.TreeGenerator {
 			}
 		}
 
-		protected abstract TreeNode SelectTerminalNode(Type type);
-		protected abstract TreeNode SelectNonTerminalNode(Type type, int maxDepth);
+		private TreeNode SelectAnyNode(Type type, int maxDepth, TreeNodeFilter filter) {
+			return InstructionSetRepository.GetRandomAny(type, maxDepth, filter);
+		}
+
+		protected abstract TreeNode SelectTerminalNode(Type type, TreeNodeFilter filter);
+		protected abstract TreeNode SelectNonTerminalNode(Type type, int maxDepth, TreeNodeFilter filter);
 
 		private TreeNode GetRootNode(Type type, int maxDepth) {
-			return InstructionSetRepository.GetRandomNonTerminal(type, maxDepth);
+			return InstructionSetRepository.GetRandomNonTerminal(type, maxDepth, null);
 		}
 	}
 }
