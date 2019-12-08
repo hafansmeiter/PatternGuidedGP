@@ -12,8 +12,6 @@ using PatternGuidedGP.Util;
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	class ForLoopTimesStatement : Statement, ITraceable {
 		public override string Description => "for";
-		public override bool IsTerminal => false;
-		public override bool IsVariable => false;
 		public override int RequiredTreeDepth => 3;
 		public override Type[] ChildTypes => _childTypes.ToArray();
 		public bool IsTraceable => true;

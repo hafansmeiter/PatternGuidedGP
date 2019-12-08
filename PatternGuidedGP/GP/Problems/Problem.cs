@@ -45,7 +45,7 @@ namespace PatternGuidedGP.GP.Problems {
 			GetCodeTemplate(codeBuilder);
 			CodeTemplate = codeBuilder.Build();
 
-			var instructionSetBuilder= new InstructionSetBuilder();
+			var instructionSetBuilder = new InstructionSetBuilder();
 			GetInstructionSet(instructionSetBuilder);
 			InstructionSetRepository = instructionSetBuilder.Build();
 
@@ -71,20 +71,23 @@ namespace PatternGuidedGP.GP.Problems {
 				builder.AddBoolTargetVariable();
 			} else if (ReturnType == typeof(float)) {
 				builder.AddFloatTargetVariable();
+			} else if (ReturnType == typeof(string)) {
+				builder.AddStringTargetVariable();
 			}
 		}
 
 		public int Evaluate(Population population) {
 			int evaluationCount = 0;
-			FitnessEvaluator.FitnessCalculator = FitnessCalculator;
 			foreach (var individual in population.Individuals) {
 				Logger.WriteLine(4, "Individual tree height: " + individual.SyntaxTree.Height);
 				if (!individual.FitnessEvaluated) {
 					var result = FitnessEvaluator.Evaluate(individual, this);
 					individual.Fitness = result.Fitness;
+					individual.FitnessResult = result;
 					evaluationCount++;
 				}
 			}
+			FitnessEvaluator.OnEvaluationFinished();
 			return evaluationCount;
 		}
 	}

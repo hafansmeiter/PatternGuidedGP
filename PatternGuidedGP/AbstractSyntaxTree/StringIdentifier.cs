@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	abstract class Statement : TreeNode {
-		public override Type Type => typeof(void);
-		public override bool IsTerminal => false;
-		public override bool IsVariable => false;
+	class StringIdentifierExpression : IdentifierExpression<string> {
+		public StringIdentifierExpression(string name, bool assignable = false) : base(name, assignable) {
+		}
 	}
 }

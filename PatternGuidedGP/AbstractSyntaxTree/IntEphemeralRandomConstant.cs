@@ -4,18 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	class IntConstantExpression : ConstantExpression<int> {
+	class IntEphemeralRandomConstant : EphemeralRandomConstant<int> {
 
-		public IntConstantExpression(int value) : base(value) {
+		public IntEphemeralRandomConstant(int lowerBound, int upperBound) : base(lowerBound, upperBound) {
 		}
 
 		protected override CSharpSyntaxNode GenerateSyntax() {
 			return SyntaxFactory.LiteralExpression(
 				SyntaxKind.NumericLiteralExpression,
-				SyntaxFactory.Literal((int) Value));
+				SyntaxFactory.Literal((int)Value));
+		}
+
+		protected override int GetRandomValue() {
+			return RandomValueGenerator.Instance.GetInt(LowerBound, UpperBound);
 		}
 	}
 }

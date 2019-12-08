@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	class FloatConstantExpression : ConstantExpression<float> {
+	class StringLiteralExpression : LiteralExpression<string> {
 
-		public FloatConstantExpression(float value) : base(value) {
+		public StringLiteralExpression(string value) : base(value) {
 		}
 
 		protected override CSharpSyntaxNode GenerateSyntax() {
 			return SyntaxFactory.LiteralExpression(
-				SyntaxKind.NumericLiteralExpression,
-				SyntaxFactory.Literal((float)Value));
+				SyntaxKind.StringLiteralExpression,
+				SyntaxFactory.Literal((string) Value));
 		}
 	}
 }

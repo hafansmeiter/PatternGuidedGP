@@ -26,24 +26,24 @@ using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP {
 	class Program {
-		private static string LOG_PATH = "..\\..\\..\\Logs\\";
+		private static string LOG_PATH = ".\\";
 
 		static void Main(string[] args) {
 			int runConfig, runProblem, fromConfig = 0, fromProblem = 0;
 			string problemSet;
 			EvaluateArgs(args, out runConfig, out runProblem, out fromConfig, out fromProblem, out problemSet);
-			Logger.Level = 4;
+			Logger.Level = 0;
 
 			if (problemSet == "simple") {
 				SyntaxConfiguration.Current = new SyntaxConfiguration.Simple();
 				Problem[] simpleProblems = new Problem[] {
 					// Simple Problems
-					new AllEqualProblem(3),			// 0
+					/*new AllEqualProblem(3),			// 0
 					new ContainsFirstProblem(3),	// 1
 					new CountZeroesProblem(3),		// 2
 					new IsOrderedProblem(3),		// 3
 					new MajorityProblem(3),			// 4
-					new MaximumProblem(3),			// 5
+					new MaximumProblem(3),		*/	// 5
 					new AllEqualProblem(4),			// 6
 					new ContainsFirstProblem(4),	// 7
 					new CountZeroesProblem(4),		// 8
@@ -155,8 +155,9 @@ namespace PatternGuidedGP {
 				for (int j = fromProblem; j < problems.Length - fromProblem; j++) {
 					var problem = problems[j];
 					Logger.WriteLine(0, problem.GetType().Name + ":");
-					problem.FitnessEvaluator = config.FitnessEvaluator;
 					generator.InstructionSetRepository = problem.InstructionSetRepository;
+
+					// set problem specific parts
 					if (config.Crossover is IGeometricOperator) {
 						((IGeometricOperator)config.Crossover).GeometricCalculator = problem.GeometricCalculator;
 					}
@@ -171,19 +172,24 @@ namespace PatternGuidedGP {
 						((ISemanticOperator)((MultiRandomMutator)config.Mutator).Options[0]).DesiredSemantics 
 							= problem.TestSuite.Semantics;
 					}
-
+					if (config.FitnessEvaluator is MDLFitnessEvaluator) {
+						(((MDLFitnessCalculator)((MDLFitnessEvaluator)config.FitnessEvaluator).FitnessCalculator)).StandardFitnessCalculator = problem.FitnessCalculator;
+					} else {
+						((ProgramFitnessEvaluator)config.FitnessEvaluator).FitnessCalculator = problem.FitnessCalculator;
+					}
+					problem.FitnessEvaluator = config.FitnessEvaluator;
 
 					int solved = 0;
 					for (int i = 0; i < config.Runs; i++) {
 						semanticsBasedSubTreePool.Clear();
 						recordBasedSubTreePool.Clear();
 
-						DefaultAlgorithm algorithm = new DefaultAlgorithm(config.PopulationSize, config.Generations, false) {
+						DefaultAlgorithm algorithm = new DefaultAlgorithm(config.PopulationSize, config.Generations, true) {
 							Crossover = config.Crossover,
 							CrossoverRate = 0.8,
 							Elitism = 5,
 							Initializer = new RampedHalfHalfInitializer(maxTreeDepth, problem.InstructionSetRepository),
-							MaxTreeDepth = 9,   // not used
+							MaxTreeDepth = maxTreeDepth,   // not used; set individually in mutators and tree generators
 							MutationRate = 0.2,
 							Mutator = config.Mutator,
 							Selector = new TournamentSelector(7)
@@ -219,6 +225,8 @@ namespace PatternGuidedGP {
 					fromProblem = int.Parse(arg.Substring(13));
 				} else if (arg.StartsWith("/problemSet:")) {
 					problemSet = arg.Substring(12);
+				} else if (arg.StartsWith("/logPath:")) {
+					LOG_PATH = arg.Substring(9);
 				}
 			}
 		}

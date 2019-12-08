@@ -13,7 +13,6 @@ namespace PatternGuidedGP.GP {
 		public IMutator Mutator { get; set; }
 		public ICrossover Crossover { get; set; }
 		public ISelector Selector { get; set; }
-		public ISubTreePool SubTreePool { get; set; }
 
 		public double MutationRate { get; set; }
 		public double CrossoverRate { get; set; }   // otherwise take over individuals unchanged
@@ -24,12 +23,6 @@ namespace PatternGuidedGP.GP {
 		public bool AllowDuplicates { get; set; }
 
 		public int MaxTreeDepth { get; set; }
-
-		internal Problem Runs {
-			get => default(Problem);
-			set {
-			}
-		}
 
 		public AlgorithmBase(int populationSize, int generations, bool allowDuplicates = true) {
 			Population = new Population(populationSize, allowDuplicates);

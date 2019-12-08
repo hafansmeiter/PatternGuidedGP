@@ -26,7 +26,6 @@ namespace PatternGuidedGP.Util {
 
 		public static void AppendToFile(string text) {
 			using (StreamWriter w = File.AppendText(FileName)) {
-				w.Write($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToShortDateString()}: ");
 				w.Write(text);
 			}
 		}

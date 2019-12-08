@@ -20,6 +20,10 @@ namespace PatternGuidedGP.GP {
 
 		private Individual[] _individuals;
 
+		public Individual this[int index] {
+			get => _individuals[index];
+		}
+
 		public Population(int size, bool allowDuplicates = true) {
 			Size = size;
 			AllowDuplicates = allowDuplicates;

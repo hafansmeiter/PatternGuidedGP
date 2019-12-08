@@ -21,8 +21,8 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			}
 		}
 
-		protected override void OnEvaluationFinished(Individual individual, FitnessResult fitness, object[] results) {
-			base.OnEvaluationFinished(individual, fitness, results);
+		protected override void OnIndividualEvaluationFinished(Individual individual, FitnessResult fitness, object[] results) {
+			base.OnIndividualEvaluationFinished(individual, fitness, results);
 
 			AssignSemanticsToTreeNodes(individual, fitness as MDLFitnessResult);
 			AssignSemanticsToIndividual(individual, results);

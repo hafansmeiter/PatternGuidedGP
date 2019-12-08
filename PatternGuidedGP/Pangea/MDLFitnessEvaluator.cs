@@ -24,16 +24,6 @@ namespace PatternGuidedGP.Pangea {
 	class MDLFitnessEvaluator : ProgramFitnessEvaluator {
 		
 		public ISubTreePool SubTreePool { get; set; }
-		public override IFitnessCalculator FitnessCalculator {
-			get => base.FitnessCalculator;
-			set {
-				if (base.FitnessCalculator != null) {
-					((MDLFitnessCalculator)base.FitnessCalculator).StandardFitnessCalculator = value;
-				} else {
-					base.FitnessCalculator = value;
-				}
-			}
-		}
 
 		public MDLFitnessEvaluator() {
 			FitnessCalculator = new MDLFitnessCalculator();	// proxy
@@ -47,13 +37,19 @@ namespace PatternGuidedGP.Pangea {
 			Singleton<ExecutionTraces>.Instance.FinishCurrent();
 		}
 
-		protected override void OnEvaluationFinished(Individual individual, FitnessResult fitness, object[] results) {
+		protected override void OnIndividualEvaluationFinished(Individual individual, FitnessResult fitness, object[] results) {
 			MDLFitnessResult fitnessResult = fitness as MDLFitnessResult;
 			if (SubTreePool != null) {
 				double fitnessValue = fitnessResult.Fitness;
 				foreach (var id in fitnessResult.Dataset.Features) {
 					SubTreePool.Add(individual.SyntaxTree.FindNodeById(id), fitnessValue);
 				}
+			}
+		}
+
+		public override void OnEvaluationFinished() {
+			if (SubTreePool != null) {
+				SubTreePool.GenerationFinished();
 			}
 		}
 

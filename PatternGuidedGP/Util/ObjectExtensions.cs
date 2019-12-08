@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.Util {
 	static class ObjectExtensions {
 		public static double ToNumeric(this object obj) {
+			if (obj == null) {
+				return 0.0;		// default value for not completed tests
+			}
 			if (obj.GetType() == typeof(int)) {
 				return (int)obj;
 			} else if (obj.GetType() == typeof(float)) {

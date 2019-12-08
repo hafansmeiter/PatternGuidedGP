@@ -11,7 +11,12 @@ namespace PatternGuidedGP.GP.Evaluators {
 		public FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {
 			double distance = 0;
 			for (int i = 0; i < testSuite.TestCases.Count; i++) {
-				distance += Math.Abs(testSuite.TestCases[i].Result.ToNumeric() - results[i].ToNumeric());
+				double d = Math.Abs(testSuite.TestCases[i].Result.ToNumeric() - results[i].ToNumeric());
+				// adjustment for float values
+				if (d < 0.001f) {
+					d = 0.0f;
+				}
+				distance += d;
 				Logger.WriteLine(4, "Test case " + i + ": " + 
 					testSuite.TestCases[i].Result + " = " + results[i] +
 					" (" + distance + ")");

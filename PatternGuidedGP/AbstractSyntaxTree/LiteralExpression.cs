@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	abstract class ConstantExpression<T> : NullaryExpression<T> {
+	abstract class LiteralExpression<T> : NullaryExpression<T> {
 		public override bool IsVariable => false;
 		public override string Description => Value.ToString();
-		public object Value { get; set; }
+		public T Value { get; set; }
 
-		protected ConstantExpression(object value) {
+		protected LiteralExpression(T value) {
 			Value = value;
 		}
 	}

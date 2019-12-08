@@ -19,7 +19,7 @@ using SyntaxTree = PatternGuidedGP.AbstractSyntaxTree.SyntaxTree;
 namespace PatternGuidedGP.GP.Evaluators {
 	class ProgramFitnessEvaluator : IFitnessEvaluator {
 
-		public virtual IFitnessCalculator FitnessCalculator { get; set; }
+		public virtual IFitnessCalculator FitnessCalculator { get; set; } = new EqualityFitnessCalculator();
 		public ICompiler Compiler { get; set; } = new CSharpCompiler();	// default
 
 		public bool AdjustCodeRequired { get; set; } = true;
@@ -55,7 +55,7 @@ namespace PatternGuidedGP.GP.Evaluators {
 			AppDomain.Unload(appDomain);
 
 			FitnessResult fitness = FitnessCalculator.CalculateFitness(individual, testSuite, results);
-			OnEvaluationFinished(individual, fitness, results);
+			OnIndividualEvaluationFinished(individual, fitness, results);
 			return fitness;
 		}
 
@@ -65,9 +65,12 @@ namespace PatternGuidedGP.GP.Evaluators {
 		protected virtual void OnTestRunFinished(Individual individual, TestCase testCase, object result) {
 		}
 
-		protected virtual void OnEvaluationFinished(Individual individual, FitnessResult fitness, object [] results) {
+		protected virtual void OnIndividualEvaluationFinished(Individual individual, FitnessResult fitness, object [] results) {
 		}
 
+		public virtual void OnEvaluationFinished() {
+		}
+		
 		protected virtual object RunTestCase(ITestable testable, TestCase test) {
 			return testable.RunTest(test.Parameter);
 		}

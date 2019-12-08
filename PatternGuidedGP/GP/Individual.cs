@@ -1,4 +1,5 @@
 ﻿using PatternGuidedGP.AbstractSyntaxTree;
+using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.SemanticGP;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace PatternGuidedGP.GP {
 				_fitnessEvaluated = true;
 			}
 		}
+
+		public FitnessResult FitnessResult { get; set; }
 
 		private bool _fitnessEvaluated = false;
 		public bool FitnessEvaluated {
@@ -56,6 +59,7 @@ namespace PatternGuidedGP.GP {
 			SyntaxTree = (SyntaxTree) other.SyntaxTree.DeepClone();
 			Fitness = other.Fitness;
 			FitnessEvaluated = other.FitnessEvaluated;
+			FitnessResult = other.FitnessResult;
 			Semantics = other.Semantics;
 			SemanticsEvaluated = other.SemanticsEvaluated;
 		}

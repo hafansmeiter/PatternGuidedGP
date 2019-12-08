@@ -5,9 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	abstract class Statement : TreeNode {
-		public override Type Type => typeof(void);
-		public override bool IsTerminal => false;
-		public override bool IsVariable => false;
+	public enum Operators : int {
+		/** bool */
+		BoolAnd = 101,
+		BoolAssignment = 102,
+		BoolEqualBool = 103,
+
+		StringAssignment = 401
 	}
 }

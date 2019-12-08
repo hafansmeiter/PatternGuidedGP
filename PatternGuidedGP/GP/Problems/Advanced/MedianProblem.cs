@@ -13,63 +13,79 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 	class MedianProblem : CodingProblem {
 		public override Type ReturnType => typeof(int);
 
-		public int TestCases { get; set; } = 50;
 		public int UpperBoundValue { get; set; } = 100;
 		public int LowerBoundValue { get; set; } = -100;
-		public int MinArrayLength { get; set; } = 3;
-		public int MaxArrayLength { get; set; } = 3;
 
-		public override IFitnessCalculator FitnessCalculator => new AbsoluteDistanceFitnessCalculator();
+		public override IFitnessCalculator FitnessCalculator => new EqualityFitnessCalculator();
 
-		public MedianProblem(bool initialize = true) : base(initialize) {
+		public MedianProblem(bool initialize = true) : base(3, true) {
 		}
 
 		// Test values are generated randomly
 		protected override TestSuite GetTestSuite() {
 			TestSuite testSuite = new TestSuite();
-			int[] arrayLengthOptions = GetArrayLengthOptions();
-			for (int i = 0; i < TestCases; i++) {
-				var arrayLength = arrayLengthOptions[RandomValueGenerator.Instance.GetInt(arrayLengthOptions.Length)];
-				var array = new int[arrayLength];
-				for (int j = 0; j < arrayLength; j++) {
-					int value = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
+			// triplet of integers, all equal
+			for (int i = 0; i < 10; i++) {
+				int value = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
+				var testCase = new TestCase(new object[] { value, value, value}, value);
+				testSuite.TestCases.Add(testCase);
+			}
+
+			// triplet of integers, two of three equal
+			for (int i = 0; i < 30; i++) {
+				var array = new int[ParameterCount];
+				int value = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
+				for (int j = 0; j < ParameterCount; j++) {
 					array[j] = value;
 				}
-				int median = GetMedian(array);
-				var testCase = new TestCase(new object[] { array, arrayLength }, median);
+				int otherValue = value;
+				while (otherValue == value) {
+					otherValue = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
+				}
+				int changeAtIndex = RandomValueGenerator.Instance.GetInt(ParameterCount);
+				array[changeAtIndex] = otherValue;
+				var testCase = new TestCase(new object[] { array[0], array[1], array[2] }, value);
+				testSuite.TestCases.Add(testCase);
+			}
+
+			// triplet of any integers, no values equal
+			for (int i = 0; i < 60; i++) {
+				int value1 = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
+				int value2 = value1;
+				while (value1 == value2) {
+					value2 = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
+				}
+				int value3 = value1;
+				while (value1 == value3 || value2 == value3) {
+					value3 = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
+				}
+				int median = GetMedian(value1, value2, value3);
+				var testCase = new TestCase(new object[] { value1, value2, value3 }, median);
 				testSuite.TestCases.Add(testCase);
 			}
 			return testSuite;
 		}
 
-		private int GetMedian(int[] array) {
-			// do not sort the original array
-			int[] copy = new int[array.Length];
-			Array.Copy(array, copy, 0);
-			Array.Sort(copy);
-			return copy[copy.Length / 2];
+		private int GetMedian(params int[] array) {
+			return array[array.Length / 2];
 		}
 
 		protected override void GetCodeTemplate(CodeTemplateBuilder builder) {
-			builder.AddParameter(typeof(int), "values", true)
-				.AddParameter(typeof(int), "length", false)
-				.SetParameters();
+			base.GetCodeTemplate(builder);
+			builder.UseParameterType(typeof(int), ParameterCount);
 		}
 
 		protected override void GetInstructionSet(InstructionSetBuilder builder) {
+			base.GetInstructionSet(builder);
 			builder.AddIntegerDomain()
 				.AddBooleanDomain()
 				.AddIfStatement()
 				.AddForLoopTimesStatement()
 				.AddForLoopVariable()
-				.AddIntTargetVariable()
-				.AddIntVariable("values", true)
-				.AddIntVariable("length");
-		}
-
-		private int[] GetArrayLengthOptions() {
-			return Enumerable.Range(MinArrayLength, MaxArrayLength - MinArrayLength + 1)
-				.Where(i => i % 2 == 1).ToArray();
+				.AddIntVariable("a")
+				.AddIntVariable("b")
+				.AddIntVariable("c")
+				.AddIntERC(-100, 100);
 		}
 	}
 }

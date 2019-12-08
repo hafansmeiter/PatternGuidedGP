@@ -17,12 +17,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override bool AcceptChild(TreeNode child, int index) {
 			bool accept = true;
 			if (index == 1) {
-				if (child is IntConstantExpression) {
-					var constant = child as IntConstantExpression;
+				if (child is IntLiteralExpression) {
+					var constant = child as IntLiteralExpression;
 					accept = (int)constant.Value != 0;
 				}
-				else if (child is FloatConstantExpression) {
-					var constant = child as FloatConstantExpression;
+				else if (child is FloatLiteralExpression) {
+					var constant = child as FloatLiteralExpression;
 					accept = (float)constant.Value != 0;
 				}
 			}

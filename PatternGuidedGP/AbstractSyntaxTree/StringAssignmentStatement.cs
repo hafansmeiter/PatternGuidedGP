@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	abstract class Statement : TreeNode {
-		public override Type Type => typeof(void);
-		public override bool IsTerminal => false;
-		public override bool IsVariable => false;
+	class StringAssignmentStatement : AssignmentStatement<string> {
+		public override int OperatorId => (int) Operators.StringAssignment;
 	}
 }

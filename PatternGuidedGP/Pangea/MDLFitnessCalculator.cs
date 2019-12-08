@@ -21,12 +21,13 @@ namespace PatternGuidedGP.Pangea {
 			var dataset = MLDataset.FromExecutionTraces(individual, Singleton<ExecutionTraces>.Instance.Traces);
 			LogDatasetFeatures(dataset);
 
+			var fitnessResult = new MDLFitnessResult(fitness, dataset);
 			if (dataset.Features.Count() > 0) {
 				// Variant 1 (results of all nodes):
-				//var input = dataset.ToRawInputDataset();
+				var input = dataset.ToRawInputDataset();
 
 				// Variant 2 (results and operation types of first n and last n operations in chronological order):
-				var input = dataset.ToRawChronologicalInputDataset(3, 3);
+				//var input = dataset.ToRawFirstNLastNInputDataset(3, 3);
 
 				var expected = GetExpectedOutputDataset(testSuite);
 				LogDataset(input, expected);
@@ -36,18 +37,40 @@ namespace PatternGuidedGP.Pangea {
 					int error = GetClassificationError(decisionTree, input, expected);
 					int treeSize = GetTreeSize(decisionTree);
 					double mdlFitness = CalculateMDLFitness(error, treeSize, results.Length);
+					double stdFitness = fitness;
 					fitness *= mdlFitness;
 
 					var rules = decisionTree.ToRules();
 					LogResult(fitness, error, treeSize, mdlFitness, rules);
+
+					fitnessResult.Fitness = fitness;
+					fitnessResult.ClassificationError = error;
+					fitnessResult.TreeSize = treeSize;
+
+					// log MDL result details
+					if (fitness == 0) {
+						Logger.WriteLine(0, "Std fitness: " + stdFitness);
+
+						var predicted = decisionTree.Decide(input);
+						var loss = Math.Round(new ZeroOneLoss(expected).Loss(predicted) * expected.Length);
+						var classificationErrorFactor = (((double)error + 1) / (results.Length + 1));
+						Logger.WriteLine(0, "Program error: " + error + "; loss: " + loss + "; factor: " + classificationErrorFactor);
+
+						var treeSizeFactor = Math.Log(treeSize + 1, 2);
+						Logger.WriteLine(0, "Tree size: " + treeSize + "; factor: " + treeSizeFactor);
+
+						Logger.WriteLine(0, "MDL fitness: " + mdlFitness);
+					}
 				}
+			} else if (fitness == 0) {
+				Logger.WriteLine(0, "Standard fitness: 0");
 			}
-			return new MDLFitnessResult(fitness, dataset);
+			return fitnessResult;
 		}
 
 		private double CalculateMDLFitness(int error, int treeSize, int n) {
 			var treeSizeFactor = Math.Log(treeSize + 1, 2);
-			var classificationErrorFactor = ((error + 1) / (n + 1));
+			var classificationErrorFactor = (((double)error + 1) / (n + 1));
 			return treeSizeFactor * classificationErrorFactor;
 		}
 
@@ -70,7 +93,7 @@ namespace PatternGuidedGP.Pangea {
 
 		private int GetClassificationError(DecisionTree decisionTree, int?[][] input, int[] expected) {
 			var predicted = decisionTree.Decide(input);
-			return (int) Math.Round(new ZeroOneLoss(expected).Loss(predicted) * expected.Length);
+			return (int) (Math.Round(new ZeroOneLoss(expected).Loss(predicted) * expected.Length));
 		}
 
 		private DecisionTree CreateDecisionTree(int?[][] input, int[] output) {

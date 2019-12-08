@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Evaluators {
 	class FitnessResult {
-		public double Fitness { get; private set; }
+		public double Fitness { get; set; }
 
 		public FitnessResult(double fitness) {
 			Fitness = fitness;

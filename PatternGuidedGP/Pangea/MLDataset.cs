@@ -47,7 +47,7 @@ namespace PatternGuidedGP.Pangea {
 						featureValues = new object[count];
 						dataset._features.Add(record.NodeId, featureValues);
 						dataset._featureData.Add(record.NodeId, 
-							new MLDatasetFeature(record.NodeId, record.OperatorId));
+							new MLDatasetFeature(record.NodeId, record.OperatorId, record.Value.GetType()));
 					}
 					featureValues[i] = record.Value;
 					if (record.OperatorId > 0) {	// only use operators (no variables, constants)
@@ -62,7 +62,7 @@ namespace PatternGuidedGP.Pangea {
 		// takes first n and last n execution records including the operator id
 		// in Krawiec - Pattern Guided GP, firstN and lastN is referred to as k
 		// result dataset consists of firstN + lastN + 1 features (+1 for total execution records)
-		public int?[][] ToRawChronologicalInputDataset(int firstN, int lastN, bool removeConstantFeatures = true) {
+		public int?[][] ToRawFirstNLastNInputDataset(int firstN, int lastN, bool removeConstantFeatures = true) {
 			int?[][] dataset = new int?[Count][];
 			int featureCount = (firstN + lastN) * 2 + 1;
 

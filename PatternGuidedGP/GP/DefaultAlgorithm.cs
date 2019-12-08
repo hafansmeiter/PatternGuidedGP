@@ -1,4 +1,5 @@
 ﻿using PatternGuidedGP.GP.Problems;
+using PatternGuidedGP.Pangea;
 using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
@@ -29,9 +30,6 @@ namespace PatternGuidedGP.GP {
 				if (solution != null) {
 					return solution;
 				}
-				if (SubTreePool != null) {
-					SubTreePool.GenerationFinished();
-				}
 			}
 			Logger.WriteLine(1, "No solution found.");
 			Logger.WriteLine(2, string.Format("Returning best:\n{0}", Population.GetFittest()));
@@ -45,10 +43,17 @@ namespace PatternGuidedGP.GP {
 			Logger.WriteLine(1, string.Format("Evaluated " + evaluationCount + "/" + Population.Size + " individuals"));
 			Logger.WriteLine(1, string.Format("Best fitness: {0}, Avg: {1}", Population.GetFittest().Fitness, Population.GetAverageFitness()));
 
+			var isMDL = false;
+			if (Population.GetFittest().FitnessResult != null && Population.GetFittest().FitnessResult is MDLFitnessResult) {
+				isMDL = true;
+			}
+
 			// Write statistics in .csv format
-			Logger.WriteLine(0, string.Format("{0};{1};{2};{3}",
+			Logger.WriteLine(0, string.Format("{0};{1};{2};{3};{4};{5}",
 				generation,
 				Population.GetFittest().Fitness, 
+				isMDL ? ((MDLFitnessResult) Population.GetFittest().FitnessResult).ClassificationError : 0,
+				isMDL ? ((MDLFitnessResult) Population.GetFittest().FitnessResult).TreeSize : 0,
 				Population.GetAverageFitness(),
 				evaluationCount));
 

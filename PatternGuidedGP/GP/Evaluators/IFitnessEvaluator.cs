@@ -11,5 +11,6 @@ namespace PatternGuidedGP.GP.Evaluators {
 	interface IFitnessEvaluator {
 		IFitnessCalculator FitnessCalculator { get; set; }
 		FitnessResult Evaluate(Individual individual, Problem problem);
+		void OnEvaluationFinished();
 	}
 }

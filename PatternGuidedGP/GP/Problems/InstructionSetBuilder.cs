@@ -65,6 +65,11 @@ namespace PatternGuidedGP.GP.Problems {
 			return this;
 		}
 
+		public InstructionSetBuilder AddIntERC(int lowerBound, int upperBound) {
+			_repository.Add(new IntEphemeralRandomConstant(lowerBound, upperBound));
+			return this;
+		}
+
 		public InstructionSetBuilder AddBoolTargetVariable() {
 			_repository.Add(new BoolIdentifierExpression("ret", true));
 			_repository.Add(new BoolAssignmentStatement());
@@ -116,6 +121,12 @@ namespace PatternGuidedGP.GP.Problems {
 			return this;
 		}
 
+		public InstructionSetBuilder AddStringTargetVariable() {
+			_repository.Add(new StringIdentifierExpression("ret", true));
+			_repository.Add(new StringAssignmentStatement());
+			return this;
+		}
+
 		public InstructionSetBuilder AddIntegerDomain() {
 			_repository.Add(
 				new BoolEqualIntExpression(),
@@ -132,9 +143,16 @@ namespace PatternGuidedGP.GP.Problems {
 			return this;
 		}
 
-		public InstructionSetBuilder AddIntegerConstants(params int[] values) {
-			foreach (int val in values) {
-				_repository.Add(new IntConstantExpression(val));
+		public InstructionSetBuilder AddIntegerLiterals(params int[] values) {
+			foreach (var val in values) {
+				_repository.Add(new IntLiteralExpression(val));
+			}
+			return this;
+		}
+
+		public InstructionSetBuilder AddStringLiterals(params string[] values) {
+			foreach (var val in values) {
+				_repository.Add(new StringLiteralExpression(val));
 			}
 			return this;
 		}
