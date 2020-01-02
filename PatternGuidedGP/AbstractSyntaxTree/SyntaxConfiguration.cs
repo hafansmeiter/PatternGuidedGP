@@ -15,7 +15,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public int RootMaxStatements { get; set; } = 3;
 
 		// For loop
-		public int ForLoopMaxIterations { get; set; } = 10000;
+		public int ForLoopMaxIterations { get; set; } = 100;
 		public int ForLoopMaxStatements { get; set; } = 3;
 
 		// If statement
@@ -27,7 +27,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			public Simple() {
 				RootMaxStatements = 1;
 				ForLoopMaxStatements = 1;
-				ForLoopMaxIterations = 10000;
+				ForLoopMaxIterations = 10;
 				IfHasElseBlockPropability = 1;
 				MaxIfBlockStatements = 1;
 				MaxElseBlockStatement = 1;
@@ -38,7 +38,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			public Advanced() {
 				RootMaxStatements = 3;
 				ForLoopMaxStatements = 3;
-				ForLoopMaxIterations = 10000;
+				ForLoopMaxIterations = 10;
 				IfHasElseBlockPropability = 0.5;
 				MaxIfBlockStatements = 3;
 				MaxElseBlockStatement = 3;

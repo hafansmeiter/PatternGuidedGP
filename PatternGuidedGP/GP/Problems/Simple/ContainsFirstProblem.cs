@@ -27,5 +27,176 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 				return false;
 			});
 		}
+
+		public override IEnumerable<SyntaxTree> GetOptimalSolutions() {
+			IList<SyntaxTree> trees = new List<SyntaxTree>();
+
+			var a = new IntIdentifierExpression("a");
+			var b = new IntIdentifierExpression("d");
+			var c = new IntIdentifierExpression("c");
+			var d = new IntIdentifierExpression("d");
+			var ret = new BoolIdentifierExpression("ret");
+			var trueVal = new BoolTrueExpression();
+			var falseVal = new BoolFalseExpression();
+
+			/**
+			 * Solution 1 (for 3 parameters):
+			 * if (a == b || a == c) {
+			 *   ret = true;
+			 * } else {
+			 *   ret = false;
+			 * }
+			 */
+
+			if (ParameterCount == 3) {
+				trees.Add(new SyntaxTree(new IfStatement() {
+					Children = {
+						new BoolOrExpression() {
+							Children = {
+								new BoolEqualIntExpression() {
+									Children = {
+										a, b
+									}
+								},
+								new BoolEqualIntExpression() {
+									Children = {
+										a, c
+									}
+								}
+							}
+						},
+						new BoolAssignmentStatement() {
+							Children = {
+								ret, trueVal
+							}
+						},
+						new BoolAssignmentStatement() {
+							Children = {
+								ret, falseVal
+							}
+						}
+					}
+				}));
+			}
+			else if (ParameterCount == 4) {
+				trees.Add(new SyntaxTree(new IfStatement() {
+					Children = {
+						new BoolOrExpression() {
+							Children = {
+								new BoolOrExpression() {
+									Children = {
+										new BoolEqualIntExpression() {
+											Children = {
+												a, b
+											}
+										},
+										new BoolEqualIntExpression() {
+											Children = {
+												a, c
+											}
+										}
+									}
+								},
+								new BoolEqualIntExpression() {
+									Children = {
+										a, d
+									}
+								}
+							}
+						},
+						new BoolAssignmentStatement() {
+							Children = {
+								ret, trueVal
+							}
+						},
+						new BoolAssignmentStatement() {
+							Children = {
+								ret, falseVal
+							}
+						}
+					}
+				}));
+			}
+
+			/**
+			 * Solution 2 (for 3 parameters):
+			 * if (a != b && a != c) {
+			 *   ret = false;
+			 * } else {
+			 *   ret = true;
+			 * }
+			 */
+			if (ParameterCount == 3) {
+				trees.Add(new SyntaxTree(new IfStatement() {
+					Children = {
+						new BoolOrExpression() {
+							Children = {
+								new BoolNotEqualIntExpression() {
+									Children = {
+										a, b
+									}
+								},
+								new BoolNotEqualIntExpression() {
+									Children = {
+										a, c
+									}
+								}
+							}
+						},
+						new BoolAssignmentStatement() {
+							Children = {
+								ret, falseVal
+							}
+						},
+						new BoolAssignmentStatement() {
+							Children = {
+								ret, trueVal
+							}
+						}
+					}
+				}));
+			}
+			else if (ParameterCount == 4) {
+				trees.Add(new SyntaxTree(new IfStatement() {
+					Children = {
+						new BoolOrExpression() {
+							Children = {
+								new BoolOrExpression() {
+									Children = {
+										new BoolNotEqualIntExpression() {
+											Children = {
+												a, b
+											}
+										},
+										new BoolNotEqualIntExpression() {
+											Children = {
+												a, c
+											}
+										}
+									}
+								},
+								new BoolNotEqualIntExpression() {
+									Children = {
+										a, d
+									}
+								}
+							}
+						},
+						new BoolAssignmentStatement() {
+							Children = {
+								ret, falseVal
+							}
+						},
+						new BoolAssignmentStatement() {
+							Children = {
+								ret, trueVal
+							}
+						}
+					}
+				}));
+			}
+
+			return trees;
+		}
 	}
 }

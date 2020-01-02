@@ -16,7 +16,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public bool IsTraceable => true;
 		public override int OperatorId => 002;
 
-		public bool HasElseClause { get; private set; } = false;
+		public bool HasElseClause { get; set; } = true;
 
 		public Expression<bool> Condition => Children[0] as Expression<bool>;
 		public Statement[] IfBlockStatements => Children.GetRange(1, _ifStatements).Select(c => (Statement) c).ToArray();
@@ -37,6 +37,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			if (RandomValueGenerator.Instance.GetDouble() < SyntaxConfiguration.Current.IfHasElseBlockPropability) {
 				HasElseClause = true;
 				CreateBlock(SyntaxConfiguration.Current.MaxElseBlockStatement, ref _elseStatements);
+			} else {
+				HasElseClause = false;
 			}
 		}
 

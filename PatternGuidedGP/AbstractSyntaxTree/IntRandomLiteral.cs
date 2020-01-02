@@ -7,9 +7,9 @@ using Microsoft.CodeAnalysis.CSharp;
 using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	class IntEphemeralRandomConstant : EphemeralRandomConstant<int> {
+	class IntRandomLiteral : EphemeralRandomConstant<int> {
 
-		public IntEphemeralRandomConstant(int lowerBound, int upperBound) : base(lowerBound, upperBound) {
+		public IntRandomLiteral(int lowerBound, int upperBound) : base(lowerBound, upperBound) {
 		}
 
 		protected override CSharpSyntaxNode GenerateSyntax() {

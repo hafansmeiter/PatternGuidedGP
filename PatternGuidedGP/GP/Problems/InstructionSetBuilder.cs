@@ -65,8 +65,20 @@ namespace PatternGuidedGP.GP.Problems {
 			return this;
 		}
 
-		public InstructionSetBuilder AddIntERC(int lowerBound, int upperBound) {
-			_repository.Add(new IntEphemeralRandomConstant(lowerBound, upperBound));
+		public InstructionSetBuilder AddSimpleBooleanDomain() {
+			_repository.Add(new BoolAndExpression(),
+				new BoolFalseExpression(),
+				new BoolNotExpression(),
+				new BoolOrExpression(),
+				new BoolTrueExpression(),
+				new BoolXorExpression(),
+				//new BoolNotEqualBoolExpression(),
+				new BoolEqualBoolExpression());
+			return this;
+		}
+
+		public InstructionSetBuilder AddIntRandomLiteral(int lowerBound, int upperBound) {
+			_repository.Add(new IntRandomLiteral(lowerBound, upperBound));
 			return this;
 		}
 
@@ -134,6 +146,22 @@ namespace PatternGuidedGP.GP.Problems {
 				new BoolGreaterEqualIntExpression(),
 				new BoolGreaterThanIntExpression(),
 				new BoolLessEqualIntExpression(),
+				new BoolLessThanIntExpression(),
+				new IntAdditionExpression(),
+				new IntSubtractionExpression(),
+				new IntMultiplicationExpression(),
+				new IntDivisionExpression(),
+				new IntModuloExpression());
+			return this;
+		}
+
+		public InstructionSetBuilder AddSimpleIntegerDomain() {
+			_repository.Add(
+				new BoolEqualIntExpression(),
+				//new BoolNotEqualIntExpression(),
+				//new BoolGreaterEqualIntExpression(),
+				new BoolGreaterThanIntExpression(),
+				//new BoolLessEqualIntExpression(),
 				new BoolLessThanIntExpression(),
 				new IntAdditionExpression(),
 				new IntSubtractionExpression(),

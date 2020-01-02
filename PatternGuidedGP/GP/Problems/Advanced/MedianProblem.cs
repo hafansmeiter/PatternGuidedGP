@@ -85,7 +85,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 				.AddIntVariable("a")
 				.AddIntVariable("b")
 				.AddIntVariable("c")
-				.AddIntERC(-100, 100);
+				.AddIntRandomLiteral(-100, 100);
 		}
 	}
 }

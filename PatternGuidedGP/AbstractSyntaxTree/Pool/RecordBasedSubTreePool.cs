@@ -10,9 +10,8 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 	class RecordBasedSubTreePool : SubTreePoolBase, ISyntaxTreeProvider {
 		protected class RecordTreeNodeItem : PoolItem {
-			// double type, because score may be decreased (e.g. halvened) over generations
-			public double Improved { get; set; }
-			public double Deteriorated { get; set; }
+			public int Improved { get; set; }
+			public int Deteriorated { get; set; }
 
 			public RecordTreeNodeItem(TreeNode node, int improved, int deteriorated)
 				: base(node) {

@@ -24,10 +24,10 @@ namespace PatternGuidedGP.Pangea {
 			var fitnessResult = new MDLFitnessResult(fitness, dataset);
 			if (dataset.Features.Count() > 0) {
 				// Variant 1 (results of all nodes):
-				var input = dataset.ToRawInputDataset();
+				//var input = dataset.ToRawInputDataset();
 
 				// Variant 2 (results and operation types of first n and last n operations in chronological order):
-				//var input = dataset.ToRawFirstNLastNInputDataset(3, 3);
+				var input = dataset.ToRawFirstNLastNInputDataset(5, 5);
 
 				var expected = GetExpectedOutputDataset(testSuite);
 				LogDataset(input, expected);
@@ -46,6 +46,7 @@ namespace PatternGuidedGP.Pangea {
 					fitnessResult.Fitness = fitness;
 					fitnessResult.ClassificationError = error;
 					fitnessResult.TreeSize = treeSize;
+					fitnessResult.StandardFitness = stdFitness;
 
 					// log MDL result details
 					if (fitness == 0) {

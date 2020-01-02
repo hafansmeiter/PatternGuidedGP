@@ -70,6 +70,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>PatternGuidedGP.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accord, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
       <HintPath>..\packages\Accord.3.8.0\lib\net462\Accord.dll</HintPath>
@@ -135,7 +138,7 @@
     <Compile Include="AbstractSyntaxTree\BoolLessThanFloatExpression.cs" />
     <Compile Include="AbstractSyntaxTree\BoolNotEqualFloatExpression.cs" />
     <Compile Include="AbstractSyntaxTree\EphemeralRandomConstant.cs" />
-    <Compile Include="AbstractSyntaxTree\IntEphemeralRandomConstant.cs" />
+    <Compile Include="AbstractSyntaxTree\IntRandomLiteral.cs" />
     <Compile Include="AbstractSyntaxTree\LiteralExpression.cs" />
     <Compile Include="AbstractSyntaxTree\FloatArrayIdentifier.cs" />
     <Compile Include="AbstractSyntaxTree\FloatLiteralExpression.cs" />
@@ -158,6 +161,8 @@
     <Compile Include="AbstractSyntaxTree\Pool\RecordBasedSubTreePool.cs" />
     <Compile Include="AbstractSyntaxTree\Pool\SubTreePoolBase.cs" />
     <Compile Include="AbstractSyntaxTree\PrintStatement.cs" />
+    <Compile Include="AbstractSyntaxTree\SimilarityEvaluation\ISimilarityMeasure.cs" />
+    <Compile Include="AbstractSyntaxTree\SimilarityEvaluation\TreeEditDistance\TreeDistanceSimilarity.cs" />
     <Compile Include="AbstractSyntaxTree\StringAssignmentStatement.cs" />
     <Compile Include="AbstractSyntaxTree\StringIdentifier.cs" />
     <Compile Include="AbstractSyntaxTree\StringLiteralExpression.cs" />
@@ -220,6 +225,7 @@
     <Compile Include="GP\Individual.cs" />
     <Compile Include="GP\Evaluators\IFitnessEvaluator.cs" />
     <Compile Include="GP\Evaluators\ProgramFitnessEvaluator.cs" />
+    <Compile Include="GP\Operators\EvaluatingRandomSubtreeMutator.cs" />
     <Compile Include="GP\Operators\MultiRandomCrossover.cs" />
     <Compile Include="GP\Operators\MultiRandomMutator.cs" />
     <Compile Include="GP\Operators\MultiRandomOperator.cs" />
@@ -292,6 +298,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AbstractSyntaxTree\TreeNode.cs" />
+    <Compile Include="AbstractSyntaxTree\SimilarityEvaluation\TreeEditDistance\TestMain.cs" />
+    <Compile Include="AbstractSyntaxTree\SimilarityEvaluation\TreeEditDistance\Node.cs" />
+    <Compile Include="AbstractSyntaxTree\SimilarityEvaluation\TreeEditDistance\Tree.cs" />
     <Compile Include="Util\AppDomainHelper.cs" />
     <Compile Include="Util\IDeepCloneable.cs" />
     <Compile Include="Util\Logger.cs" />

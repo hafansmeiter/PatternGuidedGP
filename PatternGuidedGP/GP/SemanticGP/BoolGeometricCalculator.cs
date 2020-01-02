@@ -14,8 +14,8 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			var midpoint = new Semantics(length);
 			var random = GetRandom(length);
 			for (int i = 0; i < length; i++) {
-				bool s1 = (bool)semantics1[i];
-				bool s2 = (bool)semantics2[i];
+				bool s1 = semantics1[i] != null ? (bool)semantics1[i] : false;	// use false if no semantics evaluated
+				bool s2 = semantics2[i] != null ? (bool)semantics2[i] : false;
 				bool sx = (bool)random[i];
 				midpoint[i] = (s1 && sx) || (!sx && s2);
 			}

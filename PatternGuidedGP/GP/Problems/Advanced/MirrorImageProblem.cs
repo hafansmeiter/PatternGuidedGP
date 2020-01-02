@@ -53,7 +53,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 
 			// add mirrored arrays
 			for (int i = 0; i < 37; i++) {
-				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength + 1);
+				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				for (int j = 0; j < arrayLength; j++) {
 					array[j] = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
@@ -63,7 +63,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 
 			// add equal arrays
 			for (int i = 0; i < 10; i++) {
-				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength + 1);
+				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				for (int j = 0; j < arrayLength; j++) {
 					array[j] = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
@@ -73,7 +73,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 
 			// add close-to-mirrored arrays
 			for (int i = 0; i < 20; i++) {
-				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength + 1);
+				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				for (int j = 0; j < arrayLength; j++) {
 					array[j] = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
@@ -93,7 +93,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 
 			// add random arrays
 			for (int i = 0; i < 10; i++) {
-				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength + 1);
+				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				for (int j = 0; j < arrayLength; j++) {
 					array[j] = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);

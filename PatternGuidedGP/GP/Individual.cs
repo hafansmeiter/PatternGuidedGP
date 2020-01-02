@@ -65,11 +65,11 @@ namespace PatternGuidedGP.GP {
 		}
 
 		public int CompareTo(Individual other) {
-			return Fitness.CompareTo(other.Fitness);
-		}
-
-		public bool IsBetterThan(Individual other) {
-			return Fitness < other.Fitness;
+			int cmp = Fitness.CompareTo(other.Fitness);
+			if (cmp == 0) {
+				return SyntaxTree.Height - other.SyntaxTree.Height;
+			}
+			return cmp;
 		}
 
 		public override string ToString() {

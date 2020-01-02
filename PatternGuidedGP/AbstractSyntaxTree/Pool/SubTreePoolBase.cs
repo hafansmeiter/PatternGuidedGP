@@ -32,6 +32,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			= new List<PoolItem>();
 		protected List<PoolItem> _intTreeItems
 			= new List<PoolItem>();
+		protected List<PoolItem> _voidTreeItems
+			= new List<PoolItem>();
 
 		public IPoolItemSelector<PoolItem> Selector { get; set; }
 			= new RandomPoolItemSelector<PoolItem>();
@@ -49,8 +51,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 		protected virtual List<PoolItem> GetItemsByType(Type type) {
 			if (type == typeof(bool)) {
 				return _boolTreeItems;
-			} else {
+			} else if (type == typeof(int)) {
 				return _intTreeItems;
+			} else {
+				return _voidTreeItems;
 			}
 		}
 

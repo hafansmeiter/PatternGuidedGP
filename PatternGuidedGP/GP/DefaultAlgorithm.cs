@@ -18,7 +18,7 @@ namespace PatternGuidedGP.GP {
 			Initializer.Initialize(Population, problem.RootType);
 			Logger.WriteLine(1, "Generation 0: ");
 			// .csv header
-			Logger.WriteLine(0, "Generation;Best_fitness;Avg_fitness;Evaluated");
+			Logger.WriteLine(0, "Generation;Best_fitness;Best_program_error;Best_classification_error;Best_tree_size;Avg_fitness;Evaluated");
 			Individual solution = EvaluatePopulation(problem, 0);
 			if (solution != null) { // initial generation contains solution
 				return solution;
@@ -49,9 +49,10 @@ namespace PatternGuidedGP.GP {
 			}
 
 			// Write statistics in .csv format
-			Logger.WriteLine(0, string.Format("{0};{1};{2};{3};{4};{5}",
+			Logger.WriteLine(0, string.Format("{0};{1};{2};{3};{4};{5},{6}",
 				generation,
-				Population.GetFittest().Fitness, 
+				Population.GetFittest().Fitness,
+				isMDL ? ((MDLFitnessResult)Population.GetFittest().FitnessResult).StandardFitness : 0,
 				isMDL ? ((MDLFitnessResult) Population.GetFittest().FitnessResult).ClassificationError : 0,
 				isMDL ? ((MDLFitnessResult) Population.GetFittest().FitnessResult).TreeSize : 0,
 				Population.GetAverageFitness(),

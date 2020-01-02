@@ -47,7 +47,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 				.AddForLoopVariable()
 				.AddIntVariable("n")
 				.AddStringLiterals("small", "large")
-				.AddIntERC(LowerBoundValue, UpperBoundValue);
+				.AddIntRandomLiteral(LowerBoundValue, UpperBoundValue);
 		}
 	}
 }

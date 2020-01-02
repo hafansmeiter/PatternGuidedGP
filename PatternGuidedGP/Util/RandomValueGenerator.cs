@@ -42,7 +42,7 @@ namespace PatternGuidedGP.Util {
 		}
 
 		public int GetInt(int minValue, int maxValue) {
-			return _random.Next(maxValue - minValue) + minValue;
+			return _random.Next(maxValue - minValue + 1) + minValue;
 		}
 	}
 }

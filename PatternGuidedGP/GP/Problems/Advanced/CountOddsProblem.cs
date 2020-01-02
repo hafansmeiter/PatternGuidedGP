@@ -38,7 +38,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 
 			// arrays with odd values only
 			for (int i = 0; i < 9; i++) {
-				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength + 1);
+				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				for (int j = 0; j < arrayLength; j++) {
 					int value = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
@@ -49,7 +49,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 
 			// arrays with even values only
 			for (int i = 0; i < 9; i++) {
-				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength + 1);
+				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				for (int j = 0; j < arrayLength; j++) {
 					int value = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
@@ -60,7 +60,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 
 			// arrays with random values
 			for (int i = 0; i < 100; i++) {
-				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength + 1);
+				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				int odds = 0;
 				for (int j = 0; j < arrayLength; j++) {
@@ -96,7 +96,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 				.AddForLoopVariable()
 				.AddIntVariable("values", true)
 				.AddIntVariable("length")
-				.AddIntERC(-1000, 1000);
+				.AddIntRandomLiteral(-1000, 1000);
 		}
 	}
 }

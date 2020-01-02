@@ -38,18 +38,18 @@ namespace PatternGuidedGP {
 				SyntaxConfiguration.Current = new SyntaxConfiguration.Simple();
 				Problem[] simpleProblems = new Problem[] {
 					// Simple Problems
-					/*new AllEqualProblem(3),			// 0
+					new AllEqualProblem(3),			// 0
 					new ContainsFirstProblem(3),	// 1
 					new CountZeroesProblem(3),		// 2
 					new IsOrderedProblem(3),		// 3
 					new MajorityProblem(3),			// 4
-					new MaximumProblem(3),		*/	// 5
-					new AllEqualProblem(4),			// 6
+					new MaximumProblem(3),			// 5
+					/*new AllEqualProblem(4),			// 6
 					new ContainsFirstProblem(4),	// 7
 					new CountZeroesProblem(4),		// 8
 					new IsOrderedProblem(4),		// 9
 					new MajorityProblem(4),			// 10
-					new MaximumProblem(4),			// 11
+					new MaximumProblem(4),*/			// 11
 					/*new CompareProblem(6),			// 6
 					new MultiplexerProblem(6, 2),	// 7
 					new ParityProblem(6)            // 8*/
@@ -67,31 +67,38 @@ namespace PatternGuidedGP {
 		}
 
 		static void RunProblems(Problem [] problems, int runConfig, int runProblem, int fromConfig, int fromProblem) {
-			int maxTreeDepth = 7;
+			int maxTreeDepth = 15;
+			int maxInitialTreeDepth = 7;
 			int maxMutationTreeDepth = 3;
+
 
 			var semanticsBasedSubTreePool = new SemanticsBasedSubTreePool();
 			var recordBasedSubTreePool = new RecordBasedSubTreePool();
 			var generator = new KozaTreeGeneratorFull();
+			var evaluatingSubtreeMutator = new EvaluatingRandomSubtreeMutator(recordBasedSubTreePool, maxTreeDepth, maxTreeDepth);
 
 			var configurations = new[] {
+				// /config:0
 				new RunConfiguration("Standard GP") {
 					FitnessEvaluator = new ProgramFitnessEvaluator(),
 					Crossover = new RandomSubtreeCrossover(maxTreeDepth),
 					Mutator = new RandomSubtreeMutator(generator, maxTreeDepth, maxMutationTreeDepth)
 				},
+				// /config:1
 				new RunConfiguration("Standard PANGEA") {
 					FitnessEvaluator = new MDLFitnessEvaluator(),
 					Crossover = new RandomSubtreeCrossover(maxTreeDepth),
 					Mutator = new RandomSubtreeMutator(generator, maxTreeDepth, maxMutationTreeDepth)
 				},
-				new RunConfiguration("PANGEA + Semantic Backpropagation Operators") {
+				// /config:2
+				/*new RunConfiguration("PANGEA + Semantic Backpropagation Operators") {
 					FitnessEvaluator = new SemanticMDLFitnessEvaluator() {
 						SubTreePool = semanticsBasedSubTreePool
 					},
 					Crossover = new ApproximatelyGeometricSemanticCrossover(semanticsBasedSubTreePool, maxTreeDepth),
 					Mutator = new ApproximatelySemanticMutator(semanticsBasedSubTreePool, maxTreeDepth)
-				},
+				},*/
+				// /config:2
 				new RunConfiguration("PANGEA + Semantic Backpropagation Operators + Fallback Random Operators") {
 					FitnessEvaluator = new SemanticMDLFitnessEvaluator() {
 						SubTreePool = semanticsBasedSubTreePool
@@ -103,7 +110,8 @@ namespace PatternGuidedGP {
 						Fallback = new RandomSubtreeMutator(generator, maxTreeDepth, maxMutationTreeDepth)
 					}
 				},
-				new RunConfiguration("PANGEA + Multi Random Operators (Sem. Backprop. + Random Subtree)") {
+				// /config:4
+				/*new RunConfiguration("PANGEA + Multi Random Operators (Sem. Backprop. + Random Subtree)") {
 					FitnessEvaluator = new SemanticMDLFitnessEvaluator() {
 						SubTreePool = semanticsBasedSubTreePool
 					},
@@ -119,14 +127,16 @@ namespace PatternGuidedGP {
 							new RandomSubtreeMutator(generator, maxTreeDepth, maxMutationTreeDepth)
 						}
 					},
-				},
-				new RunConfiguration("PANGEA + Record-Based Subtree Pool") {
+				},*/
+				// /config:5
+				/*new RunConfiguration("PANGEA + Record-Based Subtree Pool") {
 					FitnessEvaluator = new MDLFitnessEvaluator() {
 						SubTreePool = recordBasedSubTreePool
 					},
 					Crossover = new RandomSubtreeCrossover(maxTreeDepth),
 					Mutator = new RandomSubtreeMutator(recordBasedSubTreePool, maxTreeDepth, maxTreeDepth)
-				},
+				},*/
+				// /config:3
 				new RunConfiguration("PANGEA + Multi Random Mutator (Record-Based Subtree Pool + Random Subtree)") {
 					FitnessEvaluator = new MDLFitnessEvaluator() {
 						SubTreePool = recordBasedSubTreePool
@@ -134,8 +144,8 @@ namespace PatternGuidedGP {
 					Crossover = new RandomSubtreeCrossover(maxTreeDepth),
 					Mutator = new MultiRandomMutator() {
 						Options = {
-							new RandomSubtreeMutator(generator, maxTreeDepth, maxMutationTreeDepth),
-							new RandomSubtreeMutator(recordBasedSubTreePool, maxTreeDepth, maxTreeDepth)
+							evaluatingSubtreeMutator,
+							new RandomSubtreeMutator(generator, maxTreeDepth, maxMutationTreeDepth)
 						}
 					}
 				}
@@ -152,7 +162,7 @@ namespace PatternGuidedGP {
 				Logger.FileName = GetLogFilename(config);
 				Logger.WriteLine(0, "Run configuration: " + config.Name + 
 					" (Population: " + config.PopulationSize + ", generations: " + config.Generations + ")");
-				for (int j = fromProblem; j < problems.Length - fromProblem; j++) {
+				for (int j = fromProblem; j < problems.Length; j++) {
 					var problem = problems[j];
 					Logger.WriteLine(0, problem.GetType().Name + ":");
 					generator.InstructionSetRepository = problem.InstructionSetRepository;
@@ -169,8 +179,14 @@ namespace PatternGuidedGP {
 						((ISemanticOperator)config.Mutator).DesiredSemantics = problem.TestSuite.Semantics;
 					}
 					if (config.Mutator is MultiRandomMutator) {
-						((ISemanticOperator)((MultiRandomMutator)config.Mutator).Options[0]).DesiredSemantics 
-							= problem.TestSuite.Semantics;
+						if ((((MultiRandomMutator)config.Mutator).Options[0]) is ISemanticOperator) {
+							((ISemanticOperator)((MultiRandomMutator)config.Mutator).Options[0]).DesiredSemantics
+								= problem.TestSuite.Semantics;
+						}
+						else if ((((MultiRandomMutator)config.Mutator).Options[0]) is EvaluatingRandomSubtreeMutator) {
+							((EvaluatingRandomSubtreeMutator)((MultiRandomMutator)config.Mutator).Options[0]).FitnessEvaluator = config.FitnessEvaluator;
+							((EvaluatingRandomSubtreeMutator)((MultiRandomMutator)config.Mutator).Options[0]).Problem = problem;
+						}
 					}
 					if (config.FitnessEvaluator is MDLFitnessEvaluator) {
 						(((MDLFitnessCalculator)((MDLFitnessEvaluator)config.FitnessEvaluator).FitnessCalculator)).StandardFitnessCalculator = problem.FitnessCalculator;
@@ -186,9 +202,9 @@ namespace PatternGuidedGP {
 
 						DefaultAlgorithm algorithm = new DefaultAlgorithm(config.PopulationSize, config.Generations, true) {
 							Crossover = config.Crossover,
-							CrossoverRate = 0.8,
+							CrossoverRate = 0.7,
 							Elitism = 5,
-							Initializer = new RampedHalfHalfInitializer(maxTreeDepth, problem.InstructionSetRepository),
+							Initializer = new RampedHalfHalfInitializer(maxInitialTreeDepth, problem.InstructionSetRepository),
 							MaxTreeDepth = maxTreeDepth,   // not used; set individually in mutators and tree generators
 							MutationRate = 0.2,
 							Mutator = config.Mutator,

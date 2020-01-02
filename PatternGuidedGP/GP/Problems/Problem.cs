@@ -82,13 +82,17 @@ namespace PatternGuidedGP.GP.Problems {
 				Logger.WriteLine(4, "Individual tree height: " + individual.SyntaxTree.Height);
 				if (!individual.FitnessEvaluated) {
 					var result = FitnessEvaluator.Evaluate(individual, this);
-					individual.Fitness = result.Fitness;
 					individual.FitnessResult = result;
+					individual.Fitness = result.Fitness;
 					evaluationCount++;
 				}
 			}
 			FitnessEvaluator.OnEvaluationFinished();
 			return evaluationCount;
+		}
+
+		public virtual IEnumerable<SyntaxTree> GetOptimalSolutions() {
+			return null;
 		}
 	}
 }

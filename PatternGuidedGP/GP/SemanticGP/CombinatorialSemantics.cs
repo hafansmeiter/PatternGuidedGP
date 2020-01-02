@@ -38,16 +38,16 @@ namespace PatternGuidedGP.GP.SemanticGP {
 		public static double NumericDistance(CombinatorialSemantics desired, Semantics candidate, IEnumerable<Semantics> allCandidates) {
 			double distance = 0.0;
 			for (int i = 0; i < Math.Min(desired.Length, candidate.Length); i++) {
-				var semantics = desired[i];
-				foreach (var value in semantics) {
+				var desiredSemantics = desired[i];
+				foreach (var value in desiredSemantics) {
 					if (candidate[i] == null) {
 						// if candidate has no semantic value, take the worst distance of the other candidates
 						// if no other candidate has a semantic value, ignore i'th value
-						bool distanceFound;
+						/*bool distanceFound;
 						double worstDistance = GetWorstDistance((int) value, allCandidates, i, out distanceFound);
 						if (distanceFound) {
 							distance += worstDistance; 
-						}
+						}*/
 					} else {
 						var dist = Math.Abs((int)value - (int)candidate[i]);
 						distance += dist;

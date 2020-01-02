@@ -16,7 +16,7 @@ namespace PatternGuidedGP.GP.Operators {
 			Individual bestIndividual = population.GetRandom();
 			for (int i = 0; i < TournamentSize - 1; i++) {
 				Individual individual = population.GetRandom();
-				if (individual.IsBetterThan(bestIndividual)) {
+				if (individual.CompareTo(bestIndividual) < 0) {
 					bestIndividual = individual;
 				}
 			}

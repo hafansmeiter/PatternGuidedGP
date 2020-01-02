@@ -69,7 +69,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 
 			// arrays of random float values
 			for (int i = 0; i < 90; i++) {
-				var arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength + 1);
+				var arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new float[arrayLength];
 				float sum = 0.0f;
 				for (int j = 0; j < arrayLength; j++) {

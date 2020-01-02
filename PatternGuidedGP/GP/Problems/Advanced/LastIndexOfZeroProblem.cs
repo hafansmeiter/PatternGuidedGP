@@ -51,7 +51,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 
 			// array with at least one zero
 			for (int i = 0; i < 78; i++) {
-				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength + 1);
+				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				for (int j = 0; j < arrayLength; j++) {
 					array[j] = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);

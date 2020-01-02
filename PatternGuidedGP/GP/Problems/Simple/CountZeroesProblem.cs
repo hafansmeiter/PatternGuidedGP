@@ -29,5 +29,218 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 				return zeroes;
 			});
 		}
+
+		public override IEnumerable<SyntaxTree> GetOptimalSolutions() {
+			IList<SyntaxTree> trees = new List<SyntaxTree>();
+
+			var a = new IntIdentifierExpression("a");
+			var b = new IntIdentifierExpression("d");
+			var c = new IntIdentifierExpression("c");
+			var d = new IntIdentifierExpression("d");
+			var ret = new IntIdentifierExpression("ret");
+			var one = new IntLiteralExpression(1);
+			var two = new IntLiteralExpression(2);
+			var three = new IntLiteralExpression(3);
+			var four = new IntLiteralExpression(4);
+
+			/**
+			 * Solution 1 (for 3 parameters):
+			 * if (a == 1) {
+			 *   ret = ret + 1;
+			 * } else {
+			 *   ret = ret;
+			 * }
+			 * if (b == 1) {
+			 *   ret = ret + 1;
+			 * } else {
+			 *   ret = ret;
+			 * }
+			 * if (c == 1) {
+			 *   ret = ret + 1;
+			 * } else {
+			 *   ret = ret;
+			 * }
+			 */
+			if (ParameterCount == 3) {
+				trees.Add(new SyntaxTree(new IfStatement() {
+					Children = {
+						new BoolEqualIntExpression() {
+							Children = {
+								a, one
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								new IntAdditionExpression() {
+									Children = {
+										ret, one
+									}
+								}
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								ret
+							}
+						}
+					}
+				},
+				new IfStatement() {
+					Children = {
+						new BoolEqualIntExpression() {
+							Children = {
+								b, one
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								new IntAdditionExpression() {
+									Children = {
+										ret, one
+									}
+								}
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								ret
+							}
+						}
+					}
+				},
+				new IfStatement() {
+					Children = {
+						new BoolEqualIntExpression() {
+							Children = {
+								c, one
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								new IntAdditionExpression() {
+									Children = {
+										ret, one
+									}
+								}
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								ret
+							}
+						}
+					}
+				}));
+			}
+			else if (ParameterCount == 4) {
+				trees.Add(new SyntaxTree(new IfStatement() {
+					Children = {
+						new BoolEqualIntExpression() {
+							Children = {
+								a, one
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								new IntAdditionExpression() {
+									Children = {
+										ret, one
+									}
+								}
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								ret
+							}
+						}
+					}
+				},
+				new IfStatement() {
+					Children = {
+						new BoolEqualIntExpression() {
+							Children = {
+								b, one
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								new IntAdditionExpression() {
+									Children = {
+										ret, one
+									}
+								}
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								ret
+							}
+						}
+					}
+				},
+				new IfStatement() {
+					Children = {
+						new BoolEqualIntExpression() {
+							Children = {
+								c, one
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								new IntAdditionExpression() {
+									Children = {
+										ret, one
+									}
+								}
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								ret
+							}
+						}
+					}
+				},
+				new IfStatement() {
+					Children = {
+						new BoolEqualIntExpression() {
+							Children = {
+								d, one
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								new IntAdditionExpression() {
+									Children = {
+										ret, one
+									}
+								}
+							}
+						},
+						new IntAssignmentStatement() {
+							Children = {
+								ret,
+								ret
+							}
+						}
+					}
+				}));
+			}
+			return trees;
+		}
 	}
 }
