@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.SimilarityEvaluation {
-	interface ISimilarityMeasure {
+	interface ITreeSimilarityMeasure {
 		int Measure(SyntaxTree a, SyntaxTree b);
 	}
 }

@@ -27,11 +27,11 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 			});
 		}
 
-		public override IEnumerable<SyntaxTree> GetOptimalSolutions() {
+		protected override IEnumerable<SyntaxTree> CreateOptimalSolutions() {
 			IList<SyntaxTree> trees = new List<SyntaxTree>();
 
 			var a = new IntIdentifierExpression("a");
-			var b = new IntIdentifierExpression("d");
+			var b = new IntIdentifierExpression("b");
 			var c = new IntIdentifierExpression("c");
 			var d = new IntIdentifierExpression("d");
 			var ret = new BoolIdentifierExpression("ret");
@@ -51,12 +51,12 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 					Children = {
 						new BoolAndExpression() {
 							Children = {
-								new BoolGreaterEqualIntExpression() {
+								new BoolLessEqualIntExpression() {
 									Children = {
 										a, b
 									}
 								},
-								new BoolGreaterEqualIntExpression() {
+								new BoolLessEqualIntExpression() {
 									Children = {
 										b, c
 									}
@@ -83,19 +83,19 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 							Children = {
 								new BoolAndExpression() {
 									Children = {
-										new BoolGreaterEqualIntExpression() {
+										new BoolLessEqualIntExpression() {
 											Children = {
 												a, b
 											}
 										},
-										new BoolGreaterEqualIntExpression() {
+										new BoolLessEqualIntExpression() {
 											Children = {
 												b, c
 											}
 										}
 									}
 								},
-								new BoolGreaterEqualIntExpression() {
+								new BoolLessEqualIntExpression() {
 									Children = {
 										c, d
 									}

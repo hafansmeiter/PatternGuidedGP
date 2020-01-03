@@ -24,8 +24,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 
 		private IList<Type> _childTypes = new List<Type>();
 
-		private int _ifStatements;
-		private int _elseStatements;
+		private int _ifStatements = SyntaxConfiguration.Current.MaxIfBlockStatements;
+		private int _elseStatements = SyntaxConfiguration.Current.MaxElseBlockStatement;
 
 		public override void Initialize() {
 			base.Initialize();

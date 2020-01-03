@@ -28,11 +28,11 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 			});
 		}
 
-		public override IEnumerable<SyntaxTree> GetOptimalSolutions() {
+		protected override IEnumerable<SyntaxTree> CreateOptimalSolutions() {
 			IList<SyntaxTree> trees = new List<SyntaxTree>();
 
 			var a = new IntIdentifierExpression("a");
-			var b = new IntIdentifierExpression("d");
+			var b = new IntIdentifierExpression("b");
 			var c = new IntIdentifierExpression("c");
 			var d = new IntIdentifierExpression("d");
 			var ret = new BoolIdentifierExpression("ret");
@@ -129,7 +129,7 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 			if (ParameterCount == 3) {
 				trees.Add(new SyntaxTree(new IfStatement() {
 					Children = {
-						new BoolOrExpression() {
+						new BoolAndExpression() {
 							Children = {
 								new BoolNotEqualIntExpression() {
 									Children = {
@@ -159,9 +159,9 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 			else if (ParameterCount == 4) {
 				trees.Add(new SyntaxTree(new IfStatement() {
 					Children = {
-						new BoolOrExpression() {
+						new BoolAndExpression() {
 							Children = {
-								new BoolOrExpression() {
+								new BoolAndExpression() {
 									Children = {
 										new BoolNotEqualIntExpression() {
 											Children = {

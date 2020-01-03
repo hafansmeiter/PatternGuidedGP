@@ -30,11 +30,11 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 			});
 		}
 
-		public override IEnumerable<SyntaxTree> GetOptimalSolutions() {
+		protected override IEnumerable<SyntaxTree> CreateOptimalSolutions() {
 			IList<SyntaxTree> trees = new List<SyntaxTree>();
 
 			var a = new IntIdentifierExpression("a");
-			var b = new IntIdentifierExpression("d");
+			var b = new IntIdentifierExpression("b");
 			var c = new IntIdentifierExpression("c");
 			var d = new IntIdentifierExpression("d");
 			var ret = new IntIdentifierExpression("ret");

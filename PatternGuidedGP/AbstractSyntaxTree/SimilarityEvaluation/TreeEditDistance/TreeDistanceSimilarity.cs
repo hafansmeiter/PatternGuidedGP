@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.SimilarityEvaluation.TreeEditDistance {
-	class TreeDistanceSimilarity : ISimilarityMeasure {
+	class TreeDistanceSimilarity : ITreeSimilarityMeasure {
 		public int Measure(SyntaxTree a, SyntaxTree b) {
 			Tree tree1 = new Tree(a);
 			Tree tree2 = new Tree(b);

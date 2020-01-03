@@ -24,7 +24,9 @@ namespace PatternGuidedGP.GP.Problems {
 		public abstract Type RootType { get; }
 		public abstract Type ReturnType { get; }
 		public int ParameterCount { get; set; }
-		
+
+		private IEnumerable<SyntaxTree> _optimalSolutions;
+
 		public Problem(bool initialize = true) {
 			if (initialize) {
 				Initialize();
@@ -91,8 +93,15 @@ namespace PatternGuidedGP.GP.Problems {
 			return evaluationCount;
 		}
 
-		public virtual IEnumerable<SyntaxTree> GetOptimalSolutions() {
-			return null;
+		public IEnumerable<SyntaxTree> GetOptimalSolutions() {
+			if (_optimalSolutions == null) {
+				_optimalSolutions = CreateOptimalSolutions();
+			}
+			return _optimalSolutions;
+		}
+
+		protected virtual IEnumerable<SyntaxTree> CreateOptimalSolutions() {
+			return Enumerable.Empty<SyntaxTree>();
 		}
 	}
 }

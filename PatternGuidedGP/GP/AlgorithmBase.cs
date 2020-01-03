@@ -1,4 +1,6 @@
 ﻿using PatternGuidedGP.AbstractSyntaxTree.Pool;
+using PatternGuidedGP.AbstractSyntaxTree.SimilarityEvaluation;
+using PatternGuidedGP.AbstractSyntaxTree.SimilarityEvaluation.TreeEditDistance;
 using PatternGuidedGP.GP.Operators;
 using PatternGuidedGP.GP.Problems;
 using System;
@@ -23,6 +25,8 @@ namespace PatternGuidedGP.GP {
 		public bool AllowDuplicates { get; set; }
 
 		public int MaxTreeDepth { get; set; }
+
+		public ITreeSimilarityMeasure SimilarityMeasure { get; set; } = new TreeDistanceSimilarity();
 
 		public AlgorithmBase(int populationSize, int generations, bool allowDuplicates = true) {
 			Population = new Population(populationSize, allowDuplicates);
