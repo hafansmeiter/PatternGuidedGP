@@ -16,6 +16,10 @@ namespace PatternGuidedGP.GP {
 
 		public override Individual Run(Problem problem) {
 			Initializer.Initialize(Population, problem.RootType);
+			var notNullParents = Population.Individuals.Where(ind => ind.SyntaxTree.RootNodes[0].Parent != null);
+			if (notNullParents.Count() > 0) {
+				Console.WriteLine("NOT NULL PARENT AFTER INITIALIZE");
+			}
 			Logger.WriteLine(1, "Generation 0: ");
 			// .csv header
 			Logger.WriteLine(0, "Generation;Best_fitness;Best_program_error;Best_classification_error;Best_tree_size;Avg_fitness;Evaluated;Dist_to_optimal");

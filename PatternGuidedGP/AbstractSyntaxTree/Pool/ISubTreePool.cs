@@ -9,7 +9,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 	interface ISubTreePool {
 		bool Add(TreeNode node, object data);
 		TreeNode GetRandom(Type type);
-		void GenerationFinished();
+		void RemoveWorstItems();
 		void Clear();
 	}
 }

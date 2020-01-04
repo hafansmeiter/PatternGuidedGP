@@ -24,17 +24,17 @@ namespace PatternGuidedGP.GP.Operators {
 
 			TreeNode newNode = SyntaxTreeProvider.GetSyntaxTree(MaxMutationTreeDepth, nodeType);
 			if (newNode != null) {
-				bool replaced = tree.ReplaceTreeNode(exchangeNode, newNode);
+				bool replaced = tree.ReplaceTreeNode(exchangeNode, (TreeNode) newNode.DeepClone());
 				if (replaced && tree.Height <= MaxTreeDepth) {
 					individual.SyntaxTree = tree;
-					// update the node's record
-					var recordSubTreePool = SyntaxTreeProvider as RecordBasedSubTreePool;
-					if (recordSubTreePool != null && FitnessEvaluator != null) {
-						var fitness = FitnessEvaluator.Evaluate(individual, Problem).Fitness;
-						if (fitness < individual.Fitness) {
-							recordSubTreePool.UpdateRecord(newNode, true);
-						} else {
-							recordSubTreePool.UpdateRecord(newNode, false);
+					if (individual.FitnessEvaluated) {	// only meaningful if fitness of individual is already evaluated
+						// update the node's record
+						var recordSubTreePool = SyntaxTreeProvider as RecordBasedSubTreePool;
+						if (recordSubTreePool != null && FitnessEvaluator != null) {
+							var fitness = FitnessEvaluator.Evaluate(individual, Problem).Fitness;
+							if (fitness != individual.Fitness) {
+								recordSubTreePool.UpdateRecord(newNode, fitness < individual.Fitness);
+							}
 						}
 					}
 					return true;

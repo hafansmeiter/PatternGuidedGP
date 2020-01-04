@@ -12,5 +12,6 @@ namespace PatternGuidedGP.GP.Evaluators {
 		IFitnessCalculator FitnessCalculator { get; set; }
 		FitnessResult Evaluate(Individual individual, Problem problem);
 		void OnEvaluationFinished();
+		void OnStartEvaluation();
 	}
 }

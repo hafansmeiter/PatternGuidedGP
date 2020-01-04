@@ -47,9 +47,9 @@ namespace PatternGuidedGP.Pangea {
 			}
 		}
 
-		public override void OnEvaluationFinished() {
+		public override void OnStartEvaluation() {
 			if (SubTreePool != null) {
-				SubTreePool.GenerationFinished();
+				SubTreePool.RemoveWorstItems();
 			}
 		}
 

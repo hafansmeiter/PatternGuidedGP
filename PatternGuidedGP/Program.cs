@@ -71,7 +71,6 @@ namespace PatternGuidedGP {
 			int maxInitialTreeDepth = 7;
 			int maxMutationTreeDepth = 3;
 
-
 			var semanticsBasedSubTreePool = new SemanticsBasedSubTreePool();
 			var recordBasedSubTreePool = new RecordBasedSubTreePool();
 			var generator = new KozaTreeGeneratorFull();

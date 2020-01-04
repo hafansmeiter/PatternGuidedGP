@@ -80,6 +80,7 @@ namespace PatternGuidedGP.GP.Problems {
 
 		public int Evaluate(Population population) {
 			int evaluationCount = 0;
+			FitnessEvaluator.OnStartEvaluation();
 			foreach (var individual in population.Individuals) {
 				Logger.WriteLine(4, "Individual tree height: " + individual.SyntaxTree.Height);
 				if (!individual.FitnessEvaluated) {

@@ -24,7 +24,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 	abstract class SubTreePoolBase : ISubTreePool {
 		public bool DuplicateCheck { get; set; } = true;
 		public int MaxSizePerType { get; set; } = 50;
-		public int KeepItemsOnGenerationChange { get; set; } = 25;
+		public int KeepItemsOnRemoveWorst { get; set; } = 25;
+		public int MaxDepth { get; set; }
 
 		protected List<PoolItem> _boolTreeItems
 			= new List<PoolItem>();
@@ -32,6 +33,10 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			= new List<PoolItem>();
 		protected List<PoolItem> _voidTreeItems
 			= new List<PoolItem>();
+
+		protected SubTreePoolBase(int maxDepth = -1) {
+			MaxDepth = maxDepth;
+		}
 
 		public IPoolItemSelector<PoolItem> Selector { get; set; }
 			= new RandomPoolItemSelector<PoolItem>();
@@ -60,8 +65,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			return Selector.DrawFromList(list);
 		}
 
-		public bool Add(TreeNode node, object data) {
+		public virtual bool Add(TreeNode node, object data) {
 			if (DuplicateCheck && Contains(node)) {
+				return false;
+			}
+			if (MaxDepth > 0 && node.GetTreeHeight() > MaxDepth) {
 				return false;
 			}
 			var item = CreateItem(node, data);
@@ -95,19 +103,21 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			if (n <= 0) {
 				return;
 			}
-			items.RemoveRange(KeepItemsOnGenerationChange, n);
+			items.RemoveRange(KeepItemsOnRemoveWorst, n);
 		}
 
 		protected abstract PoolItem CreateItem(TreeNode node, object data);
 
-		public virtual void GenerationFinished() {
-			RemoveLastItems(_boolTreeItems, _boolTreeItems.Count - KeepItemsOnGenerationChange);
-			RemoveLastItems(_intTreeItems, _intTreeItems.Count - KeepItemsOnGenerationChange);
+		public virtual void RemoveWorstItems() {
+			RemoveLastItems(_boolTreeItems, _boolTreeItems.Count - KeepItemsOnRemoveWorst);
+			RemoveLastItems(_intTreeItems, _intTreeItems.Count - KeepItemsOnRemoveWorst);
+			RemoveLastItems(_voidTreeItems, _voidTreeItems.Count - KeepItemsOnRemoveWorst);
 		}
 
 		public void Clear() {
 			_boolTreeItems.Clear();
 			_intTreeItems.Clear();
+			_voidTreeItems.Clear();
 		}
 	}
 }

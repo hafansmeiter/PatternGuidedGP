@@ -68,6 +68,9 @@ namespace PatternGuidedGP.GP.Evaluators {
 		protected virtual void OnIndividualEvaluationFinished(Individual individual, FitnessResult fitness, object [] results) {
 		}
 
+		public virtual void OnStartEvaluation() {
+		}
+
 		public virtual void OnEvaluationFinished() {
 		}
 		
