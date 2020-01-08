@@ -246,6 +246,185 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 					}
 				}));
 			}
+
+			/**
+			 * Solution 2 (for 3 parameters):
+			 * ret = (((a == 1 && b == 1) || (b == 1 && c == 1)) || (a == 1 && c == 1))
+			 */
+			if (ParameterCount == 3) {
+				trees.Add(new SyntaxTree(new BoolAssignmentStatement() {
+					Children = {
+						ret,
+						new BoolOrExpression() {
+							Children = {
+								new BoolOrExpression() {
+									Children = {
+										new BoolAndExpression() {
+											Children = {
+												new BoolEqualIntExpression() {
+													Children = {
+														a, one
+													}
+												},
+												new BoolEqualIntExpression() {
+													Children = {
+														b, one
+													}
+												}
+											}
+										},
+										new BoolAndExpression() {
+											Children = {
+												new BoolEqualIntExpression() {
+													Children = {
+														b, one
+													}
+												},
+												new BoolEqualIntExpression() {
+													Children = {
+														c, one
+													}
+												}
+											}
+										}
+									}
+								},
+								new BoolAndExpression() {
+									Children = {
+										new BoolEqualIntExpression() {
+											Children = {
+												a, one
+											}
+										},
+										new BoolEqualIntExpression() {
+											Children = {
+												c, one
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}));
+			}
+
+			/**
+			 * Solution 2 (for 4 parameters):
+			 * ret = (((a == 1 && b == 1) && c == 1) || (a == 1 && b == 1) && d == 1)) ||
+			 *   ((a == 1 && c == 1) && d == 1) || (b == 1 && c == 1) && d == 1)))
+			 */
+			if (ParameterCount == 4) {
+				trees.Add(new SyntaxTree(new BoolAssignmentStatement() {
+					Children = {
+						ret,
+						new BoolOrExpression() {
+							Children = {
+								new BoolOrExpression() {
+									Children = {
+										new BoolAndExpression() {
+											Children = {
+												new BoolAndExpression() {
+													Children = {
+														new BoolEqualIntExpression() {
+															Children = {
+																a, one
+															}
+														},
+														new BoolEqualIntExpression() {
+															Children = {
+																b, one
+															}
+														}
+													}
+												},
+												new BoolEqualIntExpression() {
+													Children = {
+														c, one
+													}
+												}
+											}
+										},
+										new BoolAndExpression() {
+											Children = {
+												new BoolAndExpression() {
+													Children = {
+														new BoolEqualIntExpression() {
+															Children = {
+																a, one
+															}
+														},
+														new BoolEqualIntExpression() {
+															Children = {
+																b, one
+															}
+														}
+													}
+												},
+												new BoolEqualIntExpression() {
+													Children = {
+														d, one
+													}
+												}
+											}
+										}
+									}
+								},
+								new BoolOrExpression() {
+									Children = {
+										new BoolAndExpression() {
+											Children = {
+												new BoolAndExpression() {
+													Children = {
+														new BoolEqualIntExpression() {
+															Children = {
+																a, one
+															}
+														},
+														new BoolEqualIntExpression() {
+															Children = {
+																c, one
+															}
+														}
+													}
+												},
+												new BoolEqualIntExpression() {
+													Children = {
+														d, one
+													}
+												}
+											}
+										},
+										new BoolAndExpression() {
+											Children = {
+												new BoolAndExpression() {
+													Children = {
+														new BoolEqualIntExpression() {
+															Children = {
+																b, one
+															}
+														},
+														new BoolEqualIntExpression() {
+															Children = {
+																c, one
+															}
+														}
+													}
+												},
+												new BoolEqualIntExpression() {
+													Children = {
+														d, one
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}));
+			}
 			return trees;
 		}
 	}

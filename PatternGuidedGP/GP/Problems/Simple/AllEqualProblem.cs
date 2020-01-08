@@ -193,6 +193,62 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 					}
 				}));
 			}
+
+			/**
+			 * Solution 3 (for 3 parameters):
+			 * ret = a == b && b == c;
+			 */
+			if (ParameterCount == 3) {
+				trees.Add(new SyntaxTree(new BoolAssignmentStatement() {
+					Children = {
+						ret,
+						new BoolAndExpression() {
+							Children = {
+								new BoolEqualIntExpression() {
+									Children = {
+										a, b
+									}
+								},
+								new BoolEqualIntExpression() {
+									Children = {
+										b, c
+									}
+								}
+							}
+						}
+					}
+				}));
+			} else if (ParameterCount == 4) {
+				trees.Add(new SyntaxTree(new BoolAssignmentStatement() {
+					Children = {
+						ret,
+						new BoolAndExpression() {
+							Children = {
+								new BoolAndExpression() {
+									Children = {
+										new BoolEqualIntExpression() {
+											Children = {
+												a, b
+											}
+										},
+										new BoolEqualIntExpression() {
+											Children = {
+												b, c
+											}
+										}
+									}
+								},
+								new BoolEqualIntExpression() {
+									Children = {
+										c, d
+									}
+								}
+							}
+						}
+					}
+				}));
+			}
+
 			return trees;
 		}
 	}
