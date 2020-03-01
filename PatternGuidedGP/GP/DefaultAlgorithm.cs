@@ -94,22 +94,25 @@ namespace PatternGuidedGP.GP {
 			while (!nextGen.IsFull) {
 				IList<Individual> children = new List<Individual>();
 				// create child by crossover or copy from old population
-				if (RandomValueGenerator.Instance.GetDouble() < CrossoverRate) {
+				double rand = RandomValueGenerator.Instance.GetDouble();
+				if (rand < CrossoverRate) {
 					var individual1 = Selector.Select(population);
 					var individual2 = Selector.Select(population);
 					foreach (var child in Crossover.cross(individual1, individual2)) {
 						children.Add(new Individual(child));
 					}
 				}
+				else if (rand - CrossoverRate < MutationRate) {
+					var child = new Individual(Selector.Select(population));
+					if (Mutator.Mutate(child)) {
+						child.FitnessEvaluated = false;
+					}
+					children.Add(child);
+				}
 				else {
-					children.Add(new Individual(population.GetRandom()));
+					children.Add(new Individual(Selector.Select(population)));
 				}
 				foreach (var child in children) {
-					if (RandomValueGenerator.Instance.GetDouble() < MutationRate) {
-						if (Mutator.Mutate(child)) {
-							child.FitnessEvaluated = false;
-						}
-					}
 					int added = nextGen.Add(child);
 					duplicates += 1 - added;
 				}

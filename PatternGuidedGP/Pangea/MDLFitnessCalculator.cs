@@ -104,8 +104,8 @@ namespace PatternGuidedGP.Pangea {
 				tree = learner.Learn(input, output);
 			}
 			catch (Exception e) {
-				Console.WriteLine(e.Message);
-				Console.WriteLine(e.ToString());
+				//Console.WriteLine(e.Message);
+				//Console.WriteLine(e.ToString());
 			}
 			return tree;
 		}
