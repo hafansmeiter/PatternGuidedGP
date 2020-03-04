@@ -1,4 +1,5 @@
-﻿using PatternGuidedGP.GP.Problems;
+﻿using PatternGuidedGP.AbstractSyntaxTree.SimilarityEvaluation.TreeEditDistance;
+using PatternGuidedGP.GP.Problems;
 using PatternGuidedGP.Pangea;
 using PatternGuidedGP.Util;
 using System;
@@ -16,13 +17,9 @@ namespace PatternGuidedGP.GP {
 
 		public override Individual Run(Problem problem) {
 			Initializer.Initialize(Population, problem.RootType);
-			var notNullParents = Population.Individuals.Where(ind => ind.SyntaxTree.RootNodes[0].Parent != null);
-			if (notNullParents.Count() > 0) {
-				Console.WriteLine("NOT NULL PARENT AFTER INITIALIZE");
-			}
 			Logger.WriteLine(1, "Generation 0: ");
 			// .csv header
-			Logger.WriteLine(0, "Generation;Best_fitness;Best_program_error;Best_classification_error;Best_tree_size;Avg_fitness;Evaluated;Dist_to_optimal");
+			Logger.WriteLine(0, "Generation;Best_fitness;Best_program_error;Best_classification_error;Best_tree_size;Avg_fitness;Evaluated;Total_evaluated;Dist_to_optimal;Diversity_best_to_avg;Diversity_tree_dist");
 			Individual solution = EvaluatePopulation(problem, 0);
 			if (solution != null) { // initial generation contains solution
 				return solution;
@@ -42,6 +39,7 @@ namespace PatternGuidedGP.GP {
 
 		private Individual EvaluatePopulation(Problem problem, int generation) {
 			int evaluationCount = problem.Evaluate(Population);
+			TotalEvaluations += evaluationCount;
 			Population.Sort();
 			//Console.WriteLine("Best:\n{0}", Population.GetFittest());
 			Logger.WriteLine(1, string.Format("Evaluated " + evaluationCount + "/" + Population.Size + " individuals"));
@@ -53,15 +51,19 @@ namespace PatternGuidedGP.GP {
 			}
 
 			// Write statistics in .csv format
-			Logger.WriteLine(0, string.Format("{0};{1};{2};{3};{4};{5};{6};{7}",
+			double averageFitness = Population.GetAverageFitness();
+			Logger.WriteLine(0, string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10}",
 				generation,
 				Population.GetFittest().Fitness,
 				isMDL ? ((MDLFitnessResult) Population.GetFittest().FitnessResult).StandardFitness : 0,
 				isMDL ? ((MDLFitnessResult) Population.GetFittest().FitnessResult).ClassificationError : 0,
 				isMDL ? ((MDLFitnessResult) Population.GetFittest().FitnessResult).TreeSize : 0,
-				Population.GetAverageFitness(),
+				averageFitness,
 				evaluationCount,
-				ComputeDistanceToOptimal(Population.GetFittest(), problem)));
+				TotalEvaluations,
+				ComputeDistanceToOptimal(Population.GetFittest(), problem),
+				averageFitness - Population.GetFittest().Fitness,
+				Population.GetDiversity(SimilarityMeasure)));
 
 			if (IsSolutionFound()) {
 				Logger.WriteLine(1, "Solution found.");

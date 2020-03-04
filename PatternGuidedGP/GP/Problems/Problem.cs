@@ -88,6 +88,9 @@ namespace PatternGuidedGP.GP.Problems {
 					individual.FitnessResult = result;
 					individual.Fitness = result.Fitness;
 					evaluationCount++;
+					if (result.Fitness == 0) {
+						break;
+					}
 				}
 			}
 			FitnessEvaluator.OnEvaluationFinished();

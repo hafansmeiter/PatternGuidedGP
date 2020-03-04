@@ -50,21 +50,21 @@ namespace PatternGuidedGP.Pangea {
 
 					// log MDL result details
 					if (fitness == 0) {
-						Logger.WriteLine(0, "Std fitness: " + stdFitness);
+						Logger.WriteLine(1, "Std fitness: " + stdFitness);
 
 						var predicted = decisionTree.Decide(input);
 						var loss = Math.Round(new ZeroOneLoss(expected).Loss(predicted) * expected.Length);
 						var classificationErrorFactor = (((double)error + 1) / (results.Length + 1));
-						Logger.WriteLine(0, "Program error: " + error + "; loss: " + loss + "; factor: " + classificationErrorFactor);
+						Logger.WriteLine(1, "Program error: " + error + "; loss: " + loss + "; factor: " + classificationErrorFactor);
 
 						var treeSizeFactor = Math.Log(treeSize + 1, 2);
-						Logger.WriteLine(0, "Tree size: " + treeSize + "; factor: " + treeSizeFactor);
+						Logger.WriteLine(1, "Tree size: " + treeSize + "; factor: " + treeSizeFactor);
 
-						Logger.WriteLine(0, "MDL fitness: " + mdlFitness);
+						Logger.WriteLine(1, "MDL fitness: " + mdlFitness);
 					}
 				}
 			} else if (fitness == 0) {
-				Logger.WriteLine(0, "Standard fitness: 0");
+				Logger.WriteLine(1, "Standard fitness: 0");
 			}
 			return fitnessResult;
 		}

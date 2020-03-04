@@ -1,4 +1,6 @@
-﻿using PatternGuidedGP.Util;
+﻿using PatternGuidedGP.AbstractSyntaxTree.SimilarityEvaluation;
+using PatternGuidedGP.AbstractSyntaxTree.SimilarityEvaluation.TreeEditDistance;
+using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +74,23 @@ namespace PatternGuidedGP.GP {
 				}
 			}
 			return false;
+		}
+
+		public double GetDiversity(ITreeSimilarityMeasure similarityMeasure) {
+			int[] distanceSums = new int[IndividualCount];
+			for (int i = 0; i < IndividualCount; i++) {
+				for (int j = i + 1; j < IndividualCount; j++) {
+					int dist = similarityMeasure.Measure(_individuals[i].SyntaxTree, _individuals[j].SyntaxTree);
+					distanceSums[i] += dist;
+					distanceSums[j] += dist;
+				}
+			}
+
+			double[] avgDistances = new double[IndividualCount];
+			for (int i = 0; i < IndividualCount; i++) {
+				avgDistances[i] = distanceSums[i] / (IndividualCount - 1.0);
+			}
+			return avgDistances.Average();
 		}
 	}
 }

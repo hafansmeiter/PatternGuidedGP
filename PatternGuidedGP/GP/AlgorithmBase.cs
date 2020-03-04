@@ -23,6 +23,7 @@ namespace PatternGuidedGP.GP {
 		public Population Population { get; set; }
 		public int Generations { get; }
 		public bool AllowDuplicates { get; set; }
+		public int TotalEvaluations { get; set; }
 
 		public int MaxTreeDepth { get; set; }
 
