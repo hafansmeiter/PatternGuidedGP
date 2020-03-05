@@ -81,15 +81,20 @@ namespace PatternGuidedGP.GP.Problems {
 		public int Evaluate(Population population) {
 			int evaluationCount = 0;
 			FitnessEvaluator.OnStartEvaluation();
+			bool solutionFound = false;
 			foreach (var individual in population.Individuals) {
 				Logger.WriteLine(4, "Individual tree height: " + individual.SyntaxTree.Height);
 				if (!individual.FitnessEvaluated) {
 					var result = FitnessEvaluator.Evaluate(individual, this);
 					individual.FitnessResult = result;
 					individual.Fitness = result.Fitness;
-					evaluationCount++;
+					if (!solutionFound) {
+						evaluationCount++;
+					}
 					if (result.Fitness == 0) {
-						break;
+						// do not count further evaluations as this run is finished.
+						// anyway need to evaluate rest of population for sorting according to fitness.
+						solutionFound = true;	
 					}
 				}
 			}

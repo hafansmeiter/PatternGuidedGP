@@ -11,8 +11,16 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.GP {
 	class DefaultAlgorithm : AlgorithmBase {
 
+		// track fitness for termination criteria:
+		// if best fitness and average fitness not improved for 20 generations -> abort
+		private int _stagnationGen = 20;
+		private double[] _bestFitness;
+		private double[] _avgFitness;
+
 		public DefaultAlgorithm(int populationSize, int generations, bool allowDuplicates)
 			: base(populationSize, generations, allowDuplicates) {
+			_bestFitness = new double[generations];
+			_avgFitness = new double[generations];
 		}
 
 		public override Individual Run(Problem problem) {
@@ -31,10 +39,24 @@ namespace PatternGuidedGP.GP {
 				if (solution != null) {
 					return solution;
 				}
+
+				_bestFitness[i] = Population.GetFittest().Fitness;
+				_avgFitness[i] = Population.GetAverageFitness();
+				if (IsStagnating(i)) {
+					break;
+				}
 			}
 			Logger.WriteLine(1, "No solution found.");
 			Logger.WriteLine(2, string.Format("Returning best:\n{0}", Population.GetFittest()));
 			return Population.GetFittest();
+		}
+
+		private bool IsStagnating(int generation) {
+			if (generation < _stagnationGen) {
+				return false;
+			}
+			return _bestFitness[generation] >= _bestFitness[generation - _stagnationGen]
+				&& _avgFitness[generation] >= _avgFitness[generation - _stagnationGen];
 		}
 
 		private Individual EvaluatePopulation(Problem problem, int generation) {
