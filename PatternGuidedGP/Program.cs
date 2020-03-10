@@ -44,12 +44,12 @@ namespace PatternGuidedGP {
 					new IsOrderedProblem(3),		// 3
 					new MajorityProblem(3),			// 4
 					new MaximumProblem(3),			// 5
-					/*new AllEqualProblem(4),			// 6
+					new AllEqualProblem(4),			// 6
 					new ContainsFirstProblem(4),	// 7
 					new CountZeroesProblem(4),		// 8
 					new IsOrderedProblem(4),		// 9
 					new MajorityProblem(4),			// 10
-					new MaximumProblem(4),			// 11*/
+					new MaximumProblem(4),			// 11
 					/*new CompareProblem(6),			// 6
 					new MultiplexerProblem(6, 2),	// 7
 					new ParityProblem(6)            // 8*/
@@ -67,8 +67,8 @@ namespace PatternGuidedGP {
 		}
 
 		static void RunProblems(Problem [] problems, int runConfig, int runProblem, int fromConfig, int fromProblem) {
-			int maxTreeDepth = 7;
-			int maxInitialTreeDepth = 4;
+			int maxTreeDepth = 15;
+			int maxInitialTreeDepth = 7;
 			int maxMutationTreeDepth = 3;
 
 			var semanticsBasedSubTreePool = new SemanticsBasedSubTreePool();

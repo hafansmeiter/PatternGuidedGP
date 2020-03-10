@@ -12,8 +12,8 @@ namespace PatternGuidedGP.GP {
 	class DefaultAlgorithm : AlgorithmBase {
 
 		// track fitness for termination criteria:
-		// if best fitness and average fitness not improved for 15 generations -> abort
-		private int _stagnationGen = 15;
+		// if best fitness and average fitness not improved for 20 generations -> abort
+		private int _stagnationGen = 20;
 		private double[] _bestFitness;
 		private double[] _avgFitness;
 
