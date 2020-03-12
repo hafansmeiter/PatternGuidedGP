@@ -7,6 +7,7 @@ using PatternGuidedGP.GP.Tests;
 using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,10 +16,34 @@ namespace PatternGuidedGP.Pangea {
 	class MDLFitnessCalculator : IFitnessCalculator {
 		
 		public IFitnessCalculator StandardFitnessCalculator { get; set; } = new EqualityFitnessCalculator();
+		public static int STEPS = 5;
+		private C45Learning _learner = null;
+
+		public MDLFitnessCalculator() {
+			var variables = new DecisionVariable[STEPS * 6 + 1];
+			int idx = 0;
+			// bool
+			for (int i = 0; i < STEPS * 2; i++) {
+				variables[idx] = new DecisionVariable("C" + idx, DecisionVariableKind.Discrete);
+				idx++;
+			}
+			// int
+			for (int i = STEPS * 2; i < STEPS * 4; i++) {
+				variables[idx] = DecisionVariable.Continuous("C" + idx);
+				idx++;
+			}
+			// ops
+			for (int i = STEPS * 4; i < STEPS * 6; i++) {
+				variables[idx] = new DecisionVariable("C" + idx, DecisionVariableKind.Discrete);
+				idx++;
+			}
+			variables[idx] = DecisionVariable.Continuous("C" + idx);
+			//_learner = new C45Learning(variables);
+		}
 
 		public FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {
 			double fitness = StandardFitnessCalculator.CalculateFitness(individual, testSuite, results).Fitness; // standard fitness f0
-			var dataset = MLDataset.FromExecutionTraces(individual, Singleton<ExecutionTraces>.Instance.Traces);
+			MLDataset dataset = MLDataset.FromExecutionTraces(individual, Singleton<ExecutionTraces>.Instance.Traces);
 			LogDatasetFeatures(dataset);
 
 			var fitnessResult = new MDLFitnessResult(fitness, dataset);
@@ -27,7 +52,10 @@ namespace PatternGuidedGP.Pangea {
 				//var input = dataset.ToRawInputDataset();
 
 				// Variant 2 (results and operation types of first n and last n operations in chronological order):
-				var input = dataset.ToRawFirstNLastNInputDataset(5, 5);
+				//var input = dataset.ToRawFirstNLastNInputDataset(5, 5);
+
+				// Veriant 3 (results only consider values of bool and int expressions and operations)
+				var input = MLDataset.ConvertTracesToTypedSteps(individual, Singleton<ExecutionTraces>.Instance.Traces, STEPS);
 
 				var expected = GetExpectedOutputDataset(testSuite);
 				LogDataset(input, expected);
@@ -98,14 +126,15 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		private DecisionTree CreateDecisionTree(int?[][] input, int[] output) {
-			var learner = new C45Learning();
+			var variables = DecisionVariable.FromData(input);
+			var learner = new C45Learning(variables);
 			DecisionTree tree = null;
 			try {
 				tree = learner.Learn(input, output);
 			}
 			catch (Exception e) {
-				//Console.WriteLine(e.Message);
-				//Console.WriteLine(e.ToString());
+				Console.WriteLine(e.Message);
+				Console.WriteLine(e.ToString());
 			}
 			return tree;
 		}
@@ -141,11 +170,13 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		private void LogDatasetFeatures(MLDataset dataset) {
-			Logger.Write(4, "Features: ");
-			foreach (var feature in dataset.Features) {
-				Logger.Write(4, feature.ToString() + ",");
+			if (dataset != null) {
+				Logger.Write(4, "Features: ");
+				foreach (var feature in dataset.Features) {
+					Logger.Write(4, feature.ToString() + ",");
+				}
+				Logger.WriteLine(4, "");
 			}
-			Logger.WriteLine(4, "");
 		}
 	}
 }

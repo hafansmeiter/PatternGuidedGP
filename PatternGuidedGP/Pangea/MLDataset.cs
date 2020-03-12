@@ -11,7 +11,7 @@ namespace PatternGuidedGP.Pangea {
 		private SortedDictionary<ulong, object []> _features 
 			= new SortedDictionary<ulong, object []>();
 
-		private SortedDictionary<ulong, MLDatasetFeature> _featureData
+		private SortedDictionary<ulong, MLDatasetFeature> _featureInfo
 			= new SortedDictionary<ulong, MLDatasetFeature>();
 
 		private IList<IList<ulong>> _featureOrder = new List<IList<ulong>>();	// for chronological order
@@ -24,7 +24,7 @@ namespace PatternGuidedGP.Pangea {
 		}
 		public IEnumerable<MLDatasetFeature> FeatureInfo {
 			get {
-				return _featureData.Values;
+				return _featureInfo.Values;
 			}
 		}
 
@@ -34,6 +34,85 @@ namespace PatternGuidedGP.Pangea {
 			}
 		}
 
+		// combine extraction step and conversion step for performance improvement
+		public static int?[][] ConvertTracesToTypedSteps(Individual /* unused */ individual, IList<ExecutionTrace> traces, int steps, bool removeConstantFeatures = true) {
+			// example 5 steps:
+			// ML dataset consists of 31 columns
+			// 5 first bool expr. values, 5 first int expr. values, 5 first operators
+			// 5 last bool expr. values, 5 last int expr. values, 5 last operators
+			// 1 number of total operations
+			// bool values: discrete
+			// int values: ordinal (continuous in Accord.net)
+			// operators: discrete
+
+			int rowCount = traces.Count;
+			int columnCount = steps * 3 * 2 + 3;	// int + bool + operations; first + last; total operations
+			int?[][] dataset = new int?[rowCount][];
+			for (int i = 0; i < rowCount; i++) {
+				var trace = traces[i];
+				dataset[i] = new int?[columnCount];
+				FillDataSetRow(dataset[i], trace.Records, steps, 0);
+				FillDataSetRow(dataset[i], trace.Records.Reverse().ToList(), steps, steps);
+			}
+			if (removeConstantFeatures) {
+				var constantFeatures = GetConstantFeatures(dataset);
+				dataset = RemoveFeatures(dataset, constantFeatures);
+			}
+			return dataset;
+		}
+
+		private static void FillDataSetRow(int ?[] row, IList<ExecutionRecord> records, int steps, int offset) {
+			bool isBool = false;
+			bool isInt = false;
+			int totalBoolOps = 0;
+			int totalIntOps = 0;
+			int totalOps = 0;
+			int boolOpsStartIdx = offset;
+			int intOpsStartIdx = offset + steps * 2;
+			int opsStartIdx = offset + steps * 4;
+			int numBoolOps = 0;
+			int numIntOps = 0;
+			int numOps = 0;
+			for (int i = boolOpsStartIdx; i < boolOpsStartIdx + steps; i++) {
+				row[i] = null;
+			}
+			for (int i = intOpsStartIdx; i < intOpsStartIdx + steps; i++) {
+				row[i] = 0;
+			}
+			for (int i = opsStartIdx; i < opsStartIdx + steps; i++) {
+				row[i] = null;
+			}
+			foreach (var record in records) {
+				int opId = record.OperatorId;
+				int? value = ToDatasetValueOfType(record.Value, out isBool, out isInt);
+				if (opId > 0) {
+					totalOps++;
+					if (isBool) {
+						totalBoolOps++;
+					} else if (isInt) {
+						totalIntOps++;
+					}
+					if (numOps < steps) {
+						row[opsStartIdx + numOps++] = opId;
+					}
+				}
+				if (isBool) {
+					if (numBoolOps < steps) {
+						row[boolOpsStartIdx + numBoolOps++] = value;
+					}
+				}
+				else if (isInt) {
+					if (numIntOps < steps) {
+						row[intOpsStartIdx + numIntOps++] = value;
+					}
+				}
+			}
+			row[steps * 6] = totalOps;
+			row[steps * 6 + 1] = totalBoolOps;
+			row[steps * 6 + 2] = totalIntOps;
+		}
+
+		// step 1: extraction of data from traces
 		public static MLDataset FromExecutionTraces(Individual /* unused */ individual, IList<ExecutionTrace> traces) {
 			MLDataset dataset = new MLDataset();
 			int count = traces.Count;
@@ -46,11 +125,11 @@ namespace PatternGuidedGP.Pangea {
 					if (!dataset._features.TryGetValue(record.NodeId, out featureValues)) {
 						featureValues = new object[count];
 						dataset._features.Add(record.NodeId, featureValues);
-						dataset._featureData.Add(record.NodeId, 
+						dataset._featureInfo.Add(record.NodeId, 
 							new MLDatasetFeature(record.NodeId, record.OperatorId, record.Value.GetType()));
 					}
 					featureValues[i] = record.Value;
-					if (record.OperatorId > 0) {	// only use operators (no variables, constants)
+					if (record.OperatorId > 0) {	// only use operators (no variables, constants), because constant values get dropped anyway
 						featureOrder.Add(record.NodeId);
 					}
 				}
@@ -58,6 +137,9 @@ namespace PatternGuidedGP.Pangea {
 			}
 			return dataset;
 		}
+
+		// step 2: convert ML dataset to raw int arrays
+		// version 1: first n and last n values and operators
 
 		// takes first n and last n execution records including the operator id
 		// in Krawiec - Pattern Guided GP, firstN and lastN is referred to as k
@@ -73,7 +155,7 @@ namespace PatternGuidedGP.Pangea {
 				int k = 0, j = 0;	// added features
 				for (j = 0; j < opFeatures.Count && j < firstN; j++) {
 					var feature = opFeatures[j];
-					var featureOp = _featureData[feature].OperatorId;
+					var featureOp = _featureInfo[feature].OperatorId;
 					var featureValue = _features[feature][i];
 					dataset[i][k + j * 2] = featureOp;
 					dataset[i][k + j * 2 + 1] = ToDatasetValue(featureValue);
@@ -85,7 +167,7 @@ namespace PatternGuidedGP.Pangea {
 
 				for (j = 0; j < opFeatures.Count && j < lastN; j++) {
 					var feature = opFeatures[opFeatures.Count - 1 - j];
-					var featureOp = _featureData[feature].OperatorId;
+					var featureOp = _featureInfo[feature].OperatorId;
 					var featureValue = _features[feature][i];
 					dataset[i][k + j * 2] = featureOp;
 					dataset[i][k + j * 2 + 1] = ToDatasetValue(featureValue);
@@ -107,6 +189,7 @@ namespace PatternGuidedGP.Pangea {
 			return dataset;
 		}
 
+		// version 2: convert full ML dataset to int arrays
 		public int?[][] ToRawInputDataset(bool removeConstantFeatures = true) {
 			int?[][] dataset = new int?[Count][];
 			int featureCount = _features.Count;
@@ -129,7 +212,7 @@ namespace PatternGuidedGP.Pangea {
 			return dataset;
 		}
 
-		private IEnumerable<int> GetConstantFeatures(int?[][] dataset) {
+		private static IEnumerable<int> GetConstantFeatures(int?[][] dataset) {
 			IList<int> constantColumns = new List<int>();
 			int rows = dataset.Length;
 			int columns = dataset[0].Length;
@@ -158,7 +241,7 @@ namespace PatternGuidedGP.Pangea {
 			return constantColumns;
 		}
 
-		private int?[][] RemoveFeatures(int?[][] dataset, IEnumerable<int> featureIndices) {
+		private static int?[][] RemoveFeatures(int?[][] dataset, IEnumerable<int> featureIndices) {
 			int rows = dataset.Length;
 			int columns = dataset[0].Length;
 
@@ -185,8 +268,26 @@ namespace PatternGuidedGP.Pangea {
 				}
 				else if (o.GetType() == typeof(bool)) {
 					value = (bool)o ? 1 : 0;
-				} else if (o.GetType() == typeof(float)) {
+				}
+				else if (o.GetType() == typeof(float)) {
 					//value = (float)o;
+				}
+			}
+			return value;
+		}
+
+		public static int? ToDatasetValueOfType(object o, out bool isBool, out bool isInt) {
+			int? value = null;
+			isBool = false;
+			isInt = false;
+			if (o != null) {
+				if (o.GetType() == typeof(int)) {
+					value = (int)o;
+					isInt = true;
+				}
+				else if (o.GetType() == typeof(bool)) {
+					value = (bool)o ? 1 : 0;
+					isBool = true;
 				}
 			}
 			return value;

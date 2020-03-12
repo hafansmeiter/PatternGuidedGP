@@ -29,9 +29,10 @@ namespace PatternGuidedGP {
 		private static string LOG_PATH = ".\\";
 
 		static void Main(string[] args) {
-			int runConfig, runProblem, fromConfig = 0, fromProblem = 0;
+			int runConfig, runProblem, fromConfig = 0, fromProblem = 0, steps = 0;
 			string problemSet;
-			EvaluateArgs(args, out runConfig, out runProblem, out fromConfig, out fromProblem, out problemSet);
+			EvaluateArgs(args, out runConfig, out runProblem, out fromConfig, out fromProblem, out problemSet, out steps);
+			MDLFitnessCalculator.STEPS = steps;
 			Logger.Level = 0;
 
 			if (problemSet == "simple") {
@@ -67,8 +68,8 @@ namespace PatternGuidedGP {
 		}
 
 		static void RunProblems(Problem [] problems, int runConfig, int runProblem, int fromConfig, int fromProblem) {
-			int maxTreeDepth = 15;
-			int maxInitialTreeDepth = 7;
+			int maxTreeDepth = 7;
+			int maxInitialTreeDepth = 4;
 			int maxMutationTreeDepth = 3;
 
 			var semanticsBasedSubTreePool = new SemanticsBasedSubTreePool();
@@ -223,12 +224,13 @@ namespace PatternGuidedGP {
 		}
 
 		private static void EvaluateArgs(string [] args, out int runConfig, out int runProblem, 
-			out int fromConfig, out int fromProblem, out string problemSet) {
+			out int fromConfig, out int fromProblem, out string problemSet, out int steps) {
 			runConfig = -1;
 			runProblem = -1;
 			fromConfig = 0;
 			fromProblem = 0;
 			problemSet = "";
+			steps = 5;
 			foreach (var arg in args) {
 				if (arg.StartsWith("/config:")) {
 					runConfig = int.Parse(arg.Substring(8));
@@ -242,6 +244,8 @@ namespace PatternGuidedGP {
 					problemSet = arg.Substring(12);
 				} else if (arg.StartsWith("/logPath:")) {
 					LOG_PATH = arg.Substring(9);
+				} else if (arg.StartsWith("/steps:")) {
+					steps = int.Parse(arg.Substring(7));
 				}
 			}
 		}
