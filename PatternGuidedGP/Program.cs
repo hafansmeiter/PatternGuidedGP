@@ -161,7 +161,8 @@ namespace PatternGuidedGP {
 			foreach (var config in configurations) {
 				Logger.FileName = GetLogFilename(config);
 				Logger.WriteLine(0, "Run configuration: " + config.Name + 
-					" (Population: " + config.PopulationSize + ", generations: " + config.Generations + ")");
+					" (Population: " + config.PopulationSize + ", generations: " + config.Generations 
+					+ ", runs: " + config.Runs + ", trace steps: " + MDLFitnessCalculator.STEPS + ")");
 				for (int j = fromProblem; j < problems.Length; j++) {
 					var problem = problems[j];
 					Logger.WriteLine(0, problem.GetType().Name + " (" + problem.ParameterCount + "):");
