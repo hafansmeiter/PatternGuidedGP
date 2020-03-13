@@ -35,7 +35,7 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		// combine extraction step and conversion step for performance improvement
-		public static int?[][] ConvertTracesToTypedSteps(Individual /* unused */ individual, IList<ExecutionTrace> traces, int steps, bool removeConstantFeatures = true) {
+		public static int?[][] ConvertTracesToTypedSteps(Individual /* unused */ individual, IList<ExecutionTrace> traces, int steps, bool removeConstantFeatures, out int startContinuousFeatures) {
 			// example 5 steps:
 			// ML dataset consists of 31 columns
 			// 5 first bool expr. values, 5 first int expr. values, 5 first operators
@@ -45,8 +45,9 @@ namespace PatternGuidedGP.Pangea {
 			// int values: ordinal (continuous in Accord.net)
 			// operators: discrete
 
+			int stepFeatures = steps * 3 * 2;
 			int rowCount = traces.Count;
-			int columnCount = steps * 3 * 2 + 3;	// int + bool + operations; first + last; total operations
+			int columnCount = stepFeatures + 3;	// int + bool + operations; first + last; total operations
 			int?[][] dataset = new int?[rowCount][];
 			for (int i = 0; i < rowCount; i++) {
 				var trace = traces[i];
@@ -57,6 +58,9 @@ namespace PatternGuidedGP.Pangea {
 			if (removeConstantFeatures) {
 				var constantFeatures = GetConstantFeatures(dataset);
 				dataset = RemoveFeatures(dataset, constantFeatures);
+				startContinuousFeatures = stepFeatures - constantFeatures.Count(i => i < stepFeatures);
+			} else {
+				startContinuousFeatures = -1;
 			}
 			return dataset;
 		}
@@ -77,7 +81,7 @@ namespace PatternGuidedGP.Pangea {
 				row[i] = null;
 			}
 			for (int i = intOpsStartIdx; i < intOpsStartIdx + steps; i++) {
-				row[i] = 0;
+				row[i] = null;
 			}
 			for (int i = opsStartIdx; i < opsStartIdx + steps; i++) {
 				row[i] = null;

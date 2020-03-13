@@ -55,40 +55,44 @@ namespace PatternGuidedGP.Pangea {
 				//var input = dataset.ToRawFirstNLastNInputDataset(5, 5);
 
 				// Veriant 3 (results only consider values of bool and int expressions and operations)
-				var input = MLDataset.ConvertTracesToTypedSteps(individual, Singleton<ExecutionTraces>.Instance.Traces, STEPS);
+				int startContinuousFeatures;
+				var input = MLDataset.ConvertTracesToTypedSteps(individual, Singleton<ExecutionTraces>.Instance.Traces, 
+					STEPS, true, out startContinuousFeatures);
 
-				var expected = GetExpectedOutputDataset(testSuite);
-				LogDataset(input, expected);
+				if (input.Length > 0 && input[0].Length > 0) {
+					var expected = GetExpectedOutputDataset(testSuite);
+					LogDataset(input, expected);
 
-				var decisionTree = CreateDecisionTree(input, expected);
-				if (decisionTree != null) {
-					int error = GetClassificationError(decisionTree, input, expected);
-					int treeSize = GetTreeSize(decisionTree);
-					double mdlFitness = CalculateMDLFitness(error, treeSize, results.Length);
-					double stdFitness = fitness;
-					fitness *= mdlFitness;
+					var decisionTree = CreateDecisionTree(input, expected, startContinuousFeatures);
+					if (decisionTree != null) {
+						int error = GetClassificationError(decisionTree, input, expected);
+						int treeSize = GetTreeSize(decisionTree);
+						double mdlFitness = CalculateMDLFitness(error, treeSize, results.Length);
+						double stdFitness = fitness;
+						fitness *= mdlFitness;
 
-					var rules = decisionTree.ToRules();
-					LogResult(fitness, error, treeSize, mdlFitness, rules);
+						var rules = decisionTree.ToRules();
+						LogResult(fitness, error, treeSize, mdlFitness, rules);
 
-					fitnessResult.Fitness = fitness;
-					fitnessResult.ClassificationError = error;
-					fitnessResult.TreeSize = treeSize;
-					fitnessResult.StandardFitness = stdFitness;
+						fitnessResult.Fitness = fitness;
+						fitnessResult.ClassificationError = error;
+						fitnessResult.TreeSize = treeSize;
+						fitnessResult.StandardFitness = stdFitness;
 
-					// log MDL result details
-					if (fitness == 0) {
-						Logger.WriteLine(1, "Std fitness: " + stdFitness);
+						// log MDL result details
+						if (fitness == 0) {
+							Logger.WriteLine(1, "Std fitness: " + stdFitness);
 
-						var predicted = decisionTree.Decide(input);
-						var loss = Math.Round(new ZeroOneLoss(expected).Loss(predicted) * expected.Length);
-						var classificationErrorFactor = (((double)error + 1) / (results.Length + 1));
-						Logger.WriteLine(1, "Program error: " + error + "; loss: " + loss + "; factor: " + classificationErrorFactor);
+							var predicted = decisionTree.Decide(input);
+							var loss = Math.Round(new ZeroOneLoss(expected).Loss(predicted) * expected.Length);
+							var classificationErrorFactor = (((double)error + 1) / (results.Length + 1));
+							Logger.WriteLine(1, "Program error: " + error + "; loss: " + loss + "; factor: " + classificationErrorFactor);
 
-						var treeSizeFactor = Math.Log(treeSize + 1, 2);
-						Logger.WriteLine(1, "Tree size: " + treeSize + "; factor: " + treeSizeFactor);
+							var treeSizeFactor = Math.Log(treeSize + 1, 2);
+							Logger.WriteLine(1, "Tree size: " + treeSize + "; factor: " + treeSizeFactor);
 
-						Logger.WriteLine(1, "MDL fitness: " + mdlFitness);
+							Logger.WriteLine(1, "MDL fitness: " + mdlFitness);
+						}
 					}
 				}
 			} else if (fitness == 0) {
@@ -125,8 +129,13 @@ namespace PatternGuidedGP.Pangea {
 			return (int) (Math.Round(new ZeroOneLoss(expected).Loss(predicted) * expected.Length));
 		}
 
-		private DecisionTree CreateDecisionTree(int?[][] input, int[] output) {
+		private DecisionTree CreateDecisionTree(int?[][] input, int[] output, int startContinuousVariables) {
 			var variables = DecisionVariable.FromData(input);
+			if (startContinuousVariables >= 0) {
+				for (int i = startContinuousVariables; i < variables.Length; i++) {
+					variables[i] = DecisionVariable.Continuous(i.ToString());
+				}
+			}
 			var learner = new C45Learning(variables);
 			DecisionTree tree = null;
 			try {
