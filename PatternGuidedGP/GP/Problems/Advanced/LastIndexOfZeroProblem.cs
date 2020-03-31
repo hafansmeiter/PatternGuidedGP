@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Tests;
 using PatternGuidedGP.Util;
@@ -117,6 +118,59 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 				.AddIntVariable("values", true)
 				.AddIntVariable("length")
 				.AddIntegerLiterals(0);
+		}
+
+		protected override IEnumerable<SyntaxTree> CreateOptimalSolutions() {
+			IList<SyntaxTree> trees = new List<SyntaxTree>();
+
+			var i = new IntIdentifierExpression("i0");
+			var values = new IntArrayIdentifier("values") {
+				Children = {
+					i
+				}
+			};
+			var n = new IntIdentifierExpression("n");
+			var ret = new IntIdentifierExpression("ret");
+			var zero = new IntLiteralExpression(0);
+
+			/**
+			 * Solution:
+			 * for (int i = 0; i < n; i++) {
+			 *   if (values[i] == 0) {
+			 *     ret = i;
+			 *   } else {	// optional
+			 *     ret = ret;
+			 *   }
+			 * }
+			 */
+			trees.Add(new SyntaxTree(new ForLoopTimesStatement() {
+				Children = {
+					n,
+					new IfStatement() {
+						Children = {
+							new BoolEqualIntExpression() {
+								Children = {
+									values,
+									zero
+								}
+							},
+							new IntAssignmentStatement() {
+								Children = {
+									ret,
+									i
+								}
+							},
+							new IntAssignmentStatement() {
+								Children = {
+									ret,
+									ret
+								}
+							}
+						}
+					},
+				}
+			}));
+			return trees;
 		}
 	}
 }

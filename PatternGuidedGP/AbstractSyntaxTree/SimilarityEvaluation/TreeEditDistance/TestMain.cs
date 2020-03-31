@@ -1,4 +1,5 @@
 ﻿using PatternGuidedGP.GP.Problems;
+using PatternGuidedGP.GP.Problems.Advanced;
 using PatternGuidedGP.GP.Problems.Simple;
 using System;
 using System.Collections.Generic;
@@ -29,12 +30,20 @@ namespace PatternGuidedGP.AbstractSyntaxTree.SimilarityEvaluation.TreeEditDistan
 				new MaximumProblem(4)			// 11
 			};
 
+			Problem[] advancedProblems = new Problem[] {
+				// Advanced Problems
+				new MedianProblem(),
+				new CountOddsProblem(),
+				new LastIndexOfZeroProblem(),
+				new SmallOrLargeProblem()
+			};
+
 			var similarity = new TreeDistanceSimilarity();
-			foreach (var problem in simpleProblems) {
+			foreach (var problem in advancedProblems) {
 				var solutions = problem.GetOptimalSolutions();
 				Console.WriteLine("Problem: " + problem.GetType().Name);
 				foreach (var solution in solutions) {
-					//Console.WriteLine(solution.ToString());
+					Console.WriteLine(solution.ToString());
 					var sim = similarity.Measure(solution, solution);   // should be 0
 					Console.WriteLine("Similarity with self: " + sim);
 				}

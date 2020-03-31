@@ -18,17 +18,18 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override int OperatorId => 001;
 
 		public Expression<int> Count => Children[0] as Expression<int>;
-		public Statement[] ContentStatements => Children.GetRange(1, _childTypes.Count - 1).Select(c => (Statement)c).ToArray();
+		public Statement[] ContentStatements => Children.GetRange(1, _contentStatements).Select(c => (Statement)c).ToArray();
 
 		private IList<Type> _childTypes = new List<Type>();
+		private int _contentStatements = SyntaxConfiguration.Current.ForLoopMaxStatements;
 
 		public string LoopVariableName => "i" + Id;
 
 		public override void Initialize() {
 			base.Initialize();
 			_childTypes = new List<Type>(new[] { typeof(int) });
-			var statements = RandomValueGenerator.Instance.GetInt(SyntaxConfiguration.Current.ForLoopMaxStatements) + 1;
-			for (int i = 0; i < statements; i++) {
+			_contentStatements = RandomValueGenerator.Instance.GetInt(SyntaxConfiguration.Current.ForLoopMaxStatements) + 1;
+			for (int i = 0; i < _contentStatements; i++) {
 				_childTypes.Add(typeof(void));
 			}
 		}

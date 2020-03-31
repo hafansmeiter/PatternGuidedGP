@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PatternGuidedGP.AbstractSyntaxTree;
 using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Tests;
 using PatternGuidedGP.Util;
@@ -48,6 +49,111 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 				.AddIntVariable("n")
 				.AddIntegerLiterals(1, 2, 3)
 				.AddIntRandomLiteral(LowerBoundValue, UpperBoundValue);
+		}
+
+		protected override IEnumerable<SyntaxTree> CreateOptimalSolutions() {
+			IList<SyntaxTree> trees = new List<SyntaxTree>();
+
+			var n = new IntIdentifierExpression("n");
+			var ret = new IntIdentifierExpression("ret");
+			var one = new IntLiteralExpression(1);
+			var two = new IntLiteralExpression(2);
+			var three = new IntLiteralExpression(3);
+			var thousand = new IntLiteralExpression(1000);
+			var twoThousand = new IntLiteralExpression(2000);
+
+			/**
+			 * Solution 1:
+			 * if (n < 1000) {
+			 *   ret = 1;
+			 * } else {
+			 *   if (n < 2000) {
+			 *     ret = 2;
+			 *   } else {
+			 *     ret = 3;
+			 *   }
+			 * }
+			 */
+			trees.Add(new SyntaxTree(new IfStatement() {
+				Children = {
+					new BoolLessThanIntExpression() {
+						Children = {
+							n, thousand
+						}
+					},
+					new IntAssignmentStatement() {
+						Children = {
+							ret, one
+						}
+					},
+					new IfStatement() {
+						Children = {
+							new BoolLessThanIntExpression() {
+								Children = {
+									n, twoThousand
+								}
+							},
+							new IntAssignmentStatement() {
+								Children = {
+									ret, two
+								}
+							},
+							new IntAssignmentStatement() {
+								Children = {
+									ret, three
+								}
+							}
+						}
+					}
+				}
+			}));
+
+			/**
+			 * Solution 2:
+			 * if (n >= 1000) {
+			 *   if (n >= 2000) {
+			 *     ret = 3;
+			 *   } else {
+			 *     ret = 2;
+			 *   }
+			 * } else {
+			 *   ret = 1;
+			 * }
+			 */
+			trees.Add(new SyntaxTree(new IfStatement() {
+				Children = {
+					new BoolGreaterEqualIntExpression() {
+						Children = {
+							n, thousand
+						}
+					},
+					new IfStatement() {
+						Children = {
+							new BoolGreaterEqualIntExpression() {
+								Children = {
+									n, twoThousand
+								}
+							},
+							new IntAssignmentStatement() {
+								Children = {
+									ret, three
+								}
+							},
+							new IntAssignmentStatement() {
+								Children = {
+									ret, two
+								}
+							}
+						}
+					},
+					new IntAssignmentStatement() {
+						Children = {
+							ret, one
+						}
+					}
+				}
+			}));
+			return trees;
 		}
 	}
 }

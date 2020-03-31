@@ -57,7 +57,8 @@ namespace PatternGuidedGP {
 				};
 				RunProblems(simpleProblems, runConfig, runProblem, fromConfig, fromProblem);
 			} else if (problemSet == "advanced") {
-				SyntaxConfiguration.Current = new SyntaxConfiguration.Advanced();
+				SyntaxConfiguration.Current = new SyntaxConfiguration.Simple();
+				//SyntaxConfiguration.Current = new SyntaxConfiguration.Advanced();
 				Problem[] advancedProblems = new Problem[] {
 					// Advanced Problems
 					new MedianProblem(),				// 0
@@ -218,6 +219,8 @@ namespace PatternGuidedGP {
 						if (algorithm.IsSolutionFound()) {
 							solved++;
 							Logger.WriteLine(0, "Solution found: \n" + bestSolution.ToString());
+						} else {
+							Logger.WriteLine(0, "No Solution found. Best solution: \n" + bestSolution.ToString());
 						}
 					}
 					Logger.WriteLine(0, problem.GetType().Name + ": Solved " + solved + "/" + config.Runs);
