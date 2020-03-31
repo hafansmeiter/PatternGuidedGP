@@ -57,11 +57,13 @@ namespace PatternGuidedGP {
 				};
 				RunProblems(simpleProblems, runConfig, runProblem, fromConfig, fromProblem);
 			} else if (problemSet == "advanced") {
-				SyntaxConfiguration.Current = new SyntaxConfiguration.Simple();
-				//SyntaxConfiguration.Current = new SyntaxConfiguration.Advanced();
+				SyntaxConfiguration.Current = new SyntaxConfiguration.Advanced();
 				Problem[] advancedProblems = new Problem[] {
 					// Advanced Problems
-					new MedianProblem()				// 0
+					new MedianProblem(),				// 0
+					new CountOddsProblem(),				// 1
+					new LastIndexOfZeroProblem(),		// 2
+					new SmallOrLargeProblem()			// 3
 				};
 				RunProblems(advancedProblems, runConfig, runProblem, fromConfig, fromProblem);
 			}
