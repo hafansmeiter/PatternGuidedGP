@@ -45,23 +45,23 @@ namespace PatternGuidedGP {
 					new IsOrderedProblem(3),		// 3
 					new MajorityProblem(3),			// 4
 					new MaximumProblem(3),			// 5
-					new AllEqualProblem(4),			// 6
+					/*new AllEqualProblem(4),			// 6
 					new ContainsFirstProblem(4),	// 7
 					new CountZeroesProblem(4),		// 8
 					new IsOrderedProblem(4),		// 9
 					new MajorityProblem(4),			// 10
-					new MaximumProblem(4),			// 11
+					new MaximumProblem(4),			// 11*/
 					/*new CompareProblem(6),			// 6
 					new MultiplexerProblem(6, 2),	// 7
 					new ParityProblem(6)            // 8*/
 				};
 				RunProblems(simpleProblems, runConfig, runProblem, fromConfig, fromProblem);
 			} else if (problemSet == "advanced") {
-				SyntaxConfiguration.Current = new SyntaxConfiguration.Advanced();
+				SyntaxConfiguration.Current = new SyntaxConfiguration.Simple();
+				//SyntaxConfiguration.Current = new SyntaxConfiguration.Advanced();
 				Problem[] advancedProblems = new Problem[] {
 					// Advanced Problems
-					new AverageProblem(),			// 0
-					new MedianProblem()				// 1
+					new MedianProblem()				// 0
 				};
 				RunProblems(advancedProblems, runConfig, runProblem, fromConfig, fromProblem);
 			}

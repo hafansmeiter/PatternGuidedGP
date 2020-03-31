@@ -14,25 +14,25 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 		public override Type ReturnType => typeof(int);
 
 		public int UpperBoundValue { get; set; } = 100;
-		public int LowerBoundValue { get; set; } = -100;
+		public int LowerBoundValue { get; set; } = 0;
 
 		public override IFitnessCalculator FitnessCalculator => new EqualityFitnessCalculator();
 
-		public MedianProblem(bool initialize = true) : base(3, true) {
+		public MedianProblem(bool initialize = true) : base(3, initialize) {
 		}
 
 		// Test values are generated randomly
 		protected override TestSuite GetTestSuite() {
 			TestSuite testSuite = new TestSuite();
 			// triplet of integers, all equal
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 5; i++) {
 				int value = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
 				var testCase = new TestCase(new object[] { value, value, value}, value);
 				testSuite.TestCases.Add(testCase);
 			}
 
 			// triplet of integers, two of three equal
-			for (int i = 0; i < 30; i++) {
+			for (int i = 0; i < 15; i++) {
 				var array = new int[ParameterCount];
 				int value = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
 				for (int j = 0; j < ParameterCount; j++) {
@@ -49,7 +49,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 			}
 
 			// triplet of any integers, no values equal
-			for (int i = 0; i < 60; i++) {
+			for (int i = 0; i < 30; i++) {
 				int value1 = RandomValueGenerator.Instance.GetInt(LowerBoundValue, UpperBoundValue);
 				int value2 = value1;
 				while (value1 == value2) {
@@ -67,6 +67,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 		}
 
 		private int GetMedian(params int[] array) {
+			Array.Sort(array);
 			return array[array.Length / 2];
 		}
 

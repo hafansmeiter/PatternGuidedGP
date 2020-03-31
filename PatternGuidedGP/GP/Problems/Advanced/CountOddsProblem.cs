@@ -59,7 +59,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 			}
 
 			// arrays with random values
-			for (int i = 0; i < 100; i++) {
+			for (int i = 0; i < 30; i++) {
 				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				int odds = 0;

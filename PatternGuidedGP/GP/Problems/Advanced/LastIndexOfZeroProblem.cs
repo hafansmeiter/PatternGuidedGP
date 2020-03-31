@@ -30,7 +30,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 0, -8 }, 2 }, 0));
 
 			// arrays of zeroes of length between 1 and 50
-			for (int i = 1; i <= 50; i++) {
+			for (int i = 1; i <= 25; i++) {
 				var arr = new int[i];
 				testSuite.TestCases.Add(new TestCase(new object[] { arr, i }, i - 1));
 			}
@@ -50,7 +50,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 			}
 
 			// array with at least one zero
-			for (int i = 0; i < 78; i++) {
+			for (int i = 0; i < 30; i++) {
 				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				for (int j = 0; j < arrayLength; j++) {
