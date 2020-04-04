@@ -53,7 +53,7 @@ namespace PatternGuidedGP.Compiler.CSharp {
 		private static IEnumerable<MetadataReference> GetAssemblyReferences() {
 			var references = new MetadataReference[] {
 				MetadataReference.CreateFromFile(typeof(object).GetTypeInfo().Assembly.Location),
-				MetadataReference.CreateFromFile(typeof(ExecutionTraces).GetTypeInfo().Assembly.Location)
+				MetadataReference.CreateFromFile(typeof(ExecutionRecord).GetTypeInfo().Assembly.Location)
 			};
 			return references;
 		}

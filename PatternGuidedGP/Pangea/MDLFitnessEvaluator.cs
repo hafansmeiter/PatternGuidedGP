@@ -30,11 +30,11 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		protected override void PrepareTestRuns(Individual individual, TestSuite testSuite) {
-			Singleton<ExecutionTraces>.Instance.Reset();
+			Singleton<ExecutionRecord>.Instance.Reset();
 		}
 
 		protected override void OnTestRunFinished(Individual individual, TestCase testCase, object result) {
-			Singleton<ExecutionTraces>.Instance.FinishCurrent();
+			Singleton<ExecutionRecord>.Instance.FinishCurrent();
 		}
 
 		protected override void OnIndividualEvaluationFinished(Individual individual, FitnessResult fitness, object[] results) {

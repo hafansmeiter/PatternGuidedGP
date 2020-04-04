@@ -9,19 +9,19 @@ namespace PatternGuidedGP.Pangea {
 
 	public class ExecutionTrace : MarshalByRefObject {
 
-		IList<ExecutionRecord> _records;
-		public IList<ExecutionRecord> Records {
+		IList<ExecutionState> _states;
+		public IList<ExecutionState> States {
 			get {
-				return _records;
+				return _states;
 			}
 		}
 
 		public ExecutionTrace() {
-			_records = new List<ExecutionRecord>();
+			_states = new List<ExecutionState>();
 		}
 
 		public void Add(ulong nodeId, ulong recordNodeId, object recordValue, int operatorId) {
-			_records.Add(new ExecutionRecord(recordNodeId, recordValue, operatorId));
+			_states.Add(new ExecutionState(recordNodeId, recordValue, operatorId));
 		}
 	}
 }

@@ -1,25 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.Pangea {
+	 
+	public class ExecutionRecord : MarshalByRefObject {
+		private IList<ExecutionTrace> _traces { get; } = new List<ExecutionTrace>();
+		private ExecutionTrace _current;
+		static private ExecutionTrace _emptyExecutionTrace = new ExecutionTrace();
 
-	[Serializable]
-	public class ExecutionRecord {
-		public ulong NodeId { get; }
-		public object Value { get; }
-		public int OperatorId { get; }
-
-		public ExecutionRecord(ulong nodeId, object value, int operatorId) {
-			NodeId = nodeId;
-			Value = value;
-			OperatorId = operatorId;
+		public ExecutionTrace Current {
+			get {
+				if (_current == null) {
+					_current = new ExecutionTrace();
+				}
+				return _current;
+			}
 		}
 
-		public override string ToString() {
-			return "[" + NodeId + " (" + OperatorId + ") => " + Value + "]";
+		public IList<ExecutionTrace> Traces {
+			get {
+				return _traces;
+			}
+		}
+
+		public void Reset() {
+			_current = null;
+			_traces.Clear();
+		}
+
+		public void FinishCurrent() {
+			if (_current == null) {
+				_current = _emptyExecutionTrace;
+			}
+			_traces.Add(_current);
+			_current = null;
 		}
 	}
 }

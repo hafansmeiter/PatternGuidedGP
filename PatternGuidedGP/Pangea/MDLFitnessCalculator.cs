@@ -16,34 +16,14 @@ namespace PatternGuidedGP.Pangea {
 	class MDLFitnessCalculator : IFitnessCalculator {
 		
 		public IFitnessCalculator StandardFitnessCalculator { get; set; } = new EqualityFitnessCalculator();
-		public static int STEPS = 5;
-		private C45Learning _learner = null;
+		public static int Steps = 5;
 
 		public MDLFitnessCalculator() {
-			var variables = new DecisionVariable[STEPS * 6 + 1];
-			int idx = 0;
-			// bool
-			for (int i = 0; i < STEPS * 2; i++) {
-				variables[idx] = new DecisionVariable("C" + idx, DecisionVariableKind.Discrete);
-				idx++;
-			}
-			// int
-			for (int i = STEPS * 2; i < STEPS * 4; i++) {
-				variables[idx] = DecisionVariable.Continuous("C" + idx);
-				idx++;
-			}
-			// ops
-			for (int i = STEPS * 4; i < STEPS * 6; i++) {
-				variables[idx] = new DecisionVariable("C" + idx, DecisionVariableKind.Discrete);
-				idx++;
-			}
-			variables[idx] = DecisionVariable.Continuous("C" + idx);
-			//_learner = new C45Learning(variables);
 		}
 
 		public FitnessResult CalculateFitness(Individual individual, TestSuite testSuite, object[] results) {
 			double fitness = StandardFitnessCalculator.CalculateFitness(individual, testSuite, results).Fitness; // standard fitness f0
-			MLDataset dataset = MLDataset.FromExecutionTraces(individual, Singleton<ExecutionTraces>.Instance.Traces);
+			MLDataset dataset = MLDataset.FromExecutionTraces(individual, Singleton<ExecutionRecord>.Instance.Traces);
 			LogDatasetFeatures(dataset);
 
 			var fitnessResult = new MDLFitnessResult(fitness, dataset);
@@ -56,8 +36,8 @@ namespace PatternGuidedGP.Pangea {
 
 				// Veriant 3 (results only consider values of bool and int expressions and operations)
 				int startContinuousFeatures;
-				var input = MLDataset.ConvertTracesToTypedSteps(individual, Singleton<ExecutionTraces>.Instance.Traces, 
-					STEPS, true, out startContinuousFeatures);
+				var input = MLDataset.ConvertTracesToTypedSteps(individual, Singleton<ExecutionRecord>.Instance.Traces, 
+					Steps, true, out startContinuousFeatures);
 
 				if (input.Length > 0 && input[0].Length > 0) {
 					var expected = GetExpectedOutputDataset(testSuite);
@@ -142,8 +122,8 @@ namespace PatternGuidedGP.Pangea {
 				tree = learner.Learn(input, output);
 			}
 			catch (Exception e) {
-				Console.WriteLine(e.Message);
-				Console.WriteLine(e.ToString());
+				//Console.WriteLine(e.Message);
+				//Console.WriteLine(e.ToString());
 			}
 			return tree;
 		}

@@ -32,7 +32,7 @@ namespace PatternGuidedGP {
 			int runConfig, runProblem, fromConfig = 0, fromProblem = 0, steps = 0;
 			string problemSet;
 			EvaluateArgs(args, out runConfig, out runProblem, out fromConfig, out fromProblem, out problemSet, out steps);
-			MDLFitnessCalculator.STEPS = steps;
+			MDLFitnessCalculator.Steps = steps;
 			Logger.Level = 0;
 
 			if (problemSet == "simple") {
@@ -165,7 +165,7 @@ namespace PatternGuidedGP {
 				Logger.FileName = GetLogFilename(config);
 				Logger.WriteLine(0, "Run configuration: " + config.Name + 
 					" (Population: " + config.PopulationSize + ", generations: " + config.Generations 
-					+ ", runs: " + config.Runs + ", trace steps: " + MDLFitnessCalculator.STEPS + ")");
+					+ ", runs: " + config.Runs + ", trace steps: " + MDLFitnessCalculator.Steps + ")");
 				for (int j = fromProblem; j < problems.Length; j++) {
 					var problem = problems[j];
 					Logger.WriteLine(0, problem.GetType().Name + " (" + problem.ParameterCount + "):");

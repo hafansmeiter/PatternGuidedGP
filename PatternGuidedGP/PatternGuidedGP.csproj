@@ -289,9 +289,9 @@
     <Compile Include="GP\Tests\TestSuite.cs" />
     <Compile Include="GP\Operators\TournamentSelector.cs" />
     <Compile Include="GP\Tests\ITestSuiteGenerator.cs" />
-    <Compile Include="Pangea\ExecutionRecord.cs" />
+    <Compile Include="Pangea\ExecutionState.cs" />
     <Compile Include="Pangea\ExecutionTrace.cs" />
-    <Compile Include="Pangea\ExecutionTraces.cs" />
+    <Compile Include="Pangea\ExecutionRecord.cs" />
     <Compile Include="Pangea\ITraceable.cs" />
     <Compile Include="Pangea\MDLFitnessCalculator.cs" />
     <Compile Include="Pangea\MDLFitnessEvaluator.cs" />

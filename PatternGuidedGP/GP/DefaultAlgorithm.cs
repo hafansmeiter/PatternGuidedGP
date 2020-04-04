@@ -63,9 +63,7 @@ namespace PatternGuidedGP.GP {
 			int evaluationCount = problem.Evaluate(Population);
 			TotalEvaluations += evaluationCount;
 			Population.Sort();
-			//Console.WriteLine("Best:\n{0}", Population.GetFittest());
-			Logger.WriteLine(1, string.Format("Evaluated " + evaluationCount + "/" + Population.Size + " individuals"));
-			Logger.WriteLine(1, string.Format("Best fitness: {0}, Avg: {1}", Population.GetFittest().Fitness, Population.GetAverageFitness()));
+			Logger.WriteLine(1, string.Format("Best:\n{0}", Population.GetFittest()));
 
 			var isMDL = false;
 			if (Population.GetFittest().FitnessResult != null && Population.GetFittest().FitnessResult is MDLFitnessResult) {

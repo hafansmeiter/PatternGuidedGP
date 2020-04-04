@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
 	public enum Operators : int {
+		// to be done...
 		/** bool */
 		BoolAnd = 101,
 		BoolAssignment = 102,

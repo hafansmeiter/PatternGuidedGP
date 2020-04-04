@@ -23,9 +23,6 @@ namespace PatternGuidedGP.GP.Operators {
 			if (newNode != null) {
 				bool replaced = tree.ReplaceTreeNode(exchangeNode, newNode);
 				if (replaced && tree.Height <= MaxTreeDepth) {
-					if (tree.RootNodes[0].Parent != null) {
-						Console.WriteLine("NOT NULL ROOT IS NOT ALLOWED");
-					}
 					individual.SyntaxTree = tree;
 					return true;
 				}

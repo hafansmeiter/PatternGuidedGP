@@ -37,43 +37,52 @@ namespace PatternGuidedGP.Pangea {
 		// combine extraction step and conversion step for performance improvement
 		public static int?[][] ConvertTracesToTypedSteps(Individual /* unused */ individual, IList<ExecutionTrace> traces, int steps, bool removeConstantFeatures, out int startContinuousFeatures) {
 			// example 5 steps:
-			// ML dataset consists of 31 columns
+			// ML dataset consists of 33 columns
 			// 5 first bool expr. values, 5 first int expr. values, 5 first operators
 			// 5 last bool expr. values, 5 last int expr. values, 5 last operators
+			// 1 number of bool operations
+			// 1 number of int operations
 			// 1 number of total operations
 			// bool values: discrete
 			// int values: ordinal (continuous in Accord.net)
 			// operators: discrete
 
-			int stepFeatures = steps * 3 * 2;
+			int discreteFeatures = steps * 2 * 2;   // 2 * steps bool intermediate results + 2 * steps int intermediate results
+			int continuousFeatures = steps * 2 + 3;   // 2 * steps int intermediate results + 3 total ops columns
 			int rowCount = traces.Count;
-			int columnCount = stepFeatures + 3;	// int + bool + operations; first + last; total operations
+			int columnCount = discreteFeatures + continuousFeatures;
 			int?[][] dataset = new int?[rowCount][];
 			for (int i = 0; i < rowCount; i++) {
 				var trace = traces[i];
 				dataset[i] = new int?[columnCount];
-				FillDataSetRow(dataset[i], trace.Records, steps, 0);
-				FillDataSetRow(dataset[i], trace.Records.Reverse().ToList(), steps, steps);
+				FillDataSetRow(dataset[i], trace.States, steps, 0);
+				FillDataSetRow(dataset[i], trace.States.Reverse().ToList(), steps, steps);
 			}
 			if (removeConstantFeatures) {
 				var constantFeatures = GetConstantFeatures(dataset);
 				dataset = RemoveFeatures(dataset, constantFeatures);
-				startContinuousFeatures = stepFeatures - constantFeatures.Count(i => i < stepFeatures);
+				startContinuousFeatures = discreteFeatures - constantFeatures.Count(i => i < discreteFeatures);
 			} else {
 				startContinuousFeatures = -1;
 			}
 			return dataset;
 		}
 
-		private static void FillDataSetRow(int ?[] row, IList<ExecutionRecord> records, int steps, int offset) {
+		private static void FillDataSetRow(int ?[] row, IList<ExecutionState> records, int steps, int offset) {
+			// -------------------------------------------------------------------------------------------------
+			// | bool | bool rev | operators | operators rev | int | int rev  | total ops | bool ops | int ops |
+			// |       bool      |                           |      int       |                                |
+			// | inter. results  |      operator codes       | inter. results |      number of operations      |
+			// |                discrete                     |                  continuous                     |
+			// -------------------------------------------------------------------------------------------------
 			bool isBool = false;
 			bool isInt = false;
 			int totalBoolOps = 0;
 			int totalIntOps = 0;
 			int totalOps = 0;
 			int boolOpsStartIdx = offset;
-			int intOpsStartIdx = offset + steps * 2;
-			int opsStartIdx = offset + steps * 4;
+			int intOpsStartIdx = offset + steps * 4;
+			int opsStartIdx = offset + steps * 2;
 			int numBoolOps = 0;
 			int numIntOps = 0;
 			int numOps = 0;
@@ -123,8 +132,8 @@ namespace PatternGuidedGP.Pangea {
 			dataset.Count = count;
 			for (int i = 0; i < count; i++) {
 				var trace = traces[i];
-				IList<ulong> featureOrder = new List<ulong>(trace.Records.Count);
-				foreach (var record in trace.Records) {
+				IList<ulong> featureOrder = new List<ulong>(trace.States.Count);
+				foreach (var record in trace.States) {
 					object[] featureValues;
 					if (!dataset._features.TryGetValue(record.NodeId, out featureValues)) {
 						featureValues = new object[count];
