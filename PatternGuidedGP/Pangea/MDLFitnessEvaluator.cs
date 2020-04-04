@@ -106,7 +106,7 @@ namespace PatternGuidedGP.Pangea {
 											.WithTypeArgumentList(
 												SyntaxFactory.TypeArgumentList(
 													SyntaxFactory.SingletonSeparatedList<TypeSyntax>(
-														SyntaxFactory.IdentifierName("ExecutionTraces")))),
+														SyntaxFactory.IdentifierName("ExecutionRecord")))),
 											SyntaxFactory.IdentifierName("Instance")),
 										SyntaxFactory.IdentifierName("Current")),
 									SyntaxFactory.IdentifierName("Add")))
