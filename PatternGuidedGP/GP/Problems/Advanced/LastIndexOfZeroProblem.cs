@@ -39,7 +39,6 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 			// permutated arrays
 			var arrayList = new List<int[]>() {
 				new int[] { 0, 5, -8, 9 },
-				new int[] { 0, 0, -8, 9 },
 				new int[] { 0, 5, 0, 9 },
 			};
 			foreach (var array in arrayList) {
@@ -51,7 +50,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 			}
 
 			// array with at least one zero
-			for (int i = 0; i < 30; i++) {
+			for (int i = 0; i < 20; i++) {
 				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				for (int j = 0; j < arrayLength; j++) {
