@@ -10,7 +10,7 @@ using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP.GP.Problems.Advanced {
 	class CountOddsProblem : CodingProblem {
-		public override IFitnessCalculator FitnessCalculator => new AbsoluteDistanceFitnessCalculator();
+		public override IFitnessCalculator FitnessCalculator => new EqualityFitnessCalculator();
 		public override Type ReturnType => typeof(int);
 
 		public int UpperBoundValue { get; set; } = 1000;
