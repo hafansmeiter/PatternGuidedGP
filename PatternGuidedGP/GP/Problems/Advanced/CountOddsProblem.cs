@@ -97,8 +97,8 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 				.AddForLoopVariable()
 				.AddIntVariable("values", true)
 				.AddIntVariable("length")
-				.AddIntegerLiterals(0, 2)
-				.AddIntRandomLiteral(-1000, 1000);
+				.AddIntegerLiterals(0, 2);
+				//.AddIntRandomLiteral(-1000, 1000);
 		}
 
 		protected override IEnumerable<SyntaxTree> CreateOptimalSolutions() {
