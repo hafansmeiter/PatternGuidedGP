@@ -34,10 +34,9 @@ namespace PatternGuidedGP.GP.Operators {
 						if (recordSubTreePool != null && FitnessEvaluator != null) {
 							var fitness = FitnessEvaluator.Evaluate(individual, Problem).Fitness;
 
-							Statistics.Instance.AddRecordReplaceAttempt(fitness - individual.Fitness);
-							if (fitness != individual.Fitness) {
-								recordSubTreePool.UpdateRecord(newNode, fitness < individual.Fitness);
-							}
+							double improvement = fitness - individual.Fitness;
+							Statistics.Instance.AddRecordReplaceAttempt(improvement);
+							recordSubTreePool.UpdateRecord(newNode, improvement);
 						}
 					}
 					return true;

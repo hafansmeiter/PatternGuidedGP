@@ -13,8 +13,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 	class RecordBasedSubTreePool : SubTreePoolBase, ISyntaxTreeProvider {
 
 		protected class RecordTreeNodeItem : PoolItem {
-			public int Improved { get; private set; }
-			public int Deteriorated { get; private set; }
+			public double Score { get; private set; }
 			public int Evaluations { get; private set; }
 			public int TotalEvaluations { get; set; }
 			public double Fitness { get; private set; }
@@ -32,7 +31,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 					// xi = average payout (score)
 					// N = total number of tries
 					// ni = number of tries
-					ret = (Improved / Math.Max(0.33, Deteriorated)) +	// avoid division by 0 (question: how to value a 1-0 score? here 3-1)
+					ret = (Score / Evaluations) +
 						Math.Sqrt((2 * Math.Log(TotalEvaluations)) / Evaluations);
 				}
 				return ret;
@@ -40,35 +39,16 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 
 			public override int CompareTo(PoolItem other) {
 				var otherItem = (RecordTreeNodeItem)other;
-				// order items as follows:
-				// 1. evaluated items with positive record
-				//   .) order by UCB score
-				// 2. not evaluated items
-				//   .) order by individual fitness
-				//   .) order by tree height
-				// 3. evaluated items with negative record
-				//   .) order by UCB score
-				if (Evaluations > 0 && otherItem.Evaluations > 0) {
-					return otherItem.GetFitness().CompareTo(GetFitness());	// swap, because UCB formula is maximized
-				} else if (Evaluations > 0) {
-					return Deteriorated - (Improved + 1);	// prefer equal record to not evaluated
-				} else if (otherItem.Evaluations > 0) {
-					return (otherItem.Improved + 1) - otherItem.Deteriorated;
+				int result = GetFitness().CompareTo(other.GetFitness());
+				if (result != 0) {
+					return result;
 				} else {
-					int ret = Fitness.CompareTo(otherItem.Fitness);
-					if (ret == 0) {
-						ret = Node.GetSubTreeNodes().Count() - other.Node.GetSubTreeNodes().Count();
-					}
-					return ret;
+					return Node.GetSubTreeNodes().Count() - other.Node.GetSubTreeNodes().Count();
 				}
 			}
 
-			public void AddEvaluation(bool improved) {
-				if (improved) {
-					Improved++;
-				} else {
-					Deteriorated++;
-				}
+			public void AddEvaluation(double score) {
+				Score += score;
 				Evaluations++;
 			}
 		}
@@ -81,12 +61,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			return new RecordTreeNodeItem(node, (double) data);
 		}
 
-		public void UpdateRecord(TreeNode treeNode, bool improved) {
+		public void UpdateRecord(TreeNode treeNode, double score) {
 			var item = FindNode(treeNode);
-			Logger.WriteLine(4, "Update record " + improved + " to " + item.Node);
+			Logger.WriteLine(4, "Update record score " + score + " to " + item.Node);
 			if (item != null) {
 				var recordItem = (RecordTreeNodeItem)item;
-				recordItem.AddEvaluation(improved);
+				recordItem.AddEvaluation(score);
 
 				UpdateRecords(treeNode.Type);
 			}

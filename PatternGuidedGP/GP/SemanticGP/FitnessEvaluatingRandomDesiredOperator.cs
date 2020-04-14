@@ -23,8 +23,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			if (recordSubTreePool != null) {
 				var fitness = FitnessEvaluator.Evaluate(individual, Problem).Fitness;
 				// treat equal fitness like worse fitness => emphasize on improvements
-				bool improved = fitness < individual.Fitness;
-				recordSubTreePool.UpdateRecord(treeNode, improved);
+				recordSubTreePool.UpdateRecord(treeNode, fitness - individual.Fitness);
 			}
 			return treeNode;
 		}
