@@ -51,9 +51,9 @@ namespace PatternGuidedGP.Util {
 		public void AddRecordReplaceAttempt(double fitnessChange) {
 			_recordReplaceAttempts++;
 			_recordReplaceChange += fitnessChange;
-			if (fitnessChange > 0) {
+			if (fitnessChange < 0) {
 				_recordReplaceSuccess++;
-			} else if (fitnessChange < 0) {
+			} else if (fitnessChange > 0) {
 				_recordReplaceFailure++;
 			}
 		}

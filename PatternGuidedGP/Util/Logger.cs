@@ -39,7 +39,7 @@ namespace PatternGuidedGP.Util {
 		}
 
 		private static void WriteStatisticsLine(string line) {
-			using (StreamWriter w = File.AppendText(FileName + "stats.txt")) {
+			using (StreamWriter w = File.AppendText(FileName + ".stats.txt")) {
 				w.WriteLine(line);
 			}
 		}
