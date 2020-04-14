@@ -204,7 +204,7 @@ namespace PatternGuidedGP {
 						semanticsBasedSubTreePool.Clear();
 						recordBasedSubTreePool.Clear();
 
-						DefaultAlgorithm algorithm = new DefaultAlgorithm(config.PopulationSize, config.Generations, true) {
+						GPAlgorithm algorithm = new GPAlgorithm(config.PopulationSize, config.Generations, true) {
 							Crossover = config.Crossover,
 							CrossoverRate = 0.7,
 							Elitism = 5,
@@ -212,7 +212,7 @@ namespace PatternGuidedGP {
 							MaxTreeDepth = maxTreeDepth,   // not used; set individually in mutators and tree generators
 							MutationRate = 0.2,
 							Mutator = config.Mutator,
-							Selector = new TournamentSelector(7)
+							Selector = new TournamentSelector(4)
 						};
 
 						Individual bestSolution = algorithm.Run(problem);
@@ -257,7 +257,7 @@ namespace PatternGuidedGP {
 		}
 
 		private static string GetLogFilename(RunConfiguration config) {
-			return LOG_PATH + (config.Name + "_" + GetTimestamp()).Replace(' ', '_').Replace('.', '-') + ".txt";
+			return LOG_PATH + (config.Name + "_" + GetTimestamp()).Replace(' ', '_').Replace('.', '-');
 		}
 
 		private static string GetTimestamp() {

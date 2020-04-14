@@ -23,7 +23,18 @@ namespace PatternGuidedGP.GP {
 			}
 		}
 
-		public FitnessResult FitnessResult { get; set; }
+		private FitnessResult _fitnessResult;
+		public FitnessResult FitnessResult {
+			get {
+				return _fitnessResult;
+			}
+			set {
+				_fitnessResult = value;
+				if (value != null) {
+					Fitness = value.Fitness;
+				}
+			}
+		}
 
 		private bool _fitnessEvaluated = false;
 		public bool FitnessEvaluated {

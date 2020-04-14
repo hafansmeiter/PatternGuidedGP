@@ -17,7 +17,7 @@ namespace PatternGuidedGP.GP.Problems {
 			_template = GetCodeTemplate();
 			_parameters = new List<ParameterSyntax>();
 		}
-
+	
 		public CodeTemplateBuilder AddParameter(Type type, string name, bool isArray = false) {
 			if (isArray) {
 				_parameters.Add(SyntaxFactory.Parameter(
@@ -76,6 +76,16 @@ namespace PatternGuidedGP.GP.Problems {
 			while ((returnTypeNode = _template.GetAnnotatedNodes("ReturnType").FirstOrDefault()) != null) {
 				_template = _template.ReplaceNode(returnTypeNode, SyntaxFactory.PredefinedType(
 					SyntaxFactory.Token(GetTypeSyntax(type))));
+			}
+			return this;
+		}
+
+		public CodeTemplateBuilder UseDefaultValue(int defaultValue) {
+			SyntaxNode returnTypeNode;
+			while ((returnTypeNode = _template.GetAnnotatedNodes("DefaultValue").FirstOrDefault()) != null) {
+				_template = _template.ReplaceNode(returnTypeNode, SyntaxFactory.LiteralExpression(
+					SyntaxKind.NumericLiteralExpression,
+					SyntaxFactory.Literal(defaultValue)));
 			}
 			return this;
 		}
@@ -154,17 +164,17 @@ namespace PatternGuidedGP.GP.Problems {
 																SyntaxFactory.PredefinedType(
 																	SyntaxFactory.Token(SyntaxKind.IntKeyword))
 																.WithAdditionalAnnotations(new SyntaxAnnotation("ReturnType"))
-														)
+														).WithAdditionalAnnotations(new SyntaxAnnotation("DefaultValue"))
 														))))),
-										/*SyntaxFactory.TryStatement(
-											SyntaxFactory.SingletonList<CatchClauseSyntax>(
-												SyntaxFactory.CatchClause()
-												.WithDeclaration(
-													SyntaxFactory.CatchDeclaration(
-														SyntaxFactory.IdentifierName("Exception"))
-													.WithIdentifier(
-														SyntaxFactory.Identifier("mainException")))))
-										.WithBlock(*/
+											/*SyntaxFactory.TryStatement(
+												SyntaxFactory.SingletonList<CatchClauseSyntax>(
+													SyntaxFactory.CatchClause()
+													.WithDeclaration(
+														SyntaxFactory.CatchDeclaration(
+															SyntaxFactory.IdentifierName("Exception"))
+														.WithIdentifier(
+															SyntaxFactory.Identifier("mainException")))))
+											.WithBlock(*/
 											SyntaxFactory.Block(
 												SyntaxFactory.Block()
 													.WithAdditionalAnnotations(new SyntaxAnnotation("SyntaxPlaceholder")))/*)*/,

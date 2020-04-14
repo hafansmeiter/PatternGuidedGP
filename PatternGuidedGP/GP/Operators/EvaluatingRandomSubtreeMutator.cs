@@ -8,6 +8,7 @@ using PatternGuidedGP.AbstractSyntaxTree.Pool;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Problems;
+using PatternGuidedGP.Util;
 
 namespace PatternGuidedGP.GP.Operators {
 	class EvaluatingRandomSubtreeMutator : RandomSubtreeMutator {
@@ -32,6 +33,8 @@ namespace PatternGuidedGP.GP.Operators {
 						var recordSubTreePool = SyntaxTreeProvider as RecordBasedSubTreePool;
 						if (recordSubTreePool != null && FitnessEvaluator != null) {
 							var fitness = FitnessEvaluator.Evaluate(individual, Problem).Fitness;
+
+							Statistics.Instance.AddRecordReplaceAttempt(individual.Fitness - fitness);
 							if (fitness != individual.Fitness) {
 								recordSubTreePool.UpdateRecord(newNode, fitness < individual.Fitness);
 							}

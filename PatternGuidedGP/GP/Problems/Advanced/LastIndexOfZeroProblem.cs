@@ -21,25 +21,28 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 		protected override TestSuite GetTestSuite() {
 			TestSuite testSuite = new TestSuite();
 			// fixed array of integers
-			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 0, 1 }, 2 }, 0));
-			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 1, 0 }, 2 }, 1));
-			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 7, 0 }, 2 }, 1));
-			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 0, 8 }, 2 }, 0));
-			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 0, -1 }, 2 }, 0));
-			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { -1, 0 }, 2 }, 1));
-			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { -7, 0 }, 2 }, 1));
-			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 0, -8 }, 2 }, 0));
+			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 1, 2 }, 2 }, 0));
+			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 2, 1 }, 2 }, 1));
+			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 7, 1 }, 2 }, 1));
+			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 1, 8 }, 2 }, 0));
+			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 1, -1 }, 2 }, 0));
+			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { -1, 1 }, 2 }, 1));
+			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { -7, 1 }, 2 }, 1));
+			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { 1, -8 }, 2 }, 0));
 
-			// arrays of zeroes of length between 1 and 50
-			for (int i = 1; i <= 25; i++) {
+			// arrays of zeroes of length between 1 and 10
+			for (int i = 1; i <= 10; i++) {
 				var arr = new int[i];
+				for (int j = 0; j < i; j++) {
+					arr[j] = 1;
+				}
 				testSuite.TestCases.Add(new TestCase(new object[] { arr, i }, i - 1));
 			}
 
 			// permutated arrays
 			var arrayList = new List<int[]>() {
-				new int[] { 0, 5, -8, 9 },
-				new int[] { 0, 5, 0, 9 },
+				new int[] { 1, 5, -8, 9 },
+				new int[] { 1, 5, 1, 9 },
 			};
 			foreach (var array in arrayList) {
 				var permutations = Permutate(array);
@@ -58,7 +61,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 				}
 				// place zero randomly
 				var zeroIndex = RandomValueGenerator.Instance.GetInt(arrayLength);
-				array[zeroIndex] = 0;
+				array[zeroIndex] = 1;
 
 				var lastIndex = LastIndexOfZero(array);
 				testSuite.TestCases.Add(new TestCase(new object[] { array, arrayLength }, lastIndex));
@@ -70,7 +73,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 		private int LastIndexOfZero(int[] array) {
 			int lastIndex = 0;
 			for (int i = 0; i < array.Length; i++) {
-				if (array[i] == 0) {
+				if (array[i] == 1) {
 					lastIndex = i;
 				}
 			}
@@ -104,6 +107,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 			base.GetCodeTemplate(builder);
 			builder.AddParameter(typeof(int), "values", true)
 				.AddParameter(typeof(int), "length")
+				.UseDefaultValue(-1)
 				.SetParameters();
 		}
 
@@ -116,7 +120,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 				.AddForLoopVariable()
 				.AddIntVariable("values", true)
 				.AddIntVariable("length")
-				.AddIntegerLiterals(0);
+				.AddIntegerLiterals(1);
 		}
 
 		protected override IEnumerable<SyntaxTree> CreateOptimalSolutions() {
@@ -128,17 +132,15 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 					i
 				}
 			};
-			var n = new IntIdentifierExpression("n");
+			var n = new IntIdentifierExpression("length");
 			var ret = new IntIdentifierExpression("ret");
-			var zero = new IntLiteralExpression(0);
+			var zero = new IntLiteralExpression(1);
 
 			/**
 			 * Solution:
 			 * for (int i = 0; i < n; i++) {
-			 *   if (values[i] == 0) {
+			 *   if (values[i] == 1) {
 			 *     ret = i;
-			 *   } else {	// optional
-			 *     ret = ret;
 			 *   }
 			 * }
 			 */
@@ -146,6 +148,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 				Children = {
 					n,
 					new IfStatement() {
+						HasElseClause = false,
 						Children = {
 							new BoolEqualIntExpression() {
 								Children = {
@@ -157,12 +160,6 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 								Children = {
 									ret,
 									i
-								}
-							},
-							new IntAssignmentStatement() {
-								Children = {
-									ret,
-									ret
 								}
 							}
 						}

@@ -28,7 +28,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 				RootMaxStatements = 1;
 				ForLoopMaxStatements = 1;
 				ForLoopMaxIterations = 10;
-				IfHasElseBlockPropability = 1;
+				IfHasElseBlockPropability = 0.5;
 				MaxIfBlockStatements = 1;
 				MaxElseBlockStatement = 1;
 			}

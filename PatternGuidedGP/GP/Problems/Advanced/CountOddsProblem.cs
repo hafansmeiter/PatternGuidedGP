@@ -24,7 +24,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 			// fixed specific arrays
 			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { }, 0 }, 0));
 			for (int i = -10; i <= 10; i++) {
-				testSuite.TestCases.Add(new TestCase(new object[] { new int[] { i }, 1 }, i % 2 == 1 ? 1 : 0));
+				testSuite.TestCases.Add(new TestCase(new object[] { new int[] { i }, 1 }, i % 2 != 0 ? 1 : 0));
 			}
 			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { -947 }, 1 }, 1));
 			testSuite.TestCases.Add(new TestCase(new object[] { new int[] { -450 }, 1 }, 0));
@@ -60,7 +60,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 			}
 
 			// arrays with random values
-			for (int i = 0; i < 30; i++) {
+			for (int i = 0; i < 50; i++) {
 				int arrayLength = RandomValueGenerator.Instance.GetInt(MinArrayLength, MaxArrayLength);
 				var array = new int[arrayLength];
 				int odds = 0;
@@ -78,13 +78,14 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 		}
 
 		private bool IsOdd(int i) {
-			return i % 2 == 1;
+			return i % 2 != 0;
 		}
 
 		protected override void GetCodeTemplate(CodeTemplateBuilder builder) {
 			base.GetCodeTemplate(builder);
 			builder.AddParameter(typeof(int), "values", true)
 				.AddParameter(typeof(int), "length")
+				.UseDefaultValue(-1)
 				.SetParameters();
 		}
 
@@ -97,8 +98,8 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 				.AddForLoopVariable()
 				.AddIntVariable("values", true)
 				.AddIntVariable("length")
-				.AddIntegerLiterals(0, 2);
-				//.AddIntRandomLiteral(-1000, 1000);
+				//.AddIntegerLiterals(1, 2)
+				.AddIntRandomLiteral(1, 10);
 		}
 
 		protected override IEnumerable<SyntaxTree> CreateOptimalSolutions() {
@@ -110,7 +111,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 					i
 				}
 			};
-			var n = new IntIdentifierExpression("n");
+			var n = new IntIdentifierExpression("length");
 			var ret = new IntIdentifierExpression("ret");
 			var zero = new IntLiteralExpression(0);
 			var one = new IntLiteralExpression(1);
@@ -121,8 +122,6 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 			 * for (int i = 0; i < n; i++) {
 			 *   if (values[i] % 2 == 0) {
 			 *     ret = ret + 1;
-			 *   } else {	// optional
-			 *     ret = ret;
 			 *   }
 			 * }
 			 */
@@ -130,6 +129,7 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 				Children = {
 					n,
 					new IfStatement() {
+						HasElseClause = false,
 						Children = {
 							new BoolEqualIntExpression() {
 								Children = {
@@ -150,12 +150,6 @@ namespace PatternGuidedGP.GP.Problems.Advanced {
 											ret, one
 										}
 									}
-								}
-							},
-							new IntAssignmentStatement() {
-								Children = {
-									ret,
-									ret
 								}
 							}
 						}

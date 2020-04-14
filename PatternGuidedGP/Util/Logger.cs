@@ -25,8 +25,22 @@ namespace PatternGuidedGP.Util {
 		}
 
 		public static void AppendToFile(string text) {
-			using (StreamWriter w = File.AppendText(FileName)) {
+			using (StreamWriter w = File.AppendText(FileName + ".txt")) {
 				w.Write(text);
+			}
+		}
+
+		public static void WriteStatisticsHeader() {
+			WriteStatisticsLine("gen;total;for;if;mod;one;two;equals;ret;i;values;length;n;a;b;c;<;<=;>;>=;backprop_att;backprop_success;rec_att;rec_success;rec_failure;rec_change");
+		}
+
+		public static void WriteStatistics(int generation, params string [] nodeTypes) {
+			WriteStatisticsLine(generation + ";" + Statistics.Instance.ToString(nodeTypes));
+		}
+
+		private static void WriteStatisticsLine(string line) {
+			using (StreamWriter w = File.AppendText(FileName + "stats.txt")) {
+				w.WriteLine(line);
 			}
 		}
 	}

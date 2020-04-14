@@ -12,7 +12,7 @@ namespace PatternGuidedGP.GP.Operators {
 		public RandomSubtreeCrossover(int maxTreeDepth) : base(maxTreeDepth) {
 		}
 
-		public override IEnumerable<Individual> cross(Individual individual1, Individual individual2) {
+		public override IEnumerable<Individual> Cross(Individual individual1, Individual individual2) {
 			SyntaxTree tree1 = (SyntaxTree) individual1.SyntaxTree.DeepClone();
 			SyntaxTree tree2 = individual2.SyntaxTree;
 			TreeNode exchangeNode1 = tree1.GetRandomNode();

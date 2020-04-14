@@ -4,6 +4,7 @@ using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.GP;
 using PatternGuidedGP.GP.Operators;
 using PatternGuidedGP.GP.SemanticGP;
+using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,8 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			bool triedBackPropagation;
 			bool mutated = ResultSemanticsOperator.Operate(DesiredSemantics, individual, 
 				SubTreePool, MaxTreeDepth, out triedBackPropagation);
+
+			Statistics.Instance.AddBackpropagationAttemptMutation(triedBackPropagation);
 			if (!triedBackPropagation && Fallback != null) {
 				return Fallback.Mutate(individual);
 			}

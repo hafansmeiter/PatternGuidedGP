@@ -55,7 +55,14 @@ namespace PatternGuidedGP.GP.Problems {
 			Logger.WriteLine(4, GetType().Name + " test suite:");
 			foreach (var test in TestSuite.TestCases) {
 				foreach (var param in test.Parameter) {
-					Logger.Write(4, param + " ");
+					if (param is int[]) {
+						int[] paramArray = (int[])param;
+						foreach (var p in paramArray) {
+							Logger.Write(4, p + " ");
+						}
+					} else {
+						Logger.Write(4, param + " ");
+					}
 				}
 				Logger.WriteLine(4, "-> " + test.Result.ToString());
 			}
@@ -83,9 +90,12 @@ namespace PatternGuidedGP.GP.Problems {
 			int evaluationCount = 0;
 			FitnessEvaluator.OnStartEvaluation();
 			bool solutionFound = false;
+			Logger.WriteLine(2, "Evaluation: " + population.Size + " individuals");
 			foreach (var individual in population.Individuals) {
-				Logger.WriteLine(4, "Individual tree height: " + individual.SyntaxTree.Height);
+				Logger.WriteLine(4, "tree height: " + individual.SyntaxTree.Height);
 				if (!individual.FitnessEvaluated) {
+					Logger.WriteLine(2, "Evaluating individual... (" + evaluationCount + ")");
+					Logger.WriteLine(2, individual.SyntaxTree.ToString());
 					var result = FitnessEvaluator.Evaluate(individual, this);
 					individual.FitnessResult = result;
 					individual.Fitness = result.Fitness;

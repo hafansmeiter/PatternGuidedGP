@@ -218,7 +218,7 @@
     <Compile Include="Compiler\CSharp\TestClassProxy.cs" />
     <Compile Include="Compiler\ICompiler.cs" />
     <Compile Include="GP\AlgorithmBase.cs" />
-    <Compile Include="GP\DefaultAlgorithm.cs" />
+    <Compile Include="GP\GPAlgorithm.cs" />
     <Compile Include="GP\Evaluators\AbsoluteDistanceFitnessCalculator.cs" />
     <Compile Include="GP\Evaluators\FitnessResult.cs" />
     <Compile Include="GP\Evaluators\IFitnessCalculator.cs" />
@@ -229,6 +229,7 @@
     <Compile Include="GP\Evaluators\IFitnessEvaluator.cs" />
     <Compile Include="GP\Evaluators\ProgramFitnessEvaluator.cs" />
     <Compile Include="GP\Operators\EvaluatingRandomSubtreeMutator.cs" />
+    <Compile Include="GP\Operators\FullInitializer.cs" />
     <Compile Include="GP\Operators\MultiRandomCrossover.cs" />
     <Compile Include="GP\Operators\MultiRandomMutator.cs" />
     <Compile Include="GP\Operators\MultiRandomOperator.cs" />
@@ -308,6 +309,7 @@
     <Compile Include="Util\ObjectExtensions.cs" />
     <Compile Include="Util\RandomValueGenerator.cs" />
     <Compile Include="Util\Singleton.cs" />
+    <Compile Include="Util\Statistics.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

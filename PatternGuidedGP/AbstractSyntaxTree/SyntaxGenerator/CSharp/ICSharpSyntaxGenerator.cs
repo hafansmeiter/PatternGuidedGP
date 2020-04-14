@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 namespace PatternGuidedGP.AbstractSyntaxTree.SyntaxGenerator.CSharp {
 	interface ICSharpSyntaxGenerator {
 		CSharpSyntaxNode GetSyntaxNode();
-		CSharpSyntaxNode GetExecutionTraceSyntaxNode();
+		CSharpSyntaxNode GetExecutionStateSyntaxNode();
 	}
 }

@@ -11,7 +11,11 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		BoolAnd = 101,
 		BoolAssignment = 102,
 		BoolEqualBool = 103,
+		BoolEqualInt = 105,
 
-		StringAssignment = 401
+		StringAssignment = 401,
+		// statements
+		ForStatement = 001,
+		IfStatement = 002,
 	}
 }

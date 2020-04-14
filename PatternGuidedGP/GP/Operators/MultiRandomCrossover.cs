@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Operators {
 	class MultiRandomCrossover : MultiRandomOperator<ICrossover>, ICrossover {
-		public IEnumerable<Individual> cross(Individual individual1, Individual individual2) {
-			return GetRandom().cross(individual1, individual2);
+		public IEnumerable<Individual> Cross(Individual individual1, Individual individual2) {
+			return GetRandom().Cross(individual1, individual2);
 		}
 	}
 }

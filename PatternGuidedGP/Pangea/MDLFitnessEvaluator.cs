@@ -54,8 +54,8 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		protected override CompilationUnitSyntax CreateCompilationUnit(Individual individual, TestCase sample, CompilationUnitSyntax template) {
-			var syntax = individual.SyntaxTree.GetSyntaxNode();
-			var compSyntax = base.CreateCompilationUnit(syntax, sample, template);
+			//var syntax = individual.SyntaxTree.GetSyntaxNode();
+			var compSyntax = base.CreateCompilationUnit(individual, sample, template);
 
 			var traceableNodes = individual.SyntaxTree.GetTraceableNodes();
 			foreach (var traceableNode in traceableNodes) {
@@ -70,15 +70,15 @@ namespace PatternGuidedGP.Pangea {
 			// Code example: 
 			// ret = a + b;
 			// Store execution trace for code (23, 1, 2, 3 are node ids):
-			// e.g.: ExecutionTraces.Current.Add(result node id: 23, operation node id: 1, result: a + b, operation_code: 201);
+			// e.g.: ExecutionRecord.Current.Add(result node id: 23, operation node id: 1, result: a + b, operation_code: 201);
 			// try {
-			//   ExecutionTraces.Current.Add(23, 1, a + b, 201);
+			//   ExecutionRecord.Current.Add(23, 1, a + b, 201);
 			// } catch (Exception e) {}
 			// try {
-			//   ExecutionTraces.Current.Add(23, 2, a, -1);
+			//   ExecutionRecord.Current.Add(23, 2, a, -1);
 			// } catch (Exception e) {}
 			// try {
-			//   ExecutionTraces.Current.Add(23, 3, b, -1);
+			//   ExecutionRecord.Current.Add(23, 3, b, -1);
 			// } catch (Exception e) {}
 
 			var statements = new List<StatementSyntax>();
@@ -122,7 +122,7 @@ namespace PatternGuidedGP.Pangea {
 													SyntaxKind.NumericLiteralExpression,
 													SyntaxFactory.Literal(node.Id))),
 											SyntaxFactory.Argument(
-												(ExpressionSyntax) node.GetExecutionTraceSyntaxNode()),
+												(ExpressionSyntax) node.GetExecutionStateSyntaxNode()),
 											SyntaxFactory.Argument(
 												SyntaxFactory.LiteralExpression(
 													SyntaxKind.NumericLiteralExpression,

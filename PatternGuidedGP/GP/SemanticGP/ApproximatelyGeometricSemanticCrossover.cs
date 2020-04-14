@@ -1,5 +1,6 @@
 ﻿using PatternGuidedGP.GP;
 using PatternGuidedGP.GP.Operators;
+using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			MaxTreeDepth = maxTreeDepth;
 		}
 
-		public IEnumerable<Individual> cross(Individual individual1, Individual individual2) {
+		public IEnumerable<Individual> Cross(Individual individual1, Individual individual2) {
 			var midpoint = GeometricCalculator.GetMidpoint(individual1.Semantics, individual2.Semantics);
 
 			bool triedBackPropagation1;
@@ -32,8 +33,11 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			bool triedBackPropagation2;
 			var child2 = GenerateChildren(individual2, individual1, midpoint, out triedBackPropagation2);
 
+			Statistics.Instance.AddBackpropagationAttemptCrossover(triedBackPropagation1);
+			Statistics.Instance.AddBackpropagationAttemptCrossover(triedBackPropagation2);
+
 			if (!triedBackPropagation1 && !triedBackPropagation2 && Fallback != null) {
-				return Fallback.cross(individual1, individual2);
+				return Fallback.Cross(individual1, individual2);
 			}
 
 			return new[] { child1, child2 };

@@ -15,7 +15,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 		public override int RequiredTreeDepth => 3;
 		public override Type[] ChildTypes => _childTypes.ToArray();
 		public bool IsTraceable => true;
-		public override int OperatorId => 001;
+		public override int OperatorId => (int)Operators.ForStatement;
 
 		public Expression<int> Count => Children[0] as Expression<int>;
 		public Statement[] ContentStatements => Children.GetRange(1, _contentStatements).Select(c => (Statement)c).ToArray();
@@ -34,7 +34,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			}
 		}
 
-		public override CSharpSyntaxNode GetExecutionTraceSyntaxNode() {
+		public override CSharpSyntaxNode GetExecutionStateSyntaxNode() {
 			return Count.GetSyntaxNode();
 		}
 

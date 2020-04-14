@@ -51,7 +51,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 			}
 		}
 
-		public override CSharpSyntaxNode GetExecutionTraceSyntaxNode() {
+		public override CSharpSyntaxNode GetExecutionStateSyntaxNode() {
 			return AssignedExpression.GetSyntaxNode();
 		}
 

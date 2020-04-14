@@ -122,7 +122,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree {
 				new SyntaxAnnotation("Type", Type.ToString()));
 		}
 
-		public virtual CSharpSyntaxNode GetExecutionTraceSyntaxNode() {
+		public virtual CSharpSyntaxNode GetExecutionStateSyntaxNode() {
 			return GetSyntaxNode();
 		}
 

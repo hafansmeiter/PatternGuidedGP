@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP {
-	class DefaultAlgorithm : AlgorithmBase {
+	class GPAlgorithm : AlgorithmBase {
 
 		// track fitness for termination criteria:
 		// if best fitness and average fitness not improved for 20 generations -> abort
@@ -17,7 +17,7 @@ namespace PatternGuidedGP.GP {
 		private double[] _bestFitness;
 		private double[] _avgFitness;
 
-		public DefaultAlgorithm(int populationSize, int generations, bool allowDuplicates)
+		public GPAlgorithm(int populationSize, int generations, bool allowDuplicates)
 			: base(populationSize, generations, allowDuplicates) {
 			_bestFitness = new double[generations];
 			_avgFitness = new double[generations];
@@ -28,6 +28,7 @@ namespace PatternGuidedGP.GP {
 			Logger.WriteLine(1, "Generation 0: ");
 			// .csv header
 			Logger.WriteLine(0, "Generation;Best_fitness;Best_program_error;Best_classification_error;Best_tree_size;Avg_fitness;Evaluated;Total_evaluated;Dist_to_optimal;Diversity_best_to_avg;Diversity_tree_dist");
+			Logger.WriteStatisticsHeader();
 			Individual solution = EvaluatePopulation(problem, 0);
 			if (solution != null) { // initial generation contains solution
 				return solution;
@@ -71,6 +72,9 @@ namespace PatternGuidedGP.GP {
 			}
 
 			// Write statistics in .csv format
+			CollectNodeTypes();
+			Logger.WriteStatistics(generation, new string[] { "total", "for", "if", "%", "1", "2", "==", "ret", "i", "values", "length", "n", "a", "b", "c", "<", "<=", ">", ">=" });
+
 			double averageFitness = Population.GetAverageFitness();
 			Logger.WriteLine(0, string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10}",
 				generation,
@@ -85,12 +89,22 @@ namespace PatternGuidedGP.GP {
 				averageFitness - Population.GetFittest().Fitness,
 				Population.GetDiversity(SimilarityMeasure)));
 
+			Statistics.Instance.ClearAll();
+
 			if (IsSolutionFound()) {
 				Logger.WriteLine(1, "Solution found.");
 				Logger.WriteLine(2, string.Format("Solution:\n{0}", Population.GetFittest()));
 				return Population.GetFittest();
 			}
 			return null;
+		}
+
+		private void CollectNodeTypes() {
+			foreach (var individual in Population.Individuals) {
+				foreach (var node in individual.SyntaxTree.GetTreeNodes()) {
+					Statistics.Instance.AddNodeType(node.Description);
+				}
+			}
 		}
 
 		private int ComputeDistanceToOptimal(Individual individual, Problem problem) {
@@ -120,7 +134,7 @@ namespace PatternGuidedGP.GP {
 				if (rand < CrossoverRate) {
 					var individual1 = Selector.Select(population);
 					var individual2 = Selector.Select(population);
-					foreach (var child in Crossover.cross(individual1, individual2)) {
+					foreach (var child in Crossover.Cross(individual1, individual2)) {
 						children.Add(new Individual(child));
 					}
 				}

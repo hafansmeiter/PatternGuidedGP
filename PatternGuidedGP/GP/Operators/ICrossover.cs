@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.Operators {
 	interface ICrossover {
-		IEnumerable<Individual> cross(Individual individual1, Individual individual2);
+		IEnumerable<Individual> Cross(Individual individual1, Individual individual2);
 	}
 }
