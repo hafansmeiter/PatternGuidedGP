@@ -67,8 +67,18 @@ namespace PatternGuidedGP {
 					new SmallOrLargeProblem()			// 3
 				};
 				RunProblems(advancedProblems, runConfig, runProblem, fromConfig, fromProblem);
-			}
-		}
+			} else if (problemSet == "parity") {
+                SyntaxConfiguration.Current = new SyntaxConfiguration.Simple();
+                //SyntaxConfiguration.Current = new SyntaxConfiguration.Advanced();
+                Problem[] advancedProblems = new Problem[] {
+					// Parity Problems
+					new ParityProblem(4),				// 0
+					new ParityProblem(6),				// 1
+					new ParityProblem(8)        		// 2
+				};
+                RunProblems(advancedProblems, runConfig, runProblem, fromConfig, fromProblem);
+            }
+        }
 
 		static void RunProblems(Problem [] problems, int runConfig, int runProblem, int fromConfig, int fromProblem) {
 			int maxTreeDepth = 7;
