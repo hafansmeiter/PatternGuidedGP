@@ -246,7 +246,6 @@
     <Compile Include="GP\SemanticGP\BoolGeometricCalculator.cs" />
     <Compile Include="GP\SemanticGP\CombinatorialSemantics.cs" />
     <Compile Include="GP\SemanticGP\ApproximatelyGeometricSemanticCrossover.cs" />
-    <Compile Include="GP\SemanticGP\FitnessEvaluatingRandomDesiredOperator.cs" />
     <Compile Include="GP\SemanticGP\IGeometricOperator.cs" />
     <Compile Include="GP\SemanticGP\ISemanticOperator.cs" />
     <Compile Include="GP\SemanticGP\ISemanticPropagator.cs" />

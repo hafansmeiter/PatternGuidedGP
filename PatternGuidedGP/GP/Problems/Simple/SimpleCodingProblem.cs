@@ -37,15 +37,5 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 			base.GetCodeTemplate(builder);
 			builder.UseParameterType(ParameterType, ParameterCount);
 		}
-
-		protected virtual IGeometricCalculator GetGeometricCalculator() {
-			if (ReturnType == typeof(bool)) {
-				return new BoolGeometricCalculator();
-			}
-			else if (ReturnType == typeof(int)) {
-				return new IntGeometricCalculator();
-			}
-			return null;
-		}
 	}
 }
