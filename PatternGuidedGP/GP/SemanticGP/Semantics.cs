@@ -34,7 +34,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			for (int i = 0; i < Math.Min(semantics1.Length, semantics2.Length); i++) {
 				double s1 = (double)semantics1[i];
 				double s2 = (double)semantics2[i];
-				distance += s1 - s2;
+				distance += Math.Abs(s1 - s2);
 			}
 			return distance;
 		}
