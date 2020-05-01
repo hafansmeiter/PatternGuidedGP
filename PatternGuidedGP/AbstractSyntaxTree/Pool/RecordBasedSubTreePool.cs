@@ -24,9 +24,9 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			}
 
 			public override double GetFitness() {
-				double ret = 0;
+				double ret = double.MaxValue;
 				if (Evaluations > 0) {
-					// Maximize UCB formula:
+					// Minimize UCB formula:
 					// xi + sqrt(2 * ln(N) / ni)
 					// xi = average payout (score)
 					// N = total number of tries
@@ -38,7 +38,12 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			}
 
 			public override int CompareTo(PoolItem other) {
-				return GetFitness().CompareTo(other.GetFitness());
+				var recordBasedNodeItem = (RecordTreeNodeItem)other;
+				int result = GetFitness().CompareTo(other.GetFitness());
+				if (result == 0) {
+					result = Fitness.CompareTo(recordBasedNodeItem.Fitness);
+				}
+				return result;
 			}
 
 			public void AddEvaluation(double score) {
