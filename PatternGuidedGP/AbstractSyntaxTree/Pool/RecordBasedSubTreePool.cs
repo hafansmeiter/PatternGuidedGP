@@ -38,7 +38,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			}
 
 			public override int CompareTo(PoolItem other) {
-				var otherItem = (RecordTreeNodeItem)other;
 				return GetFitness().CompareTo(other.GetFitness());
 			}
 
