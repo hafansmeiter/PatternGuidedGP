@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.SemanticGP {
-	class PawlakSemanticBackPropagator : ISemanticPropagator {
+	class PawlakSemanticBackPropagator : ISemanticBackPropagator {
 		// Pawlak et al. Algorithm 1 in paper Semantic Backpropagation for Designing Search Operators in GP:
 		// Naming: n ... node, p ... root, t ... target
 		// semantic types may be mixed up in expression: e.g. bool ret = (a + b) == (c - a)

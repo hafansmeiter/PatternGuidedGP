@@ -12,14 +12,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.SemanticGP {
-	class ApproximatelySemanticMutator : IMutator, ISemanticOperator {
+	class ApproximateGeometricMutator : IMutator, ISemanticOperator {
 		public IResultSemanticsOperator ResultSemanticsOperator { get; set; } = new PawlakRandomDesiredOperator();
 		public ISemanticSubTreePool SubTreePool { get; set; }
 		public Semantics DesiredSemantics { get; set; }
 		public int MaxTreeDepth { get; set; }
 		public IMutator Fallback { get; set; }
 
-		public ApproximatelySemanticMutator(ISemanticSubTreePool subTreePool, int maxTreeDepth) {
+		public ApproximateGeometricMutator(ISemanticSubTreePool subTreePool, int maxTreeDepth) {
 			SubTreePool = subTreePool;
 			MaxTreeDepth = MaxTreeDepth;
 		}

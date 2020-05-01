@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree {
-	abstract class Expression<TResult> : TreeNode, ISemanticsProvider, IInvertible {
+	abstract class Expression<TResult> : TreeNode, ISemanticsHolder, IInvertible {
 		public override Type Type => typeof(TResult);
 
 		private Semantics _semantics;

@@ -10,7 +10,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 	// Pawlak et al. - Semantic Backpropagation for Designing Search Operators in GP: page 332
 	// Random Desired Operator (RDO) algorithm to replace random node by semantically fitting subtree
 	class PawlakRandomDesiredOperator : IResultSemanticsOperator {
-		public ISemanticPropagator SemanticBackPropagator { get; set; } = new PawlakSemanticBackPropagator();
+		public ISemanticBackPropagator SemanticBackPropagator { get; set; } = new PawlakSemanticBackPropagator();
 
 		public bool Operate(Semantics resultSemantics, Individual individual, ISemanticSubTreePool subTreePool, 
 			int maxTreeDepth, out bool triedBackPropagation) {

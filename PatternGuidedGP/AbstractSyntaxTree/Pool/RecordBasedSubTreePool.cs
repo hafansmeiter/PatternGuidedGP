@@ -39,12 +39,7 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 
 			public override int CompareTo(PoolItem other) {
 				var otherItem = (RecordTreeNodeItem)other;
-				int result = GetFitness().CompareTo(other.GetFitness());
-				if (result != 0) {
-					return result;
-				} else {
-					return Node.GetSubTreeNodes().Count() - other.Node.GetSubTreeNodes().Count();
-				}
+				return GetFitness().CompareTo(other.GetFitness());
 			}
 
 			public void AddEvaluation(double score) {
@@ -63,8 +58,8 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 
 		public void UpdateRecord(TreeNode treeNode, double score) {
 			var item = FindNode(treeNode);
-			Logger.WriteLine(4, "Update record score " + score + " to " + item.Node);
 			if (item != null) {
+				Logger.WriteLine(4, "Update record score " + score + " to " + item.Node);
 				var recordItem = (RecordTreeNodeItem)item;
 				recordItem.AddEvaluation(score);
 

@@ -245,14 +245,14 @@
     <Compile Include="GP\Problems\Simple\SimpleCodingProblem.cs" />
     <Compile Include="GP\SemanticGP\BoolGeometricCalculator.cs" />
     <Compile Include="GP\SemanticGP\CombinatorialSemantics.cs" />
-    <Compile Include="GP\SemanticGP\ApproximatelyGeometricSemanticCrossover.cs" />
+    <Compile Include="GP\SemanticGP\ApproximateGeometricCrossover.cs" />
     <Compile Include="GP\SemanticGP\IGeometricOperator.cs" />
     <Compile Include="GP\SemanticGP\ISemanticOperator.cs" />
-    <Compile Include="GP\SemanticGP\ISemanticPropagator.cs" />
+    <Compile Include="GP\SemanticGP\ISemanticBackPropagator.cs" />
     <Compile Include="GP\SemanticGP\PawlakRandomDesiredOperator.cs" />
     <Compile Include="GP\SemanticGP\IGeometricCalculator.cs" />
     <Compile Include="GP\SemanticGP\IntGeometricCalculator.cs" />
-    <Compile Include="GP\SemanticGP\ApproximatelySemanticMutator.cs" />
+    <Compile Include="GP\SemanticGP\ApproximateGeometricMutator.cs" />
     <Compile Include="GP\SemanticGP\IInvertible.cs" />
     <Compile Include="GP\SemanticGP\IResultSemanticsOperator.cs" />
     <Compile Include="GP\SemanticGP\ISemanticSubTreePool.cs" />
@@ -281,7 +281,7 @@
     <Compile Include="GP\Problems\Simple\ParityProblem.cs" />
     <Compile Include="GP\Problems\Problem.cs" />
     <Compile Include="GP\RunConfiguration.cs" />
-    <Compile Include="GP\SemanticGP\ISemanticsProvider.cs" />
+    <Compile Include="GP\SemanticGP\ISemanticsHolder.cs" />
     <Compile Include="GP\SemanticGP\SemanticsBasedSubTreePool.cs" />
     <Compile Include="GP\Tests\BoolTestSuiteGenerator.cs" />
     <Compile Include="GP\Tests\IntTestSuiteGenerator.cs" />

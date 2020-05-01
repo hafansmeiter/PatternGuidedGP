@@ -11,7 +11,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 
 	// Pawlak et al. - Semantic Backpropagation for Designing Search Operators in GP: page 332
 	// AGX Crossover
-	class ApproximatelyGeometricSemanticCrossover : ICrossover, IGeometricOperator {
+	class ApproximateGeometricCrossover : ICrossover, IGeometricOperator {
 
 		public IGeometricCalculator GeometricCalculator { get; set; }
 		public ISemanticSubTreePool SubTreePool { get; set; }
@@ -19,7 +19,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 		public int MaxTreeDepth { get; set; }
 		public ICrossover Fallback { get; set; }
 
-		public ApproximatelyGeometricSemanticCrossover(ISemanticSubTreePool subTreePool, int maxTreeDepth) {
+		public ApproximateGeometricCrossover(ISemanticSubTreePool subTreePool, int maxTreeDepth) {
 			SubTreePool = subTreePool;
 			MaxTreeDepth = maxTreeDepth;
 		}

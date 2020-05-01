@@ -116,10 +116,10 @@ namespace PatternGuidedGP {
 					FitnessEvaluator = new SemanticMDLFitnessEvaluator() {
 						SubTreePool = semanticsBasedSubTreePool
 					},
-					Crossover = new ApproximatelyGeometricSemanticCrossover(semanticsBasedSubTreePool, maxTreeDepth) {
+					Crossover = new ApproximateGeometricCrossover(semanticsBasedSubTreePool, maxTreeDepth) {
 						Fallback = new RandomSubtreeCrossover(maxTreeDepth)
 					},
-					Mutator = new ApproximatelySemanticMutator(semanticsBasedSubTreePool, maxTreeDepth) {
+					Mutator = new ApproximateGeometricMutator(semanticsBasedSubTreePool, maxTreeDepth) {
 						Fallback = new RandomSubtreeMutator(generator, maxTreeDepth, maxMutationTreeDepth)
 					}
 				},

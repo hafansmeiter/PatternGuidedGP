@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP {
-	class Individual : IComparable<Individual>, ISemanticsProvider {
+	class Individual : IComparable<Individual>, ISemanticsHolder {
 
 		public SyntaxTree SyntaxTree { get; set; }
 

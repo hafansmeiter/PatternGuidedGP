@@ -28,10 +28,10 @@ namespace PatternGuidedGP.GP.SemanticGP {
 		private PoolItem GetBestItem(IList<PoolItem> items, CombinatorialSemantics semantics, DistanceMeasure distanceMeasure) {
 			double bestDistance = Double.MaxValue;
 			PoolItem bestItem = null;
-			var allSemantics = items.Where(item => item is ISemanticsProvider && ((ISemanticsProvider) item.Node).SemanticsEvaluated)
-				.Select(item => ((ISemanticsProvider)item.Node).Semantics);
+			var allSemantics = items.Where(item => item is ISemanticsHolder && ((ISemanticsHolder) item.Node).SemanticsEvaluated)
+				.Select(item => ((ISemanticsHolder)item.Node).Semantics);
 			foreach (var item in items) {
-				var semanticsNode = item.Node as ISemanticsProvider;
+				var semanticsNode = item.Node as ISemanticsHolder;
 				if (semanticsNode != null && semanticsNode.SemanticsEvaluated) {
 					var distance = distanceMeasure(semantics, semanticsNode.Semantics, allSemantics);
 					if (distance < bestDistance) {

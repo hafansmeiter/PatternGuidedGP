@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PatternGuidedGP.GP.SemanticGP {
-	interface ISemanticPropagator {
+	interface ISemanticBackPropagator {
 		CombinatorialSemantics Propagate(TreeNode root, TreeNode node, Semantics target);
 	}
 }

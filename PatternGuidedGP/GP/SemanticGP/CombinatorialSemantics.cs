@@ -57,6 +57,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			return distance;
 		}
 
+		[Obsolete]
 		private static double GetWorstDistance(int value, IEnumerable<Semantics> allCandidates, int i, out bool distanceFound) {
 			var found = false;
 			var worst = int.MinValue;

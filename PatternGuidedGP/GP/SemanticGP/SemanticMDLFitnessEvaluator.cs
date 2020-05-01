@@ -14,7 +14,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			base.PrepareTestRuns(individual, testSuite);
 			individual.SemanticsEvaluated = false;
 			foreach (var node in individual.SyntaxTree.GetTreeNodes()) {
-				var semanticNode = node as ISemanticsProvider;
+				var semanticNode = node as ISemanticsHolder;
 				if (semanticNode != null) {
 					semanticNode.SemanticsEvaluated = false;
 				}
@@ -37,7 +37,7 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			int testCount = dataset.Count;
 			foreach (var id in dataset.Features) {
 				var node = individual.SyntaxTree.FindNodeById(id);
-				var semanticsNode = node as ISemanticsProvider;
+				var semanticsNode = node as ISemanticsHolder;
 				if (semanticsNode != null) {
 					var semantics = new Semantics(testCount);
 					for (int i = 0; i < testCount; i++) {
