@@ -73,7 +73,7 @@ namespace PatternGuidedGP.GP {
 
 			// Write statistics in .csv format
 			CollectNodeTypes();
-			Logger.WriteStatistics(generation, new string[] { "total", "for", "if", "%", "1", "2", "==", "ret", "i", "values", "length", "n", "a", "b", "c", "<", "<=", ">", ">=" });
+			Logger.WriteStatistics(generation, new string[] { "total", "for", "if", "&&", "||", "%", "1", "2", "==", "ret", "i", "values", "length", "n", "a", "b", "c", "d", "<", "<=", ">", ">=" });
 
 			double averageFitness = Population.GetAverageFitness();
 			Logger.WriteLine(0, string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10}",

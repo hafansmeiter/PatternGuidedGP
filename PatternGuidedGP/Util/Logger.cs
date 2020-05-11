@@ -31,7 +31,7 @@ namespace PatternGuidedGP.Util {
 		}
 
 		public static void WriteStatisticsHeader() {
-			WriteStatisticsLine("gen;total;for;if;mod;one;two;equals;ret;i;values;length;n;a;b;c;<;<=;>;>=;backprop_att;backprop_success;rec_att;rec_success;rec_failure;rec_change");
+			WriteStatisticsLine("gen;total;for;if;and;or;mod;one;two;equals;ret;i;values;length;n;a;b;c;d;<;<=;>;>=;backprop_cx_att;backprop_cx_success;backprop_mut_att;backprop_mut_success;rec_att;rec_success;rec_failure;rec_change");
 		}
 
 		public static void WriteStatistics(int generation, params string [] nodeTypes) {
