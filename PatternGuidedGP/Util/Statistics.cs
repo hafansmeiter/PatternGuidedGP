@@ -19,8 +19,10 @@ namespace PatternGuidedGP.Util {
 		// count (successful) backpropagation attempts in order to calculate success rate
 		int _backpropagationAttemptsCrossover = 0;	// total backpropagation attempts
 		int _backpropagationSuccessCrossover = 0;   // backpropagation success (without ambiguous results, failure)
+		double _backpropagationFitnessChangeCrossover = 0;
 		int _backpropagationAttemptsMutation = 0;  // total backpropagation attempts
 		int _backpropagationSuccessMutation = 0;   // backpropagation success (without ambiguous results, failure)
+		double _backpropagationFitnessChangeMutation = 0;
 
 		// count (successful) replace attempts in record-based mutation in order to calculate success rate
 		int _recordReplaceAttempts = 0;	// total replace attempts
@@ -36,8 +38,10 @@ namespace PatternGuidedGP.Util {
 			}
 			builder.Append(_backpropagationAttemptsCrossover + ";");
 			builder.Append(_backpropagationSuccessCrossover + ";");
+			builder.Append(_backpropagationFitnessChangeCrossover + ";");
 			builder.Append(_backpropagationAttemptsMutation + ";");
 			builder.Append(_backpropagationSuccessMutation + ";");
+			builder.Append(_backpropagationFitnessChangeCrossover + ";");
 
 			builder.Append(_recordReplaceAttempts + ";");
 			builder.Append(_recordReplaceSuccess + ";");
@@ -68,25 +72,29 @@ namespace PatternGuidedGP.Util {
 
 		// backpropagation
 		// ===============
-		public void AddBackpropagationAttemptCrossover(bool successful) {
+		public void AddBackpropagationAttemptCrossover(bool successful, double fitnessChange) {
 			_backpropagationAttemptsCrossover++;
 			if (successful) {
 				_backpropagationSuccessCrossover++;
+				_backpropagationFitnessChangeCrossover += fitnessChange;
 			}
 		}
 
-		public void AddBackpropagationAttemptMutation(bool successful) {
+		public void AddBackpropagationAttemptMutation(bool successful, double fitnessChange) {
 			_backpropagationAttemptsMutation++;
 			if (successful) {
 				_backpropagationSuccessMutation++;
+				_backpropagationFitnessChangeMutation += fitnessChange;
 			}
 		}
 
 		public void ClearBackpropagationAttempts() {
 			_backpropagationSuccessCrossover = 0;
 			_backpropagationAttemptsCrossover = 0;
+			_backpropagationFitnessChangeCrossover = 0;
 			_backpropagationSuccessMutation = 0;
 			_backpropagationAttemptsMutation = 0;
+			_backpropagationFitnessChangeMutation = 0;
 		}
 
 		// node type count

@@ -2,7 +2,9 @@
 using PatternGuidedGP.AbstractSyntaxTree.Pool;
 using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
 using PatternGuidedGP.GP;
+using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Operators;
+using PatternGuidedGP.GP.Problems;
 using PatternGuidedGP.GP.SemanticGP;
 using PatternGuidedGP.Util;
 using System;
@@ -19,6 +21,9 @@ namespace PatternGuidedGP.GP.SemanticGP {
 		public int MaxTreeDepth { get; set; }
 		public IMutator Fallback { get; set; }
 
+		public IFitnessEvaluator FitnessEvaluator { get; set; }
+		public Problem Problem { get; set; }
+
 		public ApproximateGeometricMutator(ISemanticSubTreePool subTreePool, int maxTreeDepth) {
 			SubTreePool = subTreePool;
 			MaxTreeDepth = MaxTreeDepth;
@@ -29,7 +34,13 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			bool mutated = ResultSemanticsOperator.Operate(DesiredSemantics, individual, 
 				SubTreePool, MaxTreeDepth, out triedBackPropagation);
 
-			Statistics.Instance.AddBackpropagationAttemptMutation(triedBackPropagation);
+			double fitnessChange = 0;
+			if (triedBackPropagation && individual.FitnessEvaluated && FitnessEvaluator != null) {
+				double fitness = FitnessEvaluator.Evaluate(individual, Problem).Fitness;
+				fitnessChange = fitness - individual.Fitness;
+			}
+
+			Statistics.Instance.AddBackpropagationAttemptMutation(triedBackPropagation, fitnessChange);
 			if (!triedBackPropagation && Fallback != null) {
 				return Fallback.Mutate(individual);
 			}

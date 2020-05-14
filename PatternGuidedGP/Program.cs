@@ -222,7 +222,7 @@ namespace PatternGuidedGP {
 							MaxTreeDepth = maxTreeDepth,   // not used; set individually in mutators and tree generators
 							MutationRate = 0.2,
 							Mutator = config.Mutator,
-							Selector = new TournamentSelector(4)
+							Selector = new TournamentSelector(7)
 						};
 
 						Individual bestSolution = algorithm.Run(problem);

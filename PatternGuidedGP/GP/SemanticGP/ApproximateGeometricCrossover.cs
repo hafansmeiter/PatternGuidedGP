@@ -1,5 +1,7 @@
 ﻿using PatternGuidedGP.GP;
+using PatternGuidedGP.GP.Evaluators;
 using PatternGuidedGP.GP.Operators;
+using PatternGuidedGP.GP.Problems;
 using PatternGuidedGP.Util;
 using System;
 using System.Collections.Generic;
@@ -19,6 +21,9 @@ namespace PatternGuidedGP.GP.SemanticGP {
 		public int MaxTreeDepth { get; set; }
 		public ICrossover Fallback { get; set; }
 
+		public IFitnessEvaluator FitnessEvaluator { get; set; }
+		public Problem Problem { get; set; }
+
 		public ApproximateGeometricCrossover(ISemanticSubTreePool subTreePool, int maxTreeDepth) {
 			SubTreePool = subTreePool;
 			MaxTreeDepth = maxTreeDepth;
@@ -33,9 +38,6 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			bool triedBackPropagation2;
 			var child2 = GenerateChildren(individual2, individual1, midpoint, out triedBackPropagation2);
 
-			Statistics.Instance.AddBackpropagationAttemptCrossover(triedBackPropagation1);
-			Statistics.Instance.AddBackpropagationAttemptCrossover(triedBackPropagation2);
-
 			if (!triedBackPropagation1 && !triedBackPropagation2 && Fallback != null) {
 				return Fallback.Cross(individual1, individual2);
 			}
@@ -48,9 +50,17 @@ namespace PatternGuidedGP.GP.SemanticGP {
 			var child1 = new Individual(individual1);
 			child1.FitnessEvaluated = false;
 
-			var mutatedChild1 = ResultSemanticsOperator.Operate(midpoint,
+			var mutated = ResultSemanticsOperator.Operate(midpoint,
 				child1, SubTreePool, MaxTreeDepth, out triedBackPropagation);
-			return mutatedChild1 ? child1 : individual1;
+
+			double fitnessChange = 0;
+			if (mutated && triedBackPropagation && individual1.FitnessEvaluated && FitnessEvaluator != null) {
+				double fitness = FitnessEvaluator.Evaluate(child1, Problem).Fitness;
+				fitnessChange = fitness - individual1.Fitness;
+			}
+			Statistics.Instance.AddBackpropagationAttemptCrossover(triedBackPropagation, fitnessChange);
+
+			return mutated ? child1 : individual1;
 		}
 	}
 }
