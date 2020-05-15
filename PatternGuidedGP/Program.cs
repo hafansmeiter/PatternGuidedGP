@@ -202,6 +202,14 @@ namespace PatternGuidedGP {
 							((EvaluatingRandomSubtreeMutator)((MultiRandomMutator)config.Mutator).Options[0]).Problem = problem;
 						}
 					}
+					if (config.Mutator is ApproximateGeometricMutator) {
+						((ApproximateGeometricMutator)config.Mutator).FitnessEvaluator = config.FitnessEvaluator;
+						((ApproximateGeometricMutator)config.Mutator).Problem = problem;
+					}
+					if (config.Crossover is ApproximateGeometricCrossover) {
+						((ApproximateGeometricCrossover)config.Crossover).FitnessEvaluator = config.FitnessEvaluator;
+						((ApproximateGeometricCrossover)config.Crossover).Problem = problem;
+					}
 					if (config.FitnessEvaluator is MDLFitnessEvaluator) {
 						(((MDLFitnessCalculator)((MDLFitnessEvaluator)config.FitnessEvaluator).FitnessCalculator)).StandardFitnessCalculator = problem.FitnessCalculator;
 					} else {
