@@ -20,15 +20,21 @@ namespace PatternGuidedGP.Util {
 		int _backpropagationAttemptsCrossover = 0;	// total backpropagation attempts
 		int _backpropagationSuccessCrossover = 0;   // backpropagation success (without ambiguous results, failure)
 		double _backpropagationFitnessChangeCrossover = 0;
+		double _backpropagationFitnessBestChangeCrossover = 0;
+		double _backpropagationFitnessWorstChangeCrossover = 0;
 		int _backpropagationAttemptsMutation = 0;  // total backpropagation attempts
 		int _backpropagationSuccessMutation = 0;   // backpropagation success (without ambiguous results, failure)
 		double _backpropagationFitnessChangeMutation = 0;
+		double _backpropagationFitnessBestChangeMutation = 0;
+		double _backpropagationFitnessWorstChangeMutation = 0;
 
 		// count (successful) replace attempts in record-based mutation in order to calculate success rate
 		int _recordReplaceAttempts = 0;	// total replace attempts
 		int _recordReplaceSuccess = 0;	// individual is better after replace
 		int _recordReplaceFailure = 0;  // individual is worse after replace
 		double _recordReplaceChange = 0.0;  // fitness change
+		double _recordReplaceBestChange = 0.0;  // best fitness change
+		double _recordReplaceWorstChange = 0.0;  // worst fitness change
 
 		public string ToString(params string[] nodeTypes) {
 			int[] counts = GetNodeTypeCount(nodeTypes);
@@ -39,14 +45,20 @@ namespace PatternGuidedGP.Util {
 			builder.Append(_backpropagationAttemptsCrossover + ";");
 			builder.Append(_backpropagationSuccessCrossover + ";");
 			builder.Append(_backpropagationFitnessChangeCrossover + ";");
+			builder.Append(_backpropagationFitnessBestChangeCrossover + ";");
+			builder.Append(_backpropagationFitnessWorstChangeCrossover + ";");
 			builder.Append(_backpropagationAttemptsMutation + ";");
 			builder.Append(_backpropagationSuccessMutation + ";");
 			builder.Append(_backpropagationFitnessChangeCrossover + ";");
+			builder.Append(_backpropagationFitnessBestChangeCrossover + ";");
+			builder.Append(_backpropagationFitnessWorstChangeCrossover + ";");
 
 			builder.Append(_recordReplaceAttempts + ";");
 			builder.Append(_recordReplaceSuccess + ";");
 			builder.Append(_recordReplaceFailure + ";");
-			builder.Append(_recordReplaceChange);
+			builder.Append(_recordReplaceChange + ";");
+			builder.Append(_recordReplaceBestChange + ";");
+			builder.Append(_recordReplaceWorstChange);
 			return builder.ToString();
 		}
 
@@ -92,9 +104,13 @@ namespace PatternGuidedGP.Util {
 			_backpropagationSuccessCrossover = 0;
 			_backpropagationAttemptsCrossover = 0;
 			_backpropagationFitnessChangeCrossover = 0;
+			_backpropagationFitnessBestChangeCrossover = 0;
+			_backpropagationFitnessWorstChangeCrossover = 0;
 			_backpropagationSuccessMutation = 0;
 			_backpropagationAttemptsMutation = 0;
 			_backpropagationFitnessChangeMutation = 0;
+			_backpropagationFitnessBestChangeMutation = 0;
+			_backpropagationFitnessWorstChangeMutation = 0;
 		}
 
 		// node type count
