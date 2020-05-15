@@ -49,9 +49,9 @@ namespace PatternGuidedGP.Util {
 			builder.Append(_backpropagationFitnessWorstChangeCrossover + ";");
 			builder.Append(_backpropagationAttemptsMutation + ";");
 			builder.Append(_backpropagationSuccessMutation + ";");
-			builder.Append(_backpropagationFitnessChangeCrossover + ";");
-			builder.Append(_backpropagationFitnessBestChangeCrossover + ";");
-			builder.Append(_backpropagationFitnessWorstChangeCrossover + ";");
+			builder.Append(_backpropagationFitnessChangeMutation + ";");
+			builder.Append(_backpropagationFitnessBestChangeMutation + ";");
+			builder.Append(_backpropagationFitnessWorstChangeMutation + ";");
 
 			builder.Append(_recordReplaceAttempts + ";");
 			builder.Append(_recordReplaceSuccess + ";");
