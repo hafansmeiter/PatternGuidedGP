@@ -69,8 +69,14 @@ namespace PatternGuidedGP.Util {
 			_recordReplaceChange += fitnessChange;
 			if (fitnessChange < 0) {
 				_recordReplaceSuccess++;
+				if (fitnessChange < _recordReplaceBestChange) {
+					_recordReplaceBestChange = fitnessChange;
+				}
 			} else if (fitnessChange > 0) {
 				_recordReplaceFailure++;
+				if (fitnessChange > _recordReplaceWorstChange) {
+					_recordReplaceWorstChange = fitnessChange;
+				}
 			}
 		}
 
@@ -79,6 +85,8 @@ namespace PatternGuidedGP.Util {
 			_recordReplaceChange = 0;
 			_recordReplaceFailure = 0;
 			_recordReplaceSuccess = 0;
+			_recordReplaceBestChange = 0;
+			_recordReplaceWorstChange = 0;
 		}
 
 
@@ -89,6 +97,12 @@ namespace PatternGuidedGP.Util {
 			if (successful) {
 				_backpropagationSuccessCrossover++;
 				_backpropagationFitnessChangeCrossover += fitnessChange;
+				if (fitnessChange < _backpropagationFitnessBestChangeCrossover) {
+					_backpropagationFitnessBestChangeCrossover = fitnessChange;
+				}
+				if (fitnessChange > _backpropagationFitnessWorstChangeCrossover) {
+					_backpropagationFitnessWorstChangeCrossover = fitnessChange;
+				}
 			}
 		}
 
@@ -97,6 +111,12 @@ namespace PatternGuidedGP.Util {
 			if (successful) {
 				_backpropagationSuccessMutation++;
 				_backpropagationFitnessChangeMutation += fitnessChange;
+				if (fitnessChange < _backpropagationFitnessBestChangeMutation) {
+					_backpropagationFitnessBestChangeMutation = fitnessChange;
+				}
+				if (fitnessChange > _backpropagationFitnessWorstChangeMutation) {
+					_backpropagationFitnessWorstChangeMutation = fitnessChange;
+				}
 			}
 		}
 
