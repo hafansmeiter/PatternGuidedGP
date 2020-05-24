@@ -31,11 +31,14 @@ namespace PatternGuidedGP.GP.Operators {
 					if (individual.FitnessEvaluated) {	// only meaningful if fitness of individual is already evaluated
 						// update the node's record
 						var recordSubTreePool = SyntaxTreeProvider as RecordBasedSubTreePool;
-						if (recordSubTreePool != null && FitnessEvaluator != null) {
+						double improvement = 0;
+						if (FitnessEvaluator != null) {
 							var fitness = FitnessEvaluator.Evaluate(individual, Problem).Fitness;
 
-							double improvement = fitness - individual.Fitness;
+							improvement = fitness - individual.Fitness;
 							Statistics.Instance.AddRecordReplaceAttempt(improvement);
+						}
+						if (recordSubTreePool != null) {
 							recordSubTreePool.UpdateRecord(newNode, improvement);
 						}
 					}

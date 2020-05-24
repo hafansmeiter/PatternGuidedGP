@@ -1,4 +1,5 @@
-﻿using PatternGuidedGP.AbstractSyntaxTree.SimilarityEvaluation.TreeEditDistance;
+﻿using PatternGuidedGP.AbstractSyntaxTree;
+using PatternGuidedGP.AbstractSyntaxTree.SimilarityEvaluation.TreeEditDistance;
 using PatternGuidedGP.GP.Problems;
 using PatternGuidedGP.Pangea;
 using PatternGuidedGP.Util;
@@ -73,7 +74,7 @@ namespace PatternGuidedGP.GP {
 
 			// Write statistics in .csv format
 			CollectNodeTypes();
-			Logger.WriteStatistics(generation, new string[] { "total", "for", "if", "&&", "||", "%", "1", "2", "==", "ret", "i", "values", "length", "n", "a", "b", "c", "d", "<", "<=", ">", ">=" });
+			Logger.WriteStatistics(generation, new string[] { "total", "for", "if", "&&", "||", "%", "1", "2", "==", "!=", "ret", "i", "values", "length", "n", "a", "b", "c", "d", "<", "<=", ">", ">=", "&&==abcd", "==abcd", "||!=abcd", "!=abcd" });
 
 			double averageFitness = Population.GetAverageFitness();
 			Logger.WriteLine(0, string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10}",
@@ -103,8 +104,44 @@ namespace PatternGuidedGP.GP {
 			foreach (var individual in Population.Individuals) {
 				foreach (var node in individual.SyntaxTree.GetTreeNodes()) {
 					Statistics.Instance.AddNodeType(node.Description);
+
+					if (node.Description == "&&" 
+						&& IsEqualsParameterVariable(node.Children[0])
+						&& IsEqualsParameterVariable(node.Children[1])) {
+						Statistics.Instance.AddNodeType("&&==abcd");
+					} else if (IsEqualsParameterVariable(node)) {
+						Statistics.Instance.AddNodeType("==abcd");
+					}
+
+					if (node.Description == "||"
+						&& IsNotEqualsParameterVariable(node.Children[0])
+						&& IsNotEqualsParameterVariable(node.Children[1])) {
+						Statistics.Instance.AddNodeType("&&!=abcd");
+					}
+					else if (IsNotEqualsParameterVariable(node)) {
+						Statistics.Instance.AddNodeType("!=abcd");
+					}
 				}
 			}
+		}
+
+		private bool IsEqualsParameterVariable(TreeNode node) {
+			return node.Description == "=="
+				&& IsParameterVariable(node.Children[0])
+				&& IsParameterVariable(node.Children[1]);
+		}
+
+		private bool IsNotEqualsParameterVariable(TreeNode node) {
+			return node.Description == "!="
+				&& IsParameterVariable(node.Children[0])
+				&& IsParameterVariable(node.Children[1]);
+		}
+
+		private bool IsParameterVariable(TreeNode node) {
+			return node.Description == "a" ||
+				node.Description == "b" ||
+				node.Description == "c" ||
+				node.Description == "d";
 		}
 
 		private int ComputeDistanceToOptimal(Individual individual, Problem problem) {
