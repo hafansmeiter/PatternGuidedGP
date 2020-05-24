@@ -88,9 +88,10 @@ namespace PatternGuidedGP.Pangea {
 		}
 
 		private int GetTreeSize(DecisionTree decisionTree) {
-			var root = decisionTree.Root;
+			int length = decisionTree.ToRules().Count;
+			/*var root = decisionTree.Root;
 			int length = 0;
-			GetSubtreeLength(root, ref length);
+			GetSubtreeLength(root, ref length);*/
 			return length;
 		}
 

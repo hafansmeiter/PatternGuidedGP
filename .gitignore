@@ -3,3 +3,27 @@
 ################################################################################
 
 /PatternGuidedGP/bin
+/.vs/PatternGuidedGP/v15
+/packages
+/PatternGuidedGP/Advanced_Simple_Logs
+/PatternGuidedGP/Advanced_Simple_Step10
+/PatternGuidedGP/Advanced_Simple_Step5
+/PatternGuidedGP/Advanced_Simple_Step7
+/PatternGuidedGP/Logs
+/PatternGuidedGP/Logs2
+/PatternGuidedGP/Logs4
+/PatternGuidedGP/obj
+/PatternGuidedGP/Steps10
+/PatternGuidedGP/TestLogs
+/PatternGuidedGP/Steps7
+/PatternGuidedGP/Steps5
+/PatternGuidedGP/Steps4
+/PatternGuidedGP/Steps3
+/PatternGuidedGP/Advanced
+/PatternGuidedGP/Final/Logs
+/PatternGuidedGP/Final/Pangea
+/PatternGuidedGP/Final/RecordBased
+/PatternGuidedGP/Final/SemanticBackpropagation
+/PatternGuidedGP/Pangea
+/PatternGuidedGP/RecordBased
+/PatternGuidedGP/SemanticBackpropagation
