@@ -40,11 +40,23 @@ namespace PatternGuidedGP.Pangea {
 		protected override void OnIndividualEvaluationFinished(Individual individual, FitnessResult fitness, object[] results) {
 			MDLFitnessResult fitnessResult = fitness as MDLFitnessResult;
 			if (SubTreePool != null) {
-				double fitnessValue = fitnessResult.Fitness;
-				foreach (var id in fitnessResult.Dataset.Features) {
-					SubTreePool.Add(individual.SyntaxTree.FindNodeById(id), fitnessValue);
+				int usedAttributes = fitnessResult.UsedAttributes;
+				int classificationError = fitnessResult.ClassificationError;
+				if (usedAttributes > 0) {
+					double utilityMeasure = CalculateUtilityMeasure(usedAttributes, classificationError);
+					foreach (var id in fitnessResult.Dataset.Features) {
+						SubTreePool.Add(individual.SyntaxTree.FindNodeById(id), utilityMeasure);
+					}
+					SubTreePool.TrimToMaxSize();
 				}
 			}
+		}
+
+		public override void OnEvaluationFinished() {
+		}
+
+		private double CalculateUtilityMeasure(int usedAttributes, int classificationError) {
+			return 1.0 / ((1.0 + classificationError) * usedAttributes);
 		}
 
 		public override void OnStartEvaluation() {

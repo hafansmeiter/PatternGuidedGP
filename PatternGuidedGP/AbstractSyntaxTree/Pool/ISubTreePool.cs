@@ -11,5 +11,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 		TreeNode GetRandom(Type type);
 		void RemoveWorstItems();
 		void Clear();
+		void TrimToMaxSize();
 	}
 }

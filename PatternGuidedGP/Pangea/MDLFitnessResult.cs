@@ -10,6 +10,7 @@ namespace PatternGuidedGP.Pangea {
 		public MLDataset Dataset { get; private set; }
 		public int ClassificationError { get; set; }
 		public int TreeSize { get; set; }
+		public int UsedAttributes { get; set; }
 		public double StandardFitness { get; set; }
 
 		public MDLFitnessResult(double fitness, MLDataset dataset = null)

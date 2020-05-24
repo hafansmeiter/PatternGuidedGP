@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PatternGuidedGP.AbstractSyntaxTree.TreeGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,17 +22,26 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 		}
 	}
 
-	abstract class SubTreePoolBase : ISubTreePool {
+	abstract class SubTreePoolBase : ISubTreePool, ISyntaxTreeProvider {
 		public bool DuplicateCheck { get; set; } = true;
 		public int MaxSizePerType { get; set; } = 50;
 		public int KeepItemsOnRemoveWorst { get; set; } = 25;
 		public int MaxDepth { get; set; }
 
+		// current items
 		protected List<PoolItem> _boolTreeItems
 			= new List<PoolItem>();
 		protected List<PoolItem> _intTreeItems
 			= new List<PoolItem>();
 		protected List<PoolItem> _voidTreeItems
+			= new List<PoolItem>();
+
+		// items for next generation
+		protected List<PoolItem> _newBoolTreeItems
+			= new List<PoolItem>();
+		protected List<PoolItem> _newIntTreeItems
+			= new List<PoolItem>();
+		protected List<PoolItem> _newVoidTreeItems
 			= new List<PoolItem>();
 
 		protected SubTreePoolBase(int maxDepth = -1) {
@@ -61,28 +71,32 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			}
 		}
 
+		protected virtual List<PoolItem> GetNewItemsByType(Type type) {
+			if (type == typeof(bool)) {
+				return _newBoolTreeItems;
+			}
+			else if (type == typeof(int)) {
+				return _newIntTreeItems;
+			}
+			else {
+				return _newVoidTreeItems;
+			}
+		}
+
 		protected PoolItem GetRandomFromList(IList<PoolItem> list) {
 			return Selector.DrawFromList(list);
 		}
 
 		public virtual bool Add(TreeNode node, object data) {
-			if (DuplicateCheck && Contains(node)) {
-				return false;
-			}
 			if (MaxDepth > 0 && node.GetTreeHeight() > MaxDepth) {
 				return false;
 			}
-			var item = CreateItem(node, data);
-			var items = GetItemsByType(node.Type);
-			if (items.Count < MaxSizePerType || items.Last().CompareTo(item) >= 0) {
+			var items = GetNewItemsByType(node.Type);
+			if (!items.Exists(it => it.Node.Equals(node))) {
+				var item = CreateItem(node, data);
 				items.Add(item);
-				items.Sort();
-				if (items.Count > MaxSizePerType) {
-					items.Remove(items.Last());
-				}
-				return true;
 			}
-			return false;
+			return true;
 		}
 
 		public bool Contains(TreeNode node) {
@@ -118,6 +132,61 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			_boolTreeItems.Clear();
 			_intTreeItems.Clear();
 			_voidTreeItems.Clear();
+		}
+
+		public TreeNode GetSyntaxTree(int maxDepth, Type type) {
+			// ignore maxDepth
+			var items = GetItemsByType(type);//.Where(item => item.Node.GetTreeHeight() <= maxDepth).ToList();
+			if (items.Count == 0) {
+				return null;
+			}
+			else {
+				return GetRandomFromList(items).Node;
+			}
+		}
+
+		public void TrimToMaxSize() {
+			TrimToMaxSize(typeof(bool));
+			TrimToMaxSize(typeof(int));
+			TrimToMaxSize(typeof(void));
+		}
+
+		public void TrimToMaxSize(Type type) {
+			var newItems = GetNewItemsByType(type);
+			var currentItems = GetItemsByType(type);
+			foreach (var curItem in currentItems) {
+				var existingItem = newItems.FirstOrDefault(it => it.Node.Equals(curItem.Node));
+				if (existingItem != null) {
+					if (curItem.GetFitness() < existingItem.GetFitness()) {
+						newItems.Remove(existingItem);
+						newItems.Add(curItem);
+					}
+				} else {
+					newItems.Add(curItem);
+				}
+			}
+			currentItems.Clear();
+			if (newItems.Count > MaxSizePerType) {
+				newItems.Sort();
+				currentItems.Clear();
+
+				var selector = new RankBasedPoolItemSelector<PoolItem>();
+				while (currentItems.Count < MaxSizePerType && newItems.Count > 0) {
+					var item = selector.DrawFromList(newItems);
+					var existingItem = FindNode(item.Node);
+					if (existingItem == null) {	// no duplicates
+						currentItems.Add(item);
+					} else if (item.GetFitness() < existingItem.GetFitness()) {
+						currentItems.Remove(existingItem);
+						currentItems.Add(item);
+					}
+					newItems.Remove(item);
+				}
+			} else {
+				currentItems.AddRange(newItems);
+			}
+			currentItems.Sort();
+			newItems.Clear();
 		}
 	}
 }

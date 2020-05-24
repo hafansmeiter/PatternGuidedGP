@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 	// Item order according to Upper Confidence Bounds (UCB)
-	class RecordBasedSubTreePool : SubTreePoolBase, ISyntaxTreeProvider {
+	class RecordBasedSubTreePool : SubTreePoolBase {
 
 		protected class RecordTreeNodeItem : PoolItem {
 			public double Score { get; private set; }
@@ -76,17 +76,6 @@ namespace PatternGuidedGP.AbstractSyntaxTree.Pool {
 			int totalEvaluations = allItems.Sum(item => ((RecordTreeNodeItem)item).Evaluations);
 			allItems.ForEach(item => ((RecordTreeNodeItem)item).TotalEvaluations = totalEvaluations);
 			allItems.Sort();
-		}
-
-		public TreeNode GetSyntaxTree(int maxDepth, Type type) {
-			// ignore maxDepth
-			var items = GetItemsByType(type);//.Where(item => item.Node.GetTreeHeight() <= maxDepth).ToList();
-			if (items.Count == 0) {
-				return null;
-			}
-			else {
-				return GetRandomFromList(items).Node;
-			}
 		}
 
 		public override bool Add(TreeNode node, object data) {

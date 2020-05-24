@@ -53,11 +53,13 @@ namespace PatternGuidedGP.Pangea {
 
 						var rules = decisionTree.ToRules();
 						LogResult(fitness, error, treeSize, mdlFitness, rules);
+						int usedAttributes = GetUsedAttributes(decisionTree).Count;
 
 						fitnessResult.Fitness = fitness;
 						fitnessResult.ClassificationError = error;
 						fitnessResult.TreeSize = treeSize;
 						fitnessResult.StandardFitness = stdFitness;
+						fitnessResult.UsedAttributes = usedAttributes;
 
 						// log MDL result details
 						if (fitness == 0) {
@@ -79,6 +81,17 @@ namespace PatternGuidedGP.Pangea {
 				Logger.WriteLine(1, "Standard fitness: 0");
 			}
 			return fitnessResult;
+		}
+
+		private ISet<int> GetUsedAttributes(DecisionTree decisionTree) {
+			var attributes = new HashSet<int>();
+			var rules = decisionTree.ToRules();
+			foreach (var rule in rules) {
+				foreach (var antecedent in rule.Antecedents) {
+					attributes.Add(antecedent.Index);
+				}
+			}
+			return attributes;
 		}
 
 		private double CalculateMDLFitness(int error, int treeSize, int n) {
