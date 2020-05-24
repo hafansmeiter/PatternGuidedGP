@@ -33,7 +33,7 @@ namespace PatternGuidedGP {
 			string problemSet;
 			EvaluateArgs(args, out runConfig, out runProblem, out fromConfig, out fromProblem, out problemSet, out steps);
 			MDLFitnessCalculator.Steps = steps;
-			Logger.Level = 0;
+			Logger.Level = 1;
 
 			if (problemSet == "simple") {
 				SyntaxConfiguration.Current = new SyntaxConfiguration.Simple();
@@ -87,8 +87,10 @@ namespace PatternGuidedGP {
 
 			var semanticsBasedSubTreePool = new SemanticsBasedSubTreePool();
 			var recordBasedSubTreePool = new RecordBasedSubTreePool();
+			var fitnessBasedSubTreePool = new FitnessBasedSubTreePool();
 			var generator = new KozaTreeGeneratorFull();
-			var evaluatingSubtreeMutator = new EvaluatingRandomSubtreeMutator(recordBasedSubTreePool, maxTreeDepth, maxTreeDepth);
+			//var evaluatingSubtreeMutator = new EvaluatingRandomSubtreeMutator(recordBasedSubTreePool, maxTreeDepth, maxTreeDepth);
+			var evaluatingSubtreeMutator = new EvaluatingRandomSubtreeMutator(fitnessBasedSubTreePool, maxTreeDepth, maxTreeDepth);
 
 			var configurations = new[] {
 				// /config:0
@@ -152,7 +154,8 @@ namespace PatternGuidedGP {
 				// /config:3
 				new RunConfiguration("PANGEA + Multi Random Mutator (Record-Based Subtree Pool + Random Subtree)") {
 					FitnessEvaluator = new MDLFitnessEvaluator() {
-						SubTreePool = recordBasedSubTreePool
+						//SubTreePool = recordBasedSubTreePool
+						SubTreePool = fitnessBasedSubTreePool
 					},
 					Crossover = new RandomSubtreeCrossover(maxTreeDepth),
 					Mutator = new MultiRandomMutator() {
@@ -221,6 +224,7 @@ namespace PatternGuidedGP {
 					for (int i = 0; i < config.Runs; i++) {
 						semanticsBasedSubTreePool.Clear();
 						recordBasedSubTreePool.Clear();
+						fitnessBasedSubTreePool.Clear();
 
 						GPAlgorithm algorithm = new GPAlgorithm(config.PopulationSize, config.Generations, true) {
 							Crossover = config.Crossover,
