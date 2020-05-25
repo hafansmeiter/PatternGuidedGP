@@ -116,7 +116,7 @@ namespace PatternGuidedGP.GP {
 					if (node.Description == "||"
 						&& IsNotEqualsParameterVariable(node.Children[0])
 						&& IsNotEqualsParameterVariable(node.Children[1])) {
-						Statistics.Instance.AddNodeType("&&!=abcd");
+						Statistics.Instance.AddNodeType("||!=abcd");
 					}
 					else if (IsNotEqualsParameterVariable(node)) {
 						Statistics.Instance.AddNodeType("!=abcd");
