@@ -33,7 +33,7 @@ namespace PatternGuidedGP {
 			string problemSet;
 			EvaluateArgs(args, out runConfig, out runProblem, out fromConfig, out fromProblem, out problemSet, out steps);
 			MDLFitnessCalculator.Steps = steps;
-			Logger.Level = 1;
+			Logger.Level = 0;
 
 			if (problemSet == "simple") {
 				SyntaxConfiguration.Current = new SyntaxConfiguration.Simple();
