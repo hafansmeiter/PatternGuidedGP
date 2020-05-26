@@ -16,7 +16,13 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 		public MaximumProblem(int parameterCount) : base(parameterCount) {
 		}
 
-		protected override TestSuite GetTestSuite() {
+        protected override void GetInstructionSet(InstructionSetBuilder builder)
+        {
+            base.GetInstructionSet(builder);
+            builder.AddIntegerDomain();
+        }
+
+        protected override TestSuite GetTestSuite() {
 			return new IntTestSuiteGenerator().Create(ParameterCount, parameters => {
 				int max = (int) parameters[0];
 				for (int i = 1; i < parameters.Length; i++) {

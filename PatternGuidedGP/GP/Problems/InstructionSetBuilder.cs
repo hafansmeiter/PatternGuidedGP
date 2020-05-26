@@ -158,7 +158,7 @@ namespace PatternGuidedGP.GP.Problems {
 		public InstructionSetBuilder AddSimpleIntegerDomain() {
 			_repository.Add(
 				new BoolEqualIntExpression(),
-				//new BoolNotEqualIntExpression(),
+				new BoolNotEqualIntExpression(),
 				//new BoolGreaterEqualIntExpression(),
 				new BoolGreaterThanIntExpression(),
 				//new BoolLessEqualIntExpression(),

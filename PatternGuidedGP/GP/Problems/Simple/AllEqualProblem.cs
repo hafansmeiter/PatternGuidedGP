@@ -16,7 +16,13 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 		public AllEqualProblem(int parameterCount) : base(parameterCount) {
 		}
 
-		protected override TestSuite GetTestSuite() {
+        protected override void GetInstructionSet(InstructionSetBuilder builder)
+        {
+            base.GetInstructionSet(builder);
+            builder.AddSimpleIntegerDomain();
+        }
+
+        protected override TestSuite GetTestSuite() {
 			return new IntTestSuiteGenerator().Create(ParameterCount, parameters => {
 				int value = (int) parameters[0];
 				for (int i = 1; i < parameters.Length; i++) {

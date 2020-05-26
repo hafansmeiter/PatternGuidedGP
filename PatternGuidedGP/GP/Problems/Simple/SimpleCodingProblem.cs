@@ -25,9 +25,9 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 				builder.AddBoolParameters(ParameterCount);
 			}
 			if (ReturnType == typeof(int) || ParameterType == typeof(int)) {
-				builder.AddSimpleIntegerDomain();
-				builder.AddIntRandomLiteral(1, 3);
-				builder.AddForLoopTimesStatement();
+				//builder.AddIntegerDomain();
+				builder.AddIntRandomLiteral(1, ParameterCount);
+				//builder.AddForLoopTimesStatement();
 			}
 			builder.AddSimpleBooleanDomain();
 			builder.AddIfStatement();

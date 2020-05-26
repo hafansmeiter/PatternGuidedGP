@@ -15,7 +15,13 @@ namespace PatternGuidedGP.GP.Problems.Simple {
 		public MajorityProblem(int n) : base(n) {
 		}
 
-		protected override TestSuite GetTestSuite() {
+        protected override void GetInstructionSet(InstructionSetBuilder builder)
+        {
+            base.GetInstructionSet(builder);
+            builder.AddIntegerDomain();
+        }
+
+        protected override TestSuite GetTestSuite() {
 			return new IntTestSuiteGenerator().Create(ParameterCount, parameters => {
 				int ones = 0;
 				foreach (var par in parameters) {
