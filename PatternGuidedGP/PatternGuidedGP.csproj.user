@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <StartArguments>/problemSet:simple /config:1 /fromProblem:0 /logPath:..\\..\\..\\TestLogs\\ /steps:5</StartArguments>
+    <StartArguments>/problemSet:simple /config:3 /fromProblem:11 /logPath:..\\..\\..\\TestLogs\\ /steps:5</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <StartArguments>/problemSet:advanced /config:2 /fromProblem:0 /logPath:..\\..\\..\\TestLogs\\</StartArguments>
+    <StartArguments>/problemSet:simple /config:1 /problem:2 /logPath:..\\..\\..\\TestLogs\\</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
     <PublishUrlHistory>publish\</PublishUrlHistory>

@@ -45,7 +45,8 @@ namespace PatternGuidedGP.Pangea {
 				if (usedAttributes > 0) {
 					double utilityMeasure = CalculateUtilityMeasure(usedAttributes, classificationError);
 					foreach (var id in fitnessResult.Dataset.Features) {
-						SubTreePool.Add(individual.SyntaxTree.FindNodeById(id), utilityMeasure);
+						// utility measure is maximized between 0 and 1 -> fitness is minimized
+						SubTreePool.Add(individual.SyntaxTree.FindNodeById(id), 1 - utilityMeasure);
 					}
 					SubTreePool.TrimToMaxSize();
 				}
